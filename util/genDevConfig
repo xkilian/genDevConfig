@@ -33,7 +33,7 @@ BEGIN { # Try to find the config; one level below $0 in ./etc, or in other likel
         eval q(require "$_/genDevConfig/genDevConfig-conf.pl")
           unless $Common::global::gInstallRoot;
     }
-    $Common::global::gInstallRoot ||= $programdir . "/..;
+    $Common::global::gInstallRoot ||= $programdir . "/..";
     $Common::global::gConfigRoot = $programdir . "/../config-tree";
 }
 
