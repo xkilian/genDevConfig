@@ -1,0 +1,286 @@
+# Cisco CSS (Cisco Systems MIB)
+
+OID	CiscoCSSapOwnHitsCs		1.3.6.1.4.1.9.9.368.1.25.2.1.15
+OID	CiscoCSSapOwnDropsCs		1.3.6.1.4.1.9.9.368.1.25.2.1.17
+OID	CiscoCSSapOwnByteCountCs	1.3.6.1.4.1.9.9.368.1.25.2.1.22
+
+OID	CiscoCSSapCntHitsCs		1.3.6.1.4.1.9.9.368.1.16.4.1.18
+OID	CiscoCSSapCntRedirectsCs	1.3.6.1.4.1.9.9.368.1.16.4.1.19
+OID	CiscoCSSapCntDropsCs		1.3.6.1.4.1.9.9.368.1.16.4.1.20
+OID	CiscoCSSapCntRejNoServicesCs	1.3.6.1.4.1.9.9.368.1.16.4.1.21
+OID	CiscoCSSapCntRejServOverloadCs	1.3.6.1.4.1.9.9.368.1.16.4.1.22
+OID	CiscoCSSapCntByteCountCs	1.3.6.1.4.1.9.9.368.1.16.4.1.25
+
+OID	CiscoCSSapCntsvcHitsCs		1.3.6.1.4.1.9.9.368.1.18.2.1.4
+OID	CiscoCSSapCntsvcBytesCs		1.3.6.1.4.1.9.9.368.1.18.2.1.5
+
+OID	CiscoCSSapSvcConnectionsCs	1.3.6.1.4.1.9.9.368.1.15.2.1.20
+
+datasource CiscoCSSapOwnHitsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnHitsCs.%inst%
+
+datasource CiscoCSSapOwnDropsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnDropsCs.%inst%
+
+datasource CiscoCSSapOwnByteCountCs
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnByteCount.%inst%
+
+datasource CiscoCSSapCntHitsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntHitsCs.%inst%
+
+datasource CiscoCSSapCntRedirectsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRedirectsCs.%inst%
+
+datasource CiscoCSSapCntDropsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntDropsCs.%inst%
+
+datasource CiscoCSSapCntRejNoServicesCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRejNoServicesCs.%inst%
+
+datasource CiscoCSSapCntRejServOverloadCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRejServOverloadCs.%inst%
+
+datasource CiscoCSSapCntByteCountCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntByteCountCs.%inst%
+
+datasource CiscoCSSapCntsvcHitsCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntsvcHitsCs.%inst%
+
+datasource CiscoCSSapCntsvcBytesCs
+	ds-source   = snmp://%snmp%/CiscoCSSapCntsvcBytesCs.%inst%
+
+datasource CiscoCSSapSvcConnectionsCs
+	rrd-ds-type	=	GAUGE
+	ds-source   = snmp://%snmp%/CiscoCSSapSvcConnectionsCs.%inst%
+
+targetType	CiscoCSS-ServiceCs
+	ds		=   "CiscoCSSapSvcConnectionsCs"
+	view		=   "Connections: CiscoCSSapSvcConnectionsCs"
+
+targetType CiscoCSS-ContentCs
+	ds		=   "CiscoCSSapCntHitsCs, CiscoCSSapCntByteCountCs, CiscoCSSapCntRedirectsCs, 
+                             CiscoCSSapCntDropsCs, CiscoCSSapCntRejNoServicesCs, CiscoCSSapCntRejServOverloadCs"
+	view		=   "Hits: CiscoCSSapCntHitsCs,
+			     Fails: CiscoCSSapCntRedirectsCs CiscoCSSapCntDropsCs CiscoCSSapCntRejNoServicesCs
+                                    CiscoCSSapCntRejServOverloadCs,
+			     Bytes: CiscoCSSapCntByteCountCs"
+
+targetType	CiscoCSS-OwnerCs
+	ds		=   "CiscoCSSapOwnHitsCs, CiscoCSSapOwnDropsCs, CiscoCSSapOwnByteCountCs"
+	view		=   "Hits: CiscoCSSapOwnHitsCs CiscoCSSapOwnDropsCs,
+			     Bytes: CiscoCSSapOwnByteCountCs"
+
+targetType	CiscoCSS-ContentServiceCs
+	ds		=   "CiscoCSSapCntsvcHitsCs, CiscoCSSapCntsvcBytesCs"
+	view		=   "Hits: CiscoCSSapCntsvcHitsCs,
+			     Bytes: CiscoCSSapCntsvcBytesCs"
+
+graph   CiscoCSSapCntHitsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntByteCountCs
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRedirectsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Redirects"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntDropsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Drops"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRejNoServicesCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Reject No Services"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRejServOverloadCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Reject Overloaded"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnHitsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnByteCountCs
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnDropsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Drops"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntsvcHitsCs
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntsvcByteCountCs
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+
+# Cisco CSS (ArrowPoint MIB)
+
+OID	CiscoCSSapOwnHitsAp		1.3.6.1.4.1.2467.1.25.2.1.15
+OID	CiscoCSSapOwnDropsAp		1.3.6.1.4.1.2467.1.25.2.1.17
+OID	CiscoCSSapOwnByteCountAp	1.3.6.1.4.1.2467.1.25.2.1.22
+
+OID	CiscoCSSapCntHitsAp		1.3.6.1.4.1.2467.1.16.4.1.18
+OID	CiscoCSSapCntRedirectsAp	1.3.6.1.4.1.2467.1.16.4.1.19
+OID	CiscoCSSapCntDropsAp		1.3.6.1.4.1.2467.1.16.4.1.20
+OID	CiscoCSSapCntRejNoServicesAp	1.3.6.1.4.1.2467.1.16.4.1.21
+OID	CiscoCSSapCntRejServOverloadAp	1.3.6.1.4.1.2467.1.16.4.1.22
+OID	CiscoCSSapCntByteCountAp	1.3.6.1.4.1.2467.1.16.4.1.25
+
+OID	CiscoCSSapCntsvcHitsAp		1.3.6.1.4.1.2467.1.18.2.1.4
+OID	CiscoCSSapCntsvcBytesAp		1.3.6.1.4.1.2467.1.18.2.1.5
+
+OID	CiscoCSSapSvcConnectionsAp	1.3.6.1.4.1.2467.1.15.2.1.20
+
+datasource CiscoCSSapOwnHitsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnHitsAp.%inst%
+
+datasource CiscoCSSapOwnDropsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnDropsAp.%inst%
+
+datasource CiscoCSSapOwnByteCountAp
+	ds-source   = snmp://%snmp%/CiscoCSSapOwnByteCount.%inst%
+
+datasource CiscoCSSapCntHitsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntHitsAp.%inst%
+
+datasource CiscoCSSapCntRedirectsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRedirectsAp.%inst%
+
+datasource CiscoCSSapCntDropsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntDropsAp.%inst%
+
+datasource CiscoCSSapCntRejNoServicesAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRejNoServicesAp.%inst%
+
+datasource CiscoCSSapCntRejServOverloadAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntRejServOverloadAp.%inst%
+
+datasource CiscoCSSapCntByteCountAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntByteCountAp.%inst%
+
+datasource CiscoCSSapCntsvcHitsAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntsvcHitsAp.%inst%
+
+datasource CiscoCSSapCntsvcBytesAp
+	ds-source   = snmp://%snmp%/CiscoCSSapCntsvcBytesAp.%inst%
+
+datasource CiscoCSSapSvcConnectionsAp
+	rrd-ds-type	=	GAUGE
+	ds-source   = snmp://%snmp%/CiscoCSSapSvcConnectionsAp.%inst%
+
+targetType CiscoCSS-ContentServiceAp
+	ds          =   "CiscoCSSapSvcConnectionsAp"
+	view        =   "Connections: CiscoCSSapSvcConnectionsAp"
+
+targetType CiscoCSS-ContentAp
+	ds		=   "CiscoCSSapCntHitsAp, CiscoCSSapCntByteCountAp, CiscoCSSapCntRedirectsAp, 
+                             CiscoCSSapCntDropsAp, CiscoCSSapCntRejNoServicesAp, CiscoCSSapCntRejServOverloadAp"
+	view		=   "Hits: CiscoCSSapCntHitsAp,
+			     Fails: CiscoCSSapCntRedirectsAp CiscoCSSapCntDropsAp CiscoCSSapCntRejNoServicesAp
+                                    CiscoCSSapCntRejServOverloadAp,
+			     Bytes: CiscoCSSapCntByteCountAp"
+
+targetType	CiscoCSS-OwnerAp
+	ds		=   "CiscoCSSapOwnHitsAp, CiscoCSSapOwnDropsAp, CiscoCSSapOwnByteCountAp"
+	view		=   "Hits: CiscoCSSapOwnHitsAp CiscoCSSapOwnDropsAp,
+			     Bytes: CiscoCSSapOwnByteCountAp"
+
+targetType	CiscoCSS-ContentServiceAp
+	ds		=   "CiscoCSSapCntsvcHitsAp, CiscoCSSapCntsvcBytesAp"
+	view		=   "Hits: CiscoCSSapCntsvcHitsAp,
+			     Bytes: CiscoCSSapCntsvcBytesAp"
+
+graph   CiscoCSSapCntHitsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntByteCountAp
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRedirectsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Redirects"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntDropsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Drops"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRejNoServicesAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Reject No Services"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntRejServOverloadAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Reject Overloaded"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnHitsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnByteCountAp
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+
+graph   CiscoCSSapOwnDropsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Drops"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntsvcHitsAp
+    y-axis      =   "Sessions per second"
+    legend      =   "Successful Hits"
+    units       =   "sessions/sec"
+    precision   =   0
+
+graph   CiscoCSSapCntsvcByteCountAp
+    y-axis      =   "Bytes per second"
+    legend      =   "Bytes"
+    units       =   "octets/sec"
+    precision   =   0
+

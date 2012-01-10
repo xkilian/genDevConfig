@@ -1,0 +1,1119 @@
+
+===============================================================================
+Historical section for previous versions of genDevConfig/genRtrConfig 2.x
+
+The historical format which included a combined changelog/credit/features
+has been split up to use the standard CREDITS, CHANGES format and the detailed
+changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
+2.x and github xkilian/genDevConfig for 3.x series.
+
+===============================================================================
+
+Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
+
+09/01/2012
+
+# Version 3_0_0
+#
+# Major project direction change
+#
+# First version of genDevConfig as a standalone profile generator.
+# It currently outputs configuration profiles for use with the Cricket network
+# monitoring system.
+# 
+# This is intended as a proof of concept for making it compatible with
+# other types of configuration profile formats.
+#
+# - Integrated Cricket log.pm into the genDevConfig package
+# - Integrated Cricket snmpUtils.pm into the genDevConfig package
+# - Changed calls to snmpUtils to genConfig::snmpUtils
+# - Updated INSTALL file to reflect change of direction
+# - Removed all calls to the Cricket database
+# - Updated base directories to expect installation in $genDevConfig
+#   instead of $Cricket
+# - Moved code for 3.x series to github instead of sourceforge: xkilian/genDevConfig
+# - Converted date format in this file for versions prior to 1.5 to : Gregorian Little Endian
+#   starting with Day.
+
+23/05/2007
+
+# Version 2_0_0beta14a
+#
+# Minor bug fix
+#
+# - Typo fixes in genDevConfig, CiscoIOS.pm and Sensatronic.pm
+
+27/01/2007
+
+# Version 2_0_0beta14
+#
+# Major new features
+#
+# - New CSS1100 cricket plugin
+# - New Sensatronics EM1 cricket plugin
+# - Support for DS1 serial interface statistics
+
+11/05/2005
+
+# Version 2_0_0beta12
+#
+# Major new features
+#
+# - Now uses GetOpts::Long module for args processing. 
+#   Much more robust options matching.
+# - --nospeedcheck option added
+# - Support for greater than gig interfaces
+# - Supports multiple plugin matches for a given device
+# - Brand new Foundry plugin based on CHIRP ServerIron plugin
+# - FIX: NortelAccelar plugin now recognizes devices correctly.
+# - Defaults have been cleaned up commented and split by vendor.
+#   It should now be much, much easier to understand what is going on!
+# - Many, many, many internal changes.
+
+05/05/2005
+
+# Version 2_0_0beta11
+#
+# Major new features
+#
+# - added --nomtucheck and nospeedcheck for sanity checking overrides.
+# - Cleaned up Debug and Info output to be more readable.
+# - various internal changes, see cvs commit info.
+
+# Version 2_0_0beta10
+#
+# NOTICE! Compatibility with previous version of genDevConfig and genRtrConfig
+# has been maintained. Please refrain from using beta9.
+#
+# Please update all plugins, libraries, defaults and main script. This
+# is a major release.
+#
+# Major new features
+# 
+# - new option:  -o, --ouputdir Provide the output dir for target being created
+# - added dot3stat support check for extended mib stats. (Andrew cutler)
+# - modified back-end for --monitors. Will now use cricket config tree
+#   monitorType's as definitions for monitor-thresholds. This feature
+#   requires the monitorType patch to HandleTarget in sourceforge.
+# - added support for non-unicast packets as a command-line option --nucast
+#   This will create targets with non-unicast stats if requested. Note that
+#   activating this for existing targets will break collection. As two new
+#   ds's are required to support this.
+# - updated all modules to support the NUcast packet support
+# - Deprecated --access and --core options, they will come back under a new
+#   form. As they influenced monitor thresholds for identical targetTypes.
+# - Changed Defaults, removed all access and core interface targetTypes.
+# - Bits and pieces all over the place. ;-)
+
+18/02/2005 - Integrated by Francois Mikus
+
+# Version 2_0_0beta9 !WARNING! DEPRECATED RELEASE DO NOT USE
+#
+# WARNING! genDevConfig targets are not compatible
+# with existing targets.
+#
+# WARNING! You will need to recreate/delete your INTERFACE targets. All others
+# target types are OK. Repeat, ONLY INTERFACE TARGETS need to be recreated.
+#
+# Modified Defaults, Defaults.nortel, all plugins, genDevConfig
+#  - Modified: standard-interface(-access, -hc, -access-hc)
+#  - Modified: extended-interface(-access, -hc, -access-hc)
+#  - Modified: cisco-interface(-access, -hc, -access-hc, -core, -core-hc)
+#  - Modified: nortel-interface
+#   The targets have changed. (I omit the ifOut.. to make this readable)
+#   Added to all : ifInNUcastpkts
+#   Added to all -hc : ifHCInUcastpkts, ifHCInBroadcastpkts, ifHCInMulticastPkts
+#   Enabled extended-interface stats based on dot3stats mib.
+#   Replaced nortel-interface with extended-interface.
+
+#   Modified behaviour in genDevConfig and plugins so that --vendorint will
+#   activate req_vendorint *and* req_extendedint *and* extendedint. In each
+#   plugin, only one of the two must activated. So the onus is on the plugin
+#   designers to deactivate extendedint if they use xxxxint(ie. ciscoint,
+#   juniperint, etc.).
+
+# Modified genDevConfig
+#  - Deprecated -r, --rtragents, --nounused, -f, --framestats. They
+#  are replaced with --nortragents, --noframestats and --showunused. Makes it
+#  so that out fo the box it is running with the recommended options.
+
+18/02/2005 - Integrated by Francois Mikus
+
+# Version 2_0_0beta8
+
+# Modified CiscoIOS
+#  (sergey eremenko, s.eremenko @ rtcomm-yug . ru )
+#  - Modified Cisco 1900 catalyst device type to use standard interface
+#    as it does not support cisco-interface type.
+
+17/02/2005 - Integrated by Francois Mikus
+
+# Version 2_0_0beta7
+
+# Modified Defaults and CiscoIOS
+#  (Greg Cockburn, gcockburn @ tedis . com . au)
+#  - Added Cisco 800 router device type
+# Modified genDevConfig, CiscoIOS and CatalystOS
+#  (Terje Bless)
+#  - Added --modular option for hierarchical output of targets
+
+21/12/2004 - Integrated by Francois Mikus
+
+# Version 2_0_0beta6
+
+# Modified genDevConfig
+#  (Andrew Cutler, andrewc @ xtra . co . nz)
+#  - Corrected missing squiggly }
+# Modified CiscoIOS.pm
+#  (Andrew Cutler, andrewc @ xtra . co . nz)
+#  - Modified handling of IOS sysDescr string.
+#  - Corrected syntax mistakes
+#
+
+20/12/2004 - Integrated by Francois Mikus
+
+# Version 2_0_0beta5
+
+# Modified genDevConfig
+#  (Andrew Cutler, andrewc @ xtra . co . nz)
+#  - Add missing ".0" to ipForwDatagrams OID.
+#  - Set "$opts{collect} = 0" on Packeteer chassis (Stats !available via SNMP).
+#  - Move handling of difficult ATM and Virtual interfaces to be 
+#    proccessed with the rest.  Removed some types that are handled by 
+#    speed and mtu tests. Had to add ATM Interleave Channel and BRI 
+#    Bearer Channel interfaces as having "Channel" in @EXCEPTIONS is 
+#    overriding @DONTCOLLECT (81 & 124).
+#  - Created a new global $opts variable for having the max and max_octets
+#    show up in the the target config. $opts{show_max}
+#  - Exclude VOIP interfaces from having "rrd-max" and "rrd-max-octets" set.
+#  - Exclude VOIP interfaces from speed and MTU tests.
+#  - Cleanup to use logging instead of deprecated $moreverbose.
+
+
+# Modified CiscoIOS.pm
+#  (Andrew Cutler, andrewc @ xtra . co . nz)
+# - Change IOS regex from '^C\d\d\d\d to '^C\d\d\d+ so 800 series 
+#   routers will be collected.
+# - Add missing dialCtlPeerCfgOriginateAddress definition.
+
+# - Allow vlan collection on Catalyst 4000 switches with the string 
+#   "Catalyst 4000" in the sysDescr for versions less than 12.2.
+#   I have several working fine on 12.1.
+# - Change primary $opts->{sysDescr} regex from /IOS/ to /IOS\s+\(tm\)/ 
+#   or it will always match and the secondary regex will never be tried.
+# - QOS fix to ignore multiple occurrences of "class-default" maps
+#   in a Cisco QOS instance. Occurs because it is included by default
+#   if a service policy is called in a class map. Cannot actually be disabled.
+#   The duplicate instances were causing "unable to update rrd" errors.
+# - Fixed QoS instances with trailing zeros to get lost due to quoting.
+# - Fixed VOIP processing.
+# - Corrected additional de-referencing for variables passed in %data hash
+#   for custom_files sub.
+# - Set $peerid = '' in several places to stop previous non-VOIP
+#   interfaces being put in dialpeer targets file.
+# - Remove '$customfile->close() || die "Cannot close $!";' or only the first
+#   object makes it into the dialpeer targets file and "blessed reference"
+#   errors are generated.
+
+
+# Modified NortelAccelar.pm:
+#  (Andrew Cutler, andrewc @ xtra . co . nz)
+# - Fixed various references.
+
+
+21/05/2004 - Integrated by Francois Mikus
+
+# Version 2_0_0beta4
+
+# Modified Defaults
+#  (Karl Carsten, ckarl @ mpi-sb . mpg . de)
+#  - Added a new target-type called extended statistics
+#    Which will be used when no vendor specific extended statistics
+#    are available and that extended statistics are required. This
+#    target-types calls upon MIB-II interface statistics.
+#  - Categorized the display of generic MIB-II extended
+#    interface statistics
+# Modified genDevConfig
+#  (Karl Carsten, ckarl @ mpi-sb . mpg . de)
+#  - Added an exception for insane speeds with Nortel 8xxx passports
+#    This should eventually be removed and fixed in the nortel.pm
+#    module itself. This is a hack for now.
+# Added Nortel.pm
+#  (Karl Carsten, ckarl @ mpi-sb . mpg . de)
+#  - New module for passport 8x0x and accelar based switches
+#    (Based on the code submitted for genRtrConfig and rewritten for
+#    the new module format by Francois Mikus.)
+# Modified Netscreen.pm
+#  (Francois Mikus)
+#  - Fixed a major bug, where the @config variable was not referenced back
+#    to the main script in the correct format.
+# Modified CiscoIOS.pm, JUNOS.pm, Netscreen.pm
+#  (Francois Mikus)
+#  - Text references to genRtrConfig were replaced with genDevConfig.
+
+18/05/2004 - Integrated by Francois Mikus
+
+# Version 2_0_0beta3
+
+# Modified genDevConfig
+#  (Francois Mikus)
+#  - Modified MIB-II switch traffic stats to be used by all
+#    network devices that support it. Not just the CiscoIOS devices
+#    as was previously configured.
+#  - Removed various bits of code and OIDs that were moved to CiscoIOS
+#    and CatalystOS modules in previous versions.
+#  - Various cosmetic changes to the code.
+#  (cougar @ random . ee)
+#  - removed Juniper (JUNOS) generic config
+#  - @EXCEPTIONS handling changed (can use interface names also)
+#  - collect ATM interface stats
+#  - skip switch CPU interface
+#  (Huw Lynch, huw_lynch @ yahoo . com)
+#  - moved speed and speed_str calculation to after the calls to plugins to
+#    allow the plugins to successfully override the values in the %speed hash.
+#  - added ifOperStatus and ifAdminStatus to the list of info passed into
+#    plugins. Required to decide if an interface with zero speed was 
+#    actually up or not within a plugin. This is a fix for broken snmp
+#    implentations.
+#
+# Modified CiscoIOS.pm, Defaults
+#  (cougar @ random . ee)
+#  - Added Catalyst 1900 series switches
+#
+# Added JUNOS.pm, Defaults.junos
+#  (cougar @ random . ee)
+#  - Juniper stats: CPU, memory, temperature, interfaces and firewall counters
+#
+
+01/04/2004 - Francois Mikus
+
+# Version 2_0_0beta2
+# 
+# Modified genDevConfig
+#  - Added usev2c checking for querying ifHCInOctets, else it was default to v1.
+#
+# Modified CiscoIOS.pm
+#  - Fixed typos
+#
+# Modified CatalystCatOS.pm
+#  - Added -hc processing
+#  - Added custom_interface
+#  - Added correct memory and cpu mapping
+#
+# Modified Netscreen.pm
+#  - Added -hc processing
+
+06/02/2004 - Francois Mikus
+
+# Version 2_0_0beta1
+# 
+# Renamed genRtrConfig to genDevConfig
+#
+# Modified genDevConfig
+#  - Fixed customfile processing
+#    Customfiles can be created and assigned to the opts hash in
+#    the custom_target function.
+#  - Added customsdesc and customldesc for custom_interfaces
+#  - Added processing of the custom*desc in creating the ldesc and sdesc
+#  - Fixed interface type recognition for EXCEPTIONS
+#  - Fixed value matching for --sortby, --communityrw options.
+# Modified CiscoIOS.pm
+#  - Added use of customldesc, customsdesc for dialpeers
+#  - Moved voip dpfile creation from custom_interfaces to custom_targets
+#    (Thanks to Andrew Cutler for identifying the loop bug for dialpeers.)
+06/02/2004 - Francois Mikus
+
+# Version 2_0_0alpha6
+# 
+# Modified genRtrConfig
+#  - Removed Catalyst processing functions
+#  - including various changes by Mike Fisher.
+# Modified File.pm, Util.pm, SNMP.pm..
+#  - Major changes by Mike Fisher.
+#  - Bug fixes.
+# Removed PluginUtils
+#  - Wrapped in Utils.pm
+# Modified CiscoIOS.pm
+#  - Lots of logic and structure changes.
+# New/Modified CatalystCatOS.pm
+#  - Lots of logic and structure changes.
+#  - Module recreates same logic as was in genRtrConfig
+# Modified Netscreen.pm
+#  - Lots of structure changes.
+# New/Modified NetSNMP
+#  - Added Comments
+#  - New module by Mike Fisher, used to query
+#    NetSNMP Unix servers.
+
+07/01/2004 - Francois Mikus
+
+# Version 2_0_0alpha5
+# 
+# Modified genRtrConfig
+#  - Fixed call to pluginUtils missing genConfig::
+#  - fixed missing logic handling in Cisco aironet discovery
+# Modified File.pm
+#  - Added subdir to the list of exported functions. Removed by error
+#    in previous release.
+
+06/01/2004 - Francois Mikus
+
+# Version 2_0_0alpha4
+# 
+# Modified genRtrConfig
+#  - Integrated new utility modules from Mike Fisher which
+#    place all common calls to external modules File.pm, Util.pm and SNMP.pm.
+#  - Replaced all calls to functions that were moved out.
+# Modified CiscoIOS.pm
+#  - Integrated use of utility modules
+# Modified Netscreen.pm
+#  - Integrated use of utility modules
+# Modified File.pm
+#  - Removed open, write, writetarget from exported functions.
+
+06/01/2004 - Francois Mikus
+
+# Version 2_0_0alpha2
+# 
+# Modified genRtrConfig
+#  - Modified how openfile and subdir are called. Additional arguments.
+#  - Modified logic to deal with target ldesc and sdesc
+#  - Moved around some utility functions. (subdir, openfile, fmi, etc)
+#  - monitorCreation now takes an argument, the filename for the monitor config file.
+#  - modified logic surrounding target writetarget call after processing
+#    by local and plugin interface treatment functions.
+#  - Removed all processing functions and OIDs related to Cisco IOS, Netscreen
+#    and Foundry devices.
+# Modified Netscreen.pm
+#  - Added variable transfert processing between main module and Netscreen module.
+#  - Added call to function from main module to get $gInstallRoot path
+#  - Added use of Common::Log in module
+#  - And various other changes which I don't really remember.
+# Added CiscoIOS.pm
+#  - This is the first module to be created.
+#    NOTE: That any modules which are added
+#    need an associated Default file to be submitted
+#    so that the Default entries are added to the
+#    distribution.
+# Added Foundry.pm
+#  - This is the first module to be created.
+#    NOTE: That any modules which are added
+#    need an associated Default file to be submitted
+#    so that the Default entries are added to the
+#    distribution.
+
+12/12/2003 - Francois Mikus
+
+# Version 2_0_0aplha1
+# 
+# Modified genRtrConfig
+#  - Activated the plugin options.
+#    (These are loosely based on the plugin architecture
+#    used by the pancho project. A great SNMP based
+#    router/switch configuration backup system.)
+#
+# Added pluginUtils
+#  - This script finds and deals with plugins
+#
+# Added Netscreen.pm
+#  - This is the first module to be created.
+#    NOTE: That any modules which are added
+#    need an associated Default file to be submitted
+#    so that the Default entries are added to the
+#    distribution.
+
+
+12/12/2003 - Francois Mikus
+
+# Version 1_5_44
+# 
+# Modified Defaults
+#  - Corrected lots of mixed case captions.
+#  - Added etherlike support, note that this is not used by genRtrConfig.
+#  - Added OIDs for more explicit QoS counters and descriptions.
+#    This feature is partially broken due to identical target names
+#    some platforms. Thanks to ? (I will add this when I find the mail)
+# Modified genRtrConfig
+#  - Standardized the handling of the --vlan option to include
+#    feature demotion/promotion as it should have been implemented
+#    first place. Thanks to Kevin Stewart for the heads up.
+#  - Mixed case description corrections.
+#  - Slot/Port mapping fix. (Thanks to Kevin Stewart)
+#  - Modified exceptions list. ('Channel','Tunnel','ge-','fe-','fxp')
+#  - Added package identifier Common:genRtrConfig to script
+
+14/11/2003 - Francois Mikus
+
+# Version 1_5_43
+# 
+# Modified Defaults
+#  - Added Device-Traffic pps statistics for forwarded and generated
+#    traffic in MIB-II cisco devices.
+#
+# Modified genRtrConfig
+#  - Added Device-Traffic targets for cisco based network equipment
+#    This could potentially be added to other devices that support the MIB-II OID.
+#  - Fixed a bug in the SAA code for devices that use the ftp SAA agents.
+#    This bug caused an exit on the genRtrConfig creation process leading to
+#    incomplete configurations.
+#  - Added global order support for all non-interface statistics
+
+06/11/2003 - Francois Mikus
+
+# Version 1_5_42 (Broken Release: SAA with FTP agents is Broken and exits the script)
+# 
+# Modified Defaults
+#  - Added definitions for Packeteer Class traffic shaping statistics 
+#    (Thanks to Kevin Stewart) Still have to add Graph definitions though.
+#
+# Modified genRtrConfig
+#  - Added Traffic Shaping Class statistics from Packeteer 
+#    (Thanks to Andrew Cutler and Kevin Stewart)
+#  - Added support for identifying the ACL related to a CCAR rate-limit
+#    on Cisco routers. (Thanks to Kevin Stewart)
+#  - Rendered the CCAR target names unique with the ACL name instead of using
+#    an incrementing counter. (Thanks to Kevin Stewart)
+#   
+
+05/11/2003 - Francois Mikus
+
+# Version 1_5_41 (Broken Release: SAA with FTP agents is Broken and exits the script)
+# 
+# Modified genRtrConfig
+#  - Bug fix for IOS routers that use SAA. This is a major bug that would cause
+#    the script to exit.
+#  - Minor text corrections and comments.
+#  - Added support for WS-X5530 CatOS supervisor modules to be recognized as
+#    IOS layer 3 modules.
+
+04/11/2003 - Francois Mikus
+
+# Version 1_5_40 (Broken Release: SAA is Broken and exits the script)
+# 
+# Modified genRtrConfig
+#  - Bug fix to support multiple CAR based inbound or outbound traffic shaping
+#    on the same interface. (thanks to Ed Ravin for pointing it out)
+#  - Added a more descriptive description of the interface on which CAR 
+#    traffic shaping rules are defined. (rate limit)
+#  - Added the actual IP address of the destination of the SAA agent
+#    defined on a router. (Thanks to Terje Bless for that one. I was stumped)
+#  - Added regex option /regex/i to discount case in exceptions to
+#    the DONTCOLLECT interface type list. So *someone* will be
+#    able to filter out his vLANs ;-) (Thanks to Ed Ravin)
+#    Added this information to the -h option output.
+
+03/11/2003 - Francois Mikus
+
+# Version 1_5_39
+# 
+# Modified Defaults
+#  - Added definitions for L2 Statistics
+#
+# Modified genRtrConfig
+#  - Added support for L2 Catalyst statistics. Not sure if it works though.
+
+
+03/11/2003 - Francois Mikus
+
+# Version 1_5_38
+# 
+# Modified genRtrConfig
+#  - Added a global variable opts{chassisinst} to be able to set
+#    any type of chassis inst mapping appropriate to the device being
+#    polled.
+#  - Added reference to map(cpu-stats) to be used with Chassis-PIX
+#    chassis targets. This should fix the bug with the invalid inst
+#    mapping with the PIX firewalls.
+
+08/10/2003 - Francois Mikus
+
+# Version 1_5_37
+# 
+# Modified Defaults
+#  - Added ifHCInOctets/ifHCOutOctets, ifInOctets/ifOutOctets, MIB-II definitions
+#    to the Defaults file. These come from the root Defaults file.
+#  - Added graph definitions for them the above from the root Defaults files.
+#  - Added default datasource definition as DERIVE from the root Defaults file.
+#  - Added interface mappings from the root Defaults file.
+#  - Added tempState definition. (From Ann Truxton)
+#  - Changed tempOutlet reference to the first temperature outlet instance.
+#    (Thanks to Ole Hansen for his perseverance!)
+
+08/10/2003 - Francois Mikus
+
+# Version 1_5_36
+# 
+# Modified genRtrConfig
+#   - Bug fix to the bug fix I just did. Syntax error. Doh.
+
+07/10/2003 - Francois Mikus
+
+# Version 1_5_35
+# 
+# Modified genRtrConfig
+#   - Bug fix for invalid slots numbers for some cisco equipment, 
+#     where value is -1. (Thanks to Florian Hinzmann)
+
+24/09/2003 - Francois Mikus
+
+# Version 1_5_34
+# 
+# Modified Defaults
+#   - Added support for Netscreen Firewalls, all fixed chassis based products.
+#
+# Modified genRtrConfig
+#   - Replaces all commas from target names, this fixes support for SuperStack swicthes from 3COM
+#   - Added support for Netscreen Firewalls, cpu, memory, attack recognition, # processes
+#     Attack recognition does not seem to send back data, I am still investigating, so consider
+#     that to be beta. The processes, cpu, memory and interface work correctly though.
+#   - Added support for the new C1200 Cisco Access Points (Thanks to Manny Gonzales)
+
+08/08/2003 - Francois Mikus
+
+# Version 1_5_33
+# 
+# Modified Defaults
+#    - Added Cisco PIX CPU recognition for PIX 6.2 and newer. Not tested against 6.3 yet. (Thanks to Joe Nave)
+#    - Added Cisco PIX no CPU for PIX 6.1 and older. (Thanks to Joe Nave)
+#    - Added missing release dates for earlier releases
+
+25/06/2003 - Francois Mikus
+
+# Version 1_5_32
+# 
+# Modified Defaults
+#    - Added missing definitions for 12K, 7500 VIP CPU Stats 
+#      (Thanks to Russell Heilling for the fixes)
+#
+# Modified genRtrConfig
+#    - Fixed redundant declaration of hashes for VIP CPU stats
+#    - Changed the name of the target-type for VIP CPU stats from cisco-cpu to cisco-vip-cpu
+#    - Fixed invalid pattern match for recognizing VIP CPU Stats
+#      (Thanks to Russell Heilling for the fixes)
+#
+
+23/06/2003 - Francois Mikus
+
+# Version 1_5_30-31
+# 
+# Modified genRtrConfig
+#    - Added Nortel Contivity vpn tunnel support. There is a fudge in the selection
+#      of the tunnel interface speed. It is currently statically assigned. Suggestions are
+#      welcome. (Thanks to Stephen Muir)
+#    - Added Cisco 12K, 75xx VIP CPU statistics (Thanks to ???, I can't find the email reference, sorry)
+#    - Minor display corrections at high debugging modes
+#    - Minor corrections to the --help information for examples on using --info option.
+#    - Minor display correction to rate-limit CAR grapher display
+#
+
+05/05/2003 - Francois Mikus
+
+# Version 1_5_29
+#
+#  Modified genRtrConfig
+#    - Added the Cisco Hardware serial numbers and chassis descriptions
+#    - Fixed instances where a pointer to an Array was returned for a reverse IP lookup
+#
+#    Note: Please be advised that SAA FTP sourceip option is generally broken
+#          in a lot of IOS versions. A lot of IOS versions are also broken in that
+#          the FTP agent will run for a while then hang, and the process cannot be reset
+#          unless you reboot. You need
+#          to run 12.2.13b or higher. Some versions of 12.1(xx) can successfully
+#          use the setting but they are pretty rare. ( 12.1(3)T , 12.2(13b), etc.) 
+#          Of course be careful upgrading to new IOS versions, there is always something broken...
+#
+
+16/04/2003 - Francois Mikus
+
+# Version 1_5_28
+#
+#  Modified genRtrConfig
+#    - Removed the refrence to Common::Log::setFormat('complete'); as this is not supported
+#      yet by the Cricket module Common::Log. ;-)
+#    - Added support for SAA FTP agents. The Defaults file has to be modified so that the
+#      graphs display the right information. (Scaling & comments)
+#
+
+15/04/2003 - Francois Mikus
+
+# Version 1_5_26-27
+#
+#  Defaults file
+#    - Now includes the Default file that was missing with version 1_5_23-25
+#  
+#  Modified genRtrConfig
+#    - Fixed mapping for Catalyst Switches portNames.. Finally getting there.
+#    - Now uses Cricket Log.pm with a default loglevel of 'warn'
+#    - Removed --verbose and --moreverbose options, replaced by --loglevel <level>
+#    - Requires a new version of Log.pm (For variable format logging)
+#    - Removed --ciscoint option (Replaced by --vendorint option)
+#    - Removed --pagergroup option (Replaced by --info option)
+#    - Added --info option. This is a generic option used to store
+#      arbitrary information in the Cricket config-tree
+#      Usage:
+#               --info "<key>:<value>"   (Quotes are optional)
+#      Example:
+#               --info "colour:blue"
+#
+#      target car
+#         colour = blue
+#
+
+03/04/2003 - Francois Mikus
+
+# Version 1_5_23-25
+#
+#  Defaults file
+#    - Now has support for ifName and mapping for Catalyst CatOS slot/port
+#  
+#  Modified genRtrConfig
+#    - Fixed Cisco Catalyst CatOS Support which was horribly broken..
+#      It will now collect chassis, and interface statistics
+#    - Added option map() statement which will be device specific
+#      currently only Catalyst CatOS devices will use the map(module-name)
+#      mapping.
+#      This should permit support of any device which has a single level
+#      of interface mapping or multiple levels or any other funky way of
+#      mapping interfaces.
+#    - Added a totaly arbitrary value called sortby which can be added
+#      to the config-tree for the device be created. This should be used
+#      in scripts that extend Crickets functionality.
+#    - Now supports order directive for all interfaces, so the interfaces
+#      should now appear in a nice easy to read decreasing order.
+#    - Fixed an issue with interfaces with 0 speed having the rrd-max set.
+#      This may cause problems to people using the rrd-max value with a negative
+#      rrd-min value. I will deal with the problem when it comes up. This should
+#      be considered a patch. genRtrConfig does not currently support negative
+#      values for rrd-min, nor does it accept or recognize dynamically the rrd-min.
+#      It is currently hardcoded at 0. So until we support negative values, there
+#      is no need to stretch our noodle.
+#    - Replaced tabs with 4 spaces
+#    - Removed trailing spaces
+#
+#  Modified the INSTALLATION notes
+#   - Added more detailed information in sections that were unclear
+#   - Corrected relations to files within the cricket config-tree
+
+24/02/2002 - Francois Mikus
+
+# Version 1_5_22
+#
+#  Modified genRtrConfig
+#    - Replaced CiscoCatalyst... OID with portName OID from the Catalyst MIB which contains
+#      the expected interface description.
+#    - Added logic to replace the ifDescr for CatOS Catalyst ports to a "portSLOT_PORT" format
+#      as the interface type is not very useful as a target name
+
+24/02/2002 - Francois Mikus
+
+# Version 1_5_21
+#
+#  Modified genRtrConfig
+#    - Fixed a typo in the interface processing loop
+#    - Added even more verbose processing information. Ugly in the code, but good enough
+#      for now. Have to move to Cricket type error/debug/wrning/info type system in the future.
+#      More likely for verion 2_x_x
+#    - Added a new sysDescr string to match against Juniper Routers. This replaces the placeholder
+#      that was put in at version 1_5_20. Should match different versions of the mXX series routers.
+#      More sysDescr OID output would be nice though.
+
+24/02/2002 - Francois Mikus
+
+# Version 1_5_20
+#
+#  Modified genRtrConfig
+#   - Added option -p or --ports to permit slot/port based exclusion lists. If the devices
+#     Slot/Port mapping is supported, it will be matched against the comma delimited quoted
+#     list provided by the user. 
+#   - Added background code to support Slot/Port mapping on IOS and CatOS devices.
+#   - Corrected Kevin Stewart's name in the documentation. doh.
+
+
+24/02/2002 - Francois Mikus
+
+# Version 1_5_19
+#
+#  Modified genRtrConfig
+#   - Added option -n or --nodns to disable DNS Instance Address Mapping (Thanks to Kevin Stewart)
+#   - Added DNS Resolution of router names to IP Adresses for informational purposes
+#     this information is to be displayed in the web interface and included in the config-tree
+#     under the chassis target ip => ip
+#   - Added support for Cisco SAA RTR Agents for HTTP queries. These are automatically collected
+#     Please note that a new config-tree is required.
+#   - Fixed instance problem when no unique description is available for an interface.
+#     Current method was totally useless. It now bases itself on the ifIndex number itself
+#     to come up with a unique target name. See example with an Altiga VPN concentrator for
+#     those that have such a device.
+#   - Added support for Juniper MPLS Statistics (Thanks to Kevin Stewart)
+#   - Added support for Cisco CAR Shaping Statistics (Thanks to Kevin Stewart)
+#
+#  Modified Defaults Config-Tree
+#   - Added support for Cisco SAA RTR Agents using HTTP
+#   - Added support for Juniper MPLS Statistics (Thanks to Kevin Stewart)
+#   - Added support for Cisco CAR Shaping Statistics (Thanks to Kevin Stewart)
+#
+#  Modified the INSTALLATION notes
+#   - Corrected some deprecated information for hard coded instances
+#   - Added more detailed information in sections that were unclear
+
+
+30/12/2002 - Francois Mikus
+
+# Version 1_5_17-18
+#
+#  Modified genRtrConfig
+#   - Added logic to avoid empty dialpeer directories (Thanks to Andrew Cutler)
+#   - Added "order" directive to the chassis target to make sure it will always
+#     be the first target displayed in the web interface 
+#   - Added logic to automatically determine if ISL and 802.1Q sub-interface
+#     stats are supported based on IOS version and other vendor versions. 
+#     (Thanks to Andrew Cutler)
+#   - Included recognition of ISL sub-interfaces in the interface processing
+#     loop. (Andrew Cutler)
+#   - Added logic to strip out the .0 sub-interface of an ATM interface,
+#     as well as Virtual-Templates and Virtual-Access interfaces that are
+#     not used to carry traffic. (Andrew Cutler)
+#   - Fine tuned support for ifAlias for IOS versions greater or equal than 11.1
+#     instead of 11.2. (Andrew Cutler)
+#   - Modified the vlan processing logic to use the EXCEPTIONS list if --vlans
+#     is used.
+#   - Comments here and there..
+#
+#   - Modified how options are stored within genRtrConfig. They are now
+#     contained in a global hash called %opts. All internal global variables
+#     will now be stored within this hash. This will also facilitate passing
+#     by reference options to external modules for device specific processing.
+#
+#     Old way:                 $framestats
+#     New way:                 $opts{framestats}
+#     From an external module: $opts->{framestats}
+#
+#   - Added a version subroutine version() that displays the genRtrConfig version information.
+#   - Moved initial snmp contact to the subroutine contact()
+#   - Consolidated some variable declarations ($file, $router, $snmp..)
+#     Variables that were declared in the early part of the script.
+#
+#   Note: Always place the variable that will be receiving output from snmpUtil function
+#         between (). Or else it will store the return value of 0(failure) or 1(success).
+
+15/12/2002 - Francois Mikus
+
+# Version 1_5_16
+#
+#  Modified genRtrConfig
+#   - Fixed undefined statements when the description is not set. 
+#     (Thanks to Manny Gonzales for identifying this one)
+#
+
+15/12/2002 - Francois Mikus
+
+# Version 1_5_15
+#
+# Modified genRtrConfig
+#  - Commented the changes I said I put in genRtrConfig_1_5_14. Totally my fault. Doh.
+#    This the logic for treating the snmpv2c support I touted...
+#  - Added a bypass for frame-relay sub-interfaces that do not have an mtu set.
+#  - Added automatic detection of ifAlias *or* ifName for generic devices.
+
+09/12/2002 - Francois Mikus
+
+# Version 1_5_13-14 (snmpv2c support fixed for good and enhanced)
+#
+# Modified Defaults
+#  - Added pix connections and memory operational block count
+#  - Added Foundry specific support for chassis and interfaces *this should be tested*
+#    (Thanks to John Deatherage)
+#
+# Modified genRtrConfig
+#  - Activated interface type 53, virtual interfaces
+#    exeception is vlans which are only activated if --vlans is specified
+#  - Added some comments for snmpv2 interface logic
+#  - Removed the --default-- logic for snmpv2c support
+#    Which I now remember why I removed, which is *only*
+#    query interfaces that require snmpv2c, for the rest use v1
+#    as version 1 will be better supported across the range of products.
+#    I replaced that logic with the one below..
+#  - Added a logic test for snmpv2c counter support for interfaces.
+#  - snmpv2c activation logic is now set to:
+#      - Global snmpv2c $usev2c variable is non-zero
+#      - A value is defined in the HC hash
+#      - A non-zero value for the interface in the hash
+#      - An interface speed of > 100Mbits
+#    So if the test is successful, the interface will use a targetType
+#    support HC counters and it will have an snmp-version '2c' tag in
+#    the interface definition. Better support across the board and
+#    more robust. :-)
+#    (Thanks to Andrew Cutler for good feedback)
+#
+#    This is some of the most advanced snmpv2c detection available
+# 
+#  - Added a logic test for Generic Devices to see if they support MIB-II
+#    ifAlias interface descriptions.
+
+07/12/2002 - Francois Mikus
+
+# Version 1_5_12 (back to imperfect snmpv2c support)
+#
+# Modified genRtrConfig
+#  - Fixed an undefined error when calling genRtrConfig with no arguments
+#  - Added a missing condition for smpv2c in the --default-- section
+#    This should really fix the broken snmpv2c support which has 
+#    been broken since 1_5_3.
+
+06/12/2002 - Francois Mikus
+
+# Version 1_5_11 (snmpv2c still broken)
+#
+# Modified genRtrConfig
+#  - Fixed an undefined error when calling genRtrConfig with no arguments
+#  - MAJOR BUG fixed, snmpv2c has been broken since genRtrConfig_1_5_3
+#    a error in a variable name was causing all the trouble. Thank you once
+#    again to Manny Gonzales for noticing the broken-ness.
+
+03/12/2002 - Francois Mikus
+
+# Version 1_5_9-10 (snmpv2c broken)
+
+# Modified Defaults
+#  - Added pixConnections OID
+#  - Removed Cisco-Unknown-Router targetType
+# 
+# Modified genRtrConfig
+#  - Fixed support for Cisco Serial interfaces that use time division with Frame-Relay interfaces
+#  - Activated support for Cisco PIX connection statistics
+#  - Fixed a logic bug for snmp queries that do not support SNMPv2c & that have a bad community
+#    It would go on to try and create a config with nothing.. Now it exits cleanly with an error message.
+#    sysObjectID contains 0 when the snmp community is invalid contrary to nothing when there is no response.
+#  - Added CatOS Catalyst support for named interfaces
+#    
+
+02/12/2002 - Francois Mikus
+
+# Version 1_5_7-8  (snmpv2c broken)
+
+# Modified Defaults
+#   - Added Cisco-1700-Router definition (same-as 1600)
+#
+# Modified genRtrConfig
+#   - Reorganisation of target processing (much more streamlined)
+#   - Reorganisation of default interface types
+#   - Support for interface classification with all types of interfaces (cisco or standard or other)
+#   - Fixed the collection on empty target types, Manny should be happy with this one. :-) No more error messages for targets with no known ds's.
+#   - Preparation work to integrate foundry recognition (Not active yet)
+#   - Preperation work for Cisco-pix-connection statistics (Not active yet)
+#   - Removal of --ciscoint for more generic --vendorint (--ciscoint will still be supported for a while)
+#   - Removal of --nodefault option. It is now always applied in the new
+#     interface processing logic.
+#   - Removed the Cisco-Unknown-Router target type. It was redundant.
+#   
+#   - Fixed Frame-Relay collection logic. The main interface was never
+#     being collected as a full interface. It was always showing up as
+#     a sub-interface. It will now be collected correctly.
+#     (Thanks to Joe Nave for his help in troubleshooting and debugging)
+
+
+27/11/2002 - Francois Mikus
+
+# Version 1_5_6  (snmpv2c broken)
+
+# Modified Defaults
+#   - Added for support of Cisco-Generic-Router, which is are allowed(in genRtrConfig) to use snmpv2c.
+#     Contrary to the Cisco-Unknown-Router targetType.
+#
+# Modified genRtrConfig
+#
+#   - Some debug information that was destined for -vv option was leaking in the general
+#     output. This has been fixed. Additional debug should only happen when requested.
+#   - Small logic bits with -vv options were touched up.
+#   - Added recognition of RSP, L1010, C5RSM Cat IOS Routing Module. (Manny Gonzales)
+#     No specific OIDs were added for these devices, only difference is that now they can
+#     get queried using snmpv2c (if the IOS version supports it)
+
+26/11/2002 - Francois Mikus
+
+# Version 1_5_5  (snmpv2c broken)
+
+# Modified the Defaults
+#   - Added Wireless Bridge Association stats for Cisco Wireless bridges
+# Modified genRtrConfig
+#   - Added the -vv & --moreverbose options for enhanced verbose output.
+#   - Added Wireless Bridge Associations for Cisco Wireless devices (Manny Gonzales)
+#   - Added -m in addition to --monitors option
+#   - Added -r in addition to --rtragents option
+#   Internal code variable names for abstraction for generic vendor support
+
+21/11/2002 - Francois Mikus
+
+# Version 1_5_4  (snmpv2c broken)
+
+# Modified the Defaults
+#   - Added support for Generic-Device targetType in the Defaults (Manny Gonzales)
+# Modified genRtrConfig
+#   - Fixed support of --ciscoint MIB data which was being collected even when not asked for
+#   - Removed the rra definitions for Cisco-7200-Router targetType (Thanks Manny)
+#     This was causing some chassis collections to fail for those targetTypes (Thanks again Manny)
+#   - More fun with Access Points, they *really* only support basic interfaces and a generic chassis
+#     all advanced stuff is not promoted, wireless stats are as always ok. 
+#   - Renamed chassitype variable to chassisname which is more exact in the sense
+#     that this will be the actual name of the target "Chassis" in the targets file.
+#
+# Sorry for the shoddy QA on that release.. It was bound to screw up with all the changes.
+
+20/11/2002 - Francois Mikus
+
+# genRtrConfig_1_5_3 
+
+# New in this version:
+# (A lot of stuff been updated, if you develop stuff with genRtrConfig
+# or would like to implement new features. Please upgrade to this code base.)
+# 
+# Major re-organisation of the code
+#   - MUCH more generic processing of devices
+#   - Cleaner comment structure
+#   - More comments!!!
+#   - Streamlined writetargets loop (removed device specific code)
+#   - MAJOR change in processing logic for device identification
+#   - Much more modular and generic approach for device and feature support
+#   - Leftover code and deadwood was removed from all over the place
+# 
+# Information of Note
+#   - Chassis stats are enabled by default. Removed --chassis option
+#   - Typos and minor comments were corrected
+#   - Wireless bridge collection is now treated as a generic device with cisco interface stats
+#     (if requested of course) until further notice.
+# 
+# New code feature
+#   - Argument promotion
+#     If a feature is requested such as "--framestats". It will only be activated
+#     if the request "$req_framestats" is promoted by a device which supports it.
+#     Then, and only then is the feature activated.
+#     I am really proud of this feature, it makes it much easier to control what devices
+#     support which user configured features. :-)
+#
+# Minor update to the INSTALLATION.genRtrConfig file. 
+#   - Typos and comments
+
+18/11/2002 - Francois Mikus
+
+# genRtrConfig_1_5_2
+
+# Added default logic to skip interfaces that are named starting with VLAN... 
+# On my previous fix attempt, I was completly off-track, I still think
+# iftype 53 should not be collected, but hey!)
+# Added even more robust detection logic for Wireless Access Points and bridges
+#   (Not sure about the stats for the bridge though. Feedback would be nice.)
+# Changed the file permissions for the distribution. More restrictive.
+
+14/11/2002 - Francois Mikus
+
+# genRtrConfig_1_5_1
+
+# Corrected an instance omission for vpn and wireless statistics
+# Added more robust recognition for Aironet Access Points
+# Documentation note: VLANs are not collected by genRtrConfig (Remove entry 53 from the DONTCOLLECT list if
+# you really want it)
+
+12/11/2002 - Francois Mikus
+
+# genRtrConfig_1_5_0
+
+# Officially Re-Released new version of genRtrConfig to Cricket community
+#   - Now has it's own web site http://www.acktomic.com/cricket/cricket-genRtrConfig.htm
+#   - Announced on cricket-users and cricket-developpers 
+
+12/11/2002 - Francois Mikus
+
+# Added support for Cisco-Aironet Wireless Access Points 
+#      (Thank the guys from UWM, Daniel Poulsen and friends for OIDs and Default file)
+# Integrated in genRtrConfig Altiga vpn 3000 series Gateways
+# Added generic Chassis support for non-cisco devices (Used for storing general values)
+# Removed --core option from genRtrConfig, still too experimental
+# Cleaned up and commented the Default config-tree associated with genRtrConfig
+
+08/10/2002 - Francois Mikus
+
+# Added support for Cisco-2950 IOS switches
+# Added basic support within the config tree for Cisco Altiga VPN gateway. 
+
+
+24/07/2002 - Francois Mikus
+
+# Added support for Cisco Service Assurance Agents (SAA or RTR) of round-trip-type using the rtragents option
+#    This requires additionnal target types to be defined in the cisco-routers config-tree
+#
+# Bug fix for basic PIX recognition and support (The PIX regex was faulty)
+#
+# A new config-tree definition for cisco-routers/Defaults is required to use the new fonctionality
+#       Adds new target types, definitions, OIDs, datasources, graph specifics
+#
+
+30/05/2002 - Francois Mikus
+
+# Adaptation of rules to identify and treat Ethernet 802.1Q interfaces as sub-interfaces
+# Adaptation of rules to identify and treat Ethernet ISL interfaces as sub-interfaces
+# Adaptation of rules to indetify and treat ATM non-ILMI PVCs interfaces as sub-interfaces
+# Modification of exclusion list for ATM sub-interfaces and ISDN dummy interfaces
+# Added support for monitor threshold support directly from the commandline using --monitors
+#    Added hooks to read in a file "monitorConfig" with monitor thresholds and apply them based on interface types
+#    Added rules to treat monitor thresholds for core, access, accessuser interfaces along with HC and non-HC counters
+#    Added logic to apply the monitor thresholds during writing out of the configuration file
+#    Added new --core, --access, --accessuser options for applying interface types
+#    Added a --nodef option to force a full write out of interface types in the targets files instead of relying on the default entry. This is necessary to apply monitor thresholds to standard interfaces
+# Added a calculation for converting the max interface speed to max-octets to the config-tree for each interface
+# Added support for 1600, 2500, 3000, 4500 routers and terminal servers
+# Added the router name in the display-name variable of the config-tree
+# Resetting framestats option if IOS version is lesser or equal to 11.2
+# Added more resilience to the intial OID detection process
+#    Ex: Will now process correctly in or out interface stats for Cisco PIX devices
+# Added intelligence in determining what routers support correctly SNMP V2c HC counters based on router type
+#
+# Added support for Holt-Winter algorithm on specific router types and interface types
+#
+# A new config-tree definition for cisco-routers/Defaults is required to use the new fonctionality
+#    Adds new target types, definitions, OIDs, datasources, graph specifics
+#
+
+
+24/01/2002 - Mike Fisher
+      * Version 1.4 posted to SourceForge
+
+14/01/2002 - Mike Fisher
+      - Clean up source and documentation for release.
+
+13/08/01 - Mike Fisher
+      -	Add SNMP V2c support.  Requires SNMP_Session 1.77 or up for Cricket.
+      -	Use high capacity octet counters where available when SNMP V2c is
+	specified.	
+
+24/05/01 - Mike Fisher
+      - Added -e and -d to give access to @EXCEPTIONS and @DONTCOLLECT lists
+	without having to modify code.
+      - Added -l flag to force directories to lowercase for use with mtargets
+	in Cricket 1.02 and earlier.      
+
+01/11/00 - Mike Fisher
+      -	Added @EXCEPTIONS to override @DONTCOLLECT in case of buggy IOS.
+	(Dean Carpenter)
+      -	Added 'ATM Sub Interface' and 'BGP Policy Accounting' to the
+	@DONTCOLLECT list.  (Kevin Stewart)
+
+11/09/00 - Mike Fisher
+      -	Minor changes to better deal with Catalyst 2600XL and 3500XL switches.
+      -	Added -nounused flag. (Rodrigo Curado)
+
+26/07/00 - Mike Fisher
+      - Added extended error stats for Cisco interfaces. (Bert Driehuis)
+      - Added support for frame relay stats on sub interfaces.
+      - Added support for experimental VoIP dail peer stats.
+      - Rearranged main config generator loop for readability.
+
+03/04/00 - Mike Fisher
+      * Version 1.2
+
+21/03/00 - Mike Fisher
+      - Misc bug fixes.  Reroll for release.
+
+09/03/00 - Mike Fisher
+      * Version 1.0
+	Based on MRTG 2.8.8 cfgmaker by Tobias Oetiker 
+	and Cricket 0.71 listInterface by Jeff Allen

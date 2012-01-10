@@ -1,0 +1,73 @@
+Thanks to Tobias Oetiker, the author of RRD, for his very useful tool.
+Without RRD, Cricket would be useless.
+
+The genDevConfig script is based on the hard work of:
+
+  * MRTG 2.8.8 cfgmaker by Tobias Oetiker 
+  * Cricket 0.71 listInterface by Jeff Allen
+  * genRtrConfig 1.4 by Mike Fisher
+  * genCatConfig 1.4 by Mike Fisher
+  * CHIRP 1.0 by ???
+
+It was initially developped and integrated by Mike Fisher, who released the
+first public version of genRtrConfig on sourceforge (version 1.4).
+
+The script was further developed under the genRtrConfig name by
+Francois Mikus. As the script evolved the name was changed to genDevConfig
+to reflect the new scope and mechanics.
+
+This script would not be where it is right now without the involvement of
+these fine people, in no particular order.
+
+Terje Bless 
+- Ideas, QA, patches, cvs magic.
+Mike Fisher 
+- Ideas, patches and all the rest!
+Jake Brutlag 
+- Help with Holt-Winter support.
+Joe Nave
+- QA
+Andrew Cutler, andrewc at-the-domain xtra . co . nz
+- Ideas, QA, patches, and more patches.
+John Deatherage
+- Patches
+Kevin Stewart
+- QA, patches
+Stephen Muir
+- Fix
+Russell Heilling
+- QA, patches
+Manny Gonzales
+- QA, patches
+Florian Hinzmann
+- QA
+Ann Truxton
+- Fix
+Ole Hansen
+- Fix
+Dave Rynne, dave at-the-domain esat.net
+- Fix
+Sergey Eremenko, s.eremenko at-the-domain rtcomm-yug . ru
+- Patch
+Karl Carsten, ckarl at-the-domain mpi-sb . mpg . de
+- Patches
+Cougar, cougar at-the-domain random . ee
+- Ideas, patches
+Huw Lynch, huw_lynch at-the-domain yahoo . com
+- QA, patches, CiscoCSS cricket module
+Ed Ravin, eravin at-the-domain panix . com
+- QA 
+Stanislav Sinyagin, ssinyagin at-the-domain yahoo . com
+- Ideas
+Bruno Clermont, bruno at-the-domain gnome . ca
+- Ideas, complaints and being a pest about things that don't work.
+Michael H. Lambert, lambert at-the-domain psc . edu
+- Patches
+Alan Edmonds, alan . edmonds at-the-domain t-mobile . net
+- Patches
+Scott Nolin, scottn at-the-domain ssec . wisc . edu
+- Cricket template for Sensatronics EM1
+Ray Burkholder, rburkholder at-the-domain oneunifieed . net
+- Ideas, patches
+If you have been forgotten, please send me a note. fmikus at-the-domain acktomic . com
+

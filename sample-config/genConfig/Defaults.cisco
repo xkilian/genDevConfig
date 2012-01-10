@@ -1,0 +1,1783 @@
+# Generic network device sub-tree defaults - for use with genDevConfig
+#
+#
+# This file is formated with a tab width of 4.
+#
+###############################################################################
+# If you're using this version of genDevConfig with Cricket 1.02 or earlier
+# you will need SNMP_Session 0.77 or later, or a new version of Net_SNMP.
+###############################################################################
+#
+# For additional information on the features and use of genDevConfig consult
+# http://www.acktomic.com/cricket/cricket.htm or see the help provided on the
+# command-line in your distribution of genDevConfig.
+#
+#
+###############################################################################
+
+
+# OID's we'll be using in this tree
+OID		cpu1min					1.3.6.1.4.1.9.2.1.57.0
+OID		cpu5min					1.3.6.1.4.1.9.2.1.58.0
+OID		tempInlet				1.3.6.1.4.1.9.9.13.1.3.1.3.1
+OID		tempOutlet				1.3.6.1.4.1.9.9.13.1.3.1.3.2
+OID		tempState				1.3.6.1.4.1.9.9.13.1.3.1.6.1
+OID		mem5minUsed				1.3.6.1.4.1.9.9.48.1.1.1.5.1
+OID		mem5minFree				1.3.6.1.4.1.9.9.48.1.1.1.6.1
+OID		processorRam			1.3.6.1.4.1.9.3.6.6.0
+OID		locIfInRunts    		1.3.6.1.4.1.9.2.2.1.1.10
+OID		locIfInGiants   		1.3.6.1.4.1.9.2.2.1.1.11
+OID		locIfInCRC      		1.3.6.1.4.1.9.2.2.1.1.12
+OID		locIfInFrame    		1.3.6.1.4.1.9.2.2.1.1.13
+OID		locIfInOverrun  		1.3.6.1.4.1.9.2.2.1.1.14
+OID		locIfInIgnored  		1.3.6.1.4.1.9.2.2.1.1.15
+OID		locIfInAbort    		1.3.6.1.4.1.9.2.2.1.1.16
+OID		locIfResets     		1.3.6.1.4.1.9.2.2.1.1.17
+OID		locIfCarTrans  			1.3.6.1.4.1.9.2.2.1.1.21
+OID		locIfCollisions 		1.3.6.1.4.1.9.2.2.1.1.25
+OID		locIfInputQueueDrops	1.3.6.1.4.1.9.2.2.1.1.26
+OID		locIfOutputQueueDrops	1.3.6.1.4.1.9.2.2.1.1.27
+OID		frCircuitReceivedFECNs	1.3.6.1.2.1.10.32.2.1.4
+OID		frCircuitReceivedBECNs	1.3.6.1.2.1.10.32.2.1.5
+OID		frCircuitSentOctets		1.3.6.1.2.1.10.32.2.1.7
+OID		frCircuitReceivedOctets	1.3.6.1.2.1.10.32.2.1.9
+
+OID		dialCtlPeerStatsConnectTime       1.3.6.1.2.1.10.21.1.2.2.1.1
+OID		dialCtlPeerStatsChargedUnits      1.3.6.1.2.1.10.21.1.2.2.1.2
+OID		dialCtlPeerStatsSuccessCalls      1.3.6.1.2.1.10.21.1.2.2.1.3
+OID		dialCtlPeerStatsFailCalls         1.3.6.1.2.1.10.21.1.2.2.1.4
+OID		dialCtlPeerStatsAcceptCalls       1.3.6.1.2.1.10.21.1.2.2.1.5
+OID		dialCtlPeerStatsRefuseCalls       1.3.6.1.2.1.10.21.1.2.2.1.6
+
+# OIDS For RTT RTRMON MIB which is used for point-to-point round-trip-time testing
+# This is also the mib that will permit us to validate if path through a specific
+# carrier is operational or not.
+
+OID     rttMonLatestRttOperCompletionTime     1.3.6.1.4.1.9.9.42.1.2.10.1.1
+OID     rttMonLatestRttOperSense              1.3.6.1.4.1.9.9.42.1.2.10.1.2
+OID     rttMonLatestHTTPOperRTT               1.3.6.1.4.1.9.9.42.1.5.1.1.1
+OID     rttMonLatestHTTPOperDNSRTT            1.3.6.1.4.1.9.9.42.1.5.1.1.2
+OID     rttMonLatestHTTPOperTCPConnectRTT     1.3.6.1.4.1.9.9.42.1.5.1.1.3
+OID     rttMonLatestHTTPOperTransactionRTT    1.3.6.1.4.1.9.9.42.1.5.1.1.4
+OID     rttMonLatestHTTPOperSense             1.3.6.1.4.1.9.9.42.1.5.1.1.6
+OID     rttMonLatestJitterOperMOS             1.3.6.1.4.1.9.9.42.1.5.2.1.42
+OID     rttMonLatestJitterOperICPI           1.3.6.1.4.1.9.9.42.1.5.2.1.43
+OID     rttMonLatestJitterOperRTTMin          1.3.6.1.4.1.9.9.42.1.5.2.1.4
+OID     rttMonLatestJitterOperRTTMax          1.3.6.1.4.1.9.9.42.1.5.2.1.5
+OID     rttMonLatestJitterOperPacketLossSD    1.3.6.1.4.1.9.9.42.1.5.2.1.26
+OID     rttMonLatestJitterOperPacketLossDS    1.3.6.1.4.1.9.9.42.1.5.2.1.27
+OID     rttMonLatestJitterOperPacketOutOfSequence 1.3.6.1.4.1.9.9.42.1.5.2.1.28
+OID     rttMonLatestJitterOperPacketMIA       1.3.6.1.4.1.9.9.42.1.5.2.1.29
+OID     rttMonLatestJitterOperPacketLateArrival 1.3.6.1.4.1.9.9.42.1.5.2.1.30
+#These aren't in the Cisco MIB yet (Ray Burkholder made up the names)
+OID     rttMonLatestJitterOperAvgJitter       1.3.6.1.4.1.9.9.42.1.5.2.1.46
+OID     rttMonLatestJitterOperAvgJitterSD     1.3.6.1.4.1.9.9.42.1.5.2.1.47
+OID     rttMonLatestJitterOperAvgJitterDS     1.3.6.1.4.1.9.9.42.1.5.2.1.48
+OID     rttMonLatestJitterOperAvgJitterOWSD   1.3.6.1.4.1.9.9.42.1.5.2.1.49
+OID     rttMonLatestJitterOperAvgJitterOWDS   1.3.6.1.4.1.9.9.42.1.5.2.1.50
+
+# OIDS For Altiga VPN Concentrators 3030 3060
+
+OID     vpnCPUtemp                        1.3.6.1.4.1.3076.2.1.2.22.1.29
+OID     vpnCagetemp                       1.3.6.1.4.1.3076.2.1.2.22.1.33
+OID     vpnCPUutil                        1.3.6.1.4.1.3076.2.1.2.25.1.2
+OID     vpnActivePhase1ipSecSessions      1.3.6.1.4.1.9.9.171.1.2.1.1
+#OID     alActiveSessionCount             1.3.6.1.4.1.3076.2.1.2.17.1.1
+OID     alTotalSessionCount               1.3.6.1.4.1.3076.2.1.2.17.1.2
+OID     alActiveLanToLanSessionCount      1.3.6.1.4.1.3076.2.1.2.17.1.7
+OID     alActiveManagementSessionCount    1.3.6.1.4.1.3076.2.1.2.17.1.8
+OID     alActiveRemoteAccessSessionCount  1.3.6.1.4.1.3076.2.1.2.17.1.9
+OID     alActiveSessionMaxUsers           1.3.6.1.4.1.3076.2.1.2.17.1.4
+OID     alPptpStatsTotalSessions          1.3.6.1.4.1.3076.2.1.2.3.1.8
+
+
+### OIDS For Aironet Wireless Access Point
+
+OID     ClientsAssociated                   1.3.6.1.4.1.522.3.12.1.8
+OID     ClientsTotal                        1.3.6.1.4.1.522.3.12.1.7
+OID     APCount                             1.3.6.1.4.1.522.3.12.1.13
+OID     awcFtBridge                         1.3.6.1.4.1.522.3.12.1.9
+OID     awcFtBridgeSelf                     1.3.6.1.4.1.522.3.12.1.10
+
+### OIDS For PIX firewalls global firewall connections
+
+OID     pixConnections                      1.3.6.1.4.1.9.9.147.1.2.2.2.1.5.40.6
+OID     aByteBlocksFree                     1.3.6.1.4.1.9.9.147.1.2.2.1.1.4.4.8
+OID     bByteBlocksFree                     1.3.6.1.4.1.9.9.147.1.2.2.1.1.4.80.8
+OID     cByteBlocksFree                     1.3.6.1.4.1.9.9.147.1.2.2.1.1.4.256.8
+OID     dByteBlocksFree                     1.3.6.1.4.1.9.9.147.1.2.2.1.1.4.1550.8
+#OID     eByteBlocksFree                     1.3.6.1.4.1.9.9.147.1.2.2.1.1.4.2560.8
+
+### OIDS For traffic shaping using CAR on Cisco IOS Routers
+
+OID	    ccarStatSwitchedPkts 		1.3.6.1.4.1.9.9.113.1.2.1.1.1
+OID	    ccarStatSwitchedBytes 		1.3.6.1.4.1.9.9.113.1.2.1.1.2
+OID	    ccarStatFilteredPkts 		1.3.6.1.4.1.9.9.113.1.2.1.1.3
+OID	    ccarStatFilteredBytes 		1.3.6.1.4.1.9.9.113.1.2.1.1.4
+
+### OIDS For traffic shaping using CAR on Cisco IOS Routers
+
+OID     cbQosCMPrePolicyByte        1.3.6.1.4.1.9.9.166.1.15.1.1.5
+OID     cbQosCMPrePolicyByte64      1.3.6.1.4.1.9.9.166.1.15.1.1.6
+OID     cbQosCMPostPolicyByte       1.3.6.1.4.1.9.9.166.1.15.1.1.9
+OID     cbQosCMPostPolicyByte64     1.3.6.1.4.1.9.9.166.1.15.1.1.10
+OID     cbQosCMPrePolicyPkt         1.3.6.1.4.1.9.9.166.1.15.1.1.2
+OID     cbQosCMPrePolicyPkt64       1.3.6.1.4.1.9.9.166.1.15.1.1.3
+OID     cbQosCMDropPkt              1.3.6.1.4.1.9.9.166.1.15.1.1.13
+OID     cbQosCMDropPkt64            1.3.6.1.4.1.9.9.166.1.15.1.1.14
+OID     cbQosCMDropByte             1.3.6.1.4.1.9.9.166.1.15.1.1.16
+OID     cbQosCMDropByte64           1.3.6.1.4.1.9.9.166.1.15.1.1.17
+
+# These are from the Cisco Catalyst MIB
+
+OID     entSensorValue              1.3.6.1.4.1.9.9.91.1.1.1.1.4
+OID     sysTraffic                  1.3.6.1.4.1.9.5.1.1.8.0
+OID     chassisPs1Status            1.3.6.1.4.1.9.5.1.2.4.0
+OID     chassisPs2Status            1.3.6.1.4.1.9.5.1.2.7.0
+OID     chassisFanStatus            1.3.6.1.4.1.9.5.1.2.9.0
+OID     chassisTempAlarm            1.3.6.1.4.1.9.5.1.2.13.0
+
+OID     bandwidthUsageCurrent       1.3.6.1.4.1.437.1.1.3.7.1.0
+OID     bandwidthUsagePeak          1.3.6.1.4.1.437.1.1.3.7.6.1.3.1
+OID     sysInfoUtilDisplay          1.3.6.1.4.1.437.1.1.3.1.9.0
+
+# Cisco Chassis & PIX CPU information
+
+OID     ciscoMemoryPoolName         1.3.6.1.4.1.9.9.48.1.1.1.2
+OID     ciscoMemoryPoolUsed         1.3.6.1.4.1.9.9.48.1.1.1.5
+OID     ciscoMemoryPoolFree         1.3.6.1.4.1.9.9.48.1.1.1.6
+
+OID     cpmCPUTotalPhysicalIndex    1.3.6.1.4.1.9.9.109.1.1.1.1.2
+OID     cpmCPUTotal1min             1.3.6.1.4.1.9.9.109.1.1.1.1.4
+OID     cpmCPUTotal5min             1.3.6.1.4.1.9.9.109.1.1.1.1.5
+OID     cpmCPUTotal1minRev          1.3.6.1.4.1.9.9.109.1.1.1.1.7
+OID     cpmCPUTotal5minRev          1.3.6.1.4.1.9.9.109.1.1.1.1.8
+
+
+
+###############################################################################
+#
+# Datasources define the type of data and the period of the data retrieved
+#
+#
+###############################################################################
+
+datasource	cpu1min		
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/cpu1min
+datasource	cpu5min		
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/cpu5min
+datasource	tempInlet	
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/tempInlet
+datasource	tempOutlet	
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/tempOutlet
+datasource	tempState	
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/tempState
+datasource	mem5minUsed	
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/mem5minUsed
+datasource	mem5minFree	
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/mem5minFree
+datasource	processorRam
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/processorRam
+
+datasource	locIfInRunts
+	ds-source	=	snmp://%snmp%/locIfInRunts.%inst%
+datasource	locIfInGiants
+	ds-source 	=	snmp://%snmp%/locIfInGiants.%inst%
+datasource	locIfInCRC
+	ds-source 	=	snmp://%snmp%/locIfInCRC.%inst%
+datasource	locIfInFrame
+	ds-source 	=	snmp://%snmp%/locIfInFrame.%inst%
+datasource	locIfInOverrun
+	ds-source 	=	snmp://%snmp%/locIfInOverrun.%inst%
+datasource	locIfInIgnored
+	ds-source 	=	snmp://%snmp%/locIfInIgnored.%inst%
+datasource	locIfInAbort
+	ds-source 	=	snmp://%snmp%/locIfInAbort.%inst%
+datasource	locIfResets
+	ds-source 	=	snmp://%snmp%/locIfResets.%inst%
+datasource	locIfCarTrans
+	ds-source 	=	snmp://%snmp%/locIfCarTrans.%inst%
+datasource	locIfCollisions
+	ds-source 	=	snmp://%snmp%/locIfCollisions.%inst%
+datasource	locIfInputQueueDrops
+	ds-source 	=	snmp://%snmp%/locIfInputQueueDrops.%inst%
+datasource	locIfOutputQueueDrops
+	ds-source 	=	snmp://%snmp%/locIfOutputQueueDrops.%inst%
+
+datasource	frCircuitReceivedFECNs
+	ds-source	=	snmp://%snmp%/frCircuitReceivedFECNs.%inst%.%dlci%
+datasource	frCircuitReceivedBECNs
+	ds-source	=	snmp://%snmp%/frCircuitReceivedBECNs.%inst%.%dlci%
+datasource	frCircuitSentOctets
+	ds-source	=	snmp://%snmp%/frCircuitSentOctets.%inst%.%dlci%
+datasource	frCircuitReceivedOctets
+	ds-source	=	snmp://%snmp%/frCircuitReceivedOctets.%inst%.%dlci%
+
+datasource	dialCtlPeerStatsConnectTime	
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsConnectTime.%peer-id%.%inst%
+datasource	dialCtlPeerStatsChargedUnits	
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsChargedUnits.%peer-id%.%inst%
+datasource	dialCtlPeerStatsSuccessCalls	
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsSuccessCalls.%peer-id%.%inst%
+datasource	dialCtlPeerStatsFailCalls	
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsFailCalls.%peer-id%.%inst%
+datasource	dialCtlPeerStatsAcceptCalls	
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsAcceptCalls.%peer-id%.%inst%
+datasource	dialCtlPeerStatsRefuseCalls
+	ds-source	=	snmp://%snmp%/dialCtlPeerStatsRefuseCalls.%peer-id%.%inst%
+
+# Round-Trip-Time counters for last value and last operational code (ok or not)
+
+datasource   rttMonLatestFtpRttOperCompletionTime
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestRttOperCompletionTime.%inst%
+datasource   rttMonLatestRttOperCompletionTime
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestRttOperCompletionTime.%inst%
+datasource   rttMonLatestRttOperSense
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestRttOperSense.%inst%
+datasource   rttMonLatestHTTPOperRTT
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestHTTPOperRTT.%inst%
+datasource   rttMonLatestHTTPOperDNSRTT
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestHTTPOperDNSRTT.%inst%
+datasource   rttMonLatestHTTPOperTCPConnectRTT
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestHTTPOperTCPConnectRTT.%inst%
+datasource   rttMonLatestHTTPOperTransactionRTT
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestHTTPOperTransactionRTT.%inst%
+datasource   rttMonLatestHTTPOperSense
+	rrd-ds-type	=	GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestHTTPOperSense.%inst%
+
+datasource   rttMonLatestJitterOperMOS
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperMOS.%inst%
+datasource   rttMonLatestJitterOperICPI
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperICPI.%inst%
+datasource   rttMonLatestJitterOperRTTMin
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperRTTMin.%inst%
+datasource   rttMonLatestJitterOperRTTMax
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperRTTMax.%inst%
+datasource   rttMonLatestJitterOperPacketLossSD
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperPacketLossSD.%inst%
+datasource   rttMonLatestJitterOperPacketLossDS
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperPacketLossDS.%inst%
+datasource   rttMonLatestJitterOperPacketOutOfSequence
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperPacketOutOfSequence.%inst%
+datasource   rttMonLatestJitterOperPacketMIA
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperPacketMIA.%inst%
+datasource   rttMonLatestJitterOperPacketLateArrival
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperPacketLateArrival.%inst%
+datasource   rttMonLatestJitterOperAvgJitter
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperAvgJitter.%inst%
+datasource   rttMonLatestJitterOperAvgJitterSD
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperAvgJitterSD.%inst%
+datasource   rttMonLatestJitterOperAvgJitterDS
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperAvgJitterDS.%inst%
+datasource   rttMonLatestJitterOperAvgJitterOWSD
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperAvgJitterOWSD.%inst%
+datasource   rttMonLatestJitterOperAvgJitterOWDS
+        rrd-ds-type     =       GAUGE
+        ds-source       =       snmp://%snmp%/rttMonLatestJitterOperAvgJitterOWDS.%inst%
+
+
+# Round-Trip-Time counters for last value and last operational code (ok or not)
+
+
+#Datasources for Altiga VPN 3030 and 3060 boxes
+
+datasource vpnCPUtemp
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/vpnCPUtemp.%inst%
+datasource vpnCagetemp
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/vpnCagetemp.%inst%
+datasource vpnCPUutil
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/vpnCPUutil.%inst%
+datasource vpnActivePhase1ipSecSessions
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/vpnActivePhase1ipSecSessions.%inst%
+datasource alTotalSessionCount
+	ds-source	=	snmp://%snmp%/alTotalSessionCount.%inst%
+datasource alActiveLanToLanSessionCount
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/alActiveLanToLanSessionCount.%inst%
+datasource alActiveManagementSessionCount
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/alActiveManagementSessionCount.%inst%
+datasource alActiveRemoteAccessSessionCount
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/alActiveRemoteAccessSessionCount.%inst%
+datasource alActiveSessionMaxUsers
+	rrd-ds-type	=	GAUGE
+	ds-source	=	snmp://%snmp%/alActiveSessionMaxUsers.%inst%
+datasource alPptpStatsTotalSessions
+	ds-source	=	snmp://%snmp%/alPptpStatsTotalSessions.%inst%
+
+### Datasources for Cisco Aironet Wireless Access Points
+
+datasource Clients-Associated
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/ClientsAssociated.%inst%
+   rrd-heartbeat   =   1800
+
+datasource Clients-Total
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/ClientsTotal.%inst%
+   rrd-heartbeat   =   1800
+
+datasource AccessPoints
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/APCount.%inst%
+   rrd-heartbeat   =   1800
+
+datasource Bridges-Associated
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/awcFtBridgeSelf.%inst%
+   rrd-heartbeat   =   1800
+
+datasource Bridges-Total
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/awcFtBridge.%inst%
+   rrd-heartbeat   =   1800
+
+datasource pixConnections
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/pixConnections
+   rrd-heartbeat   =   1800
+
+datasource aByteBlocksFree
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/aByteBlocksFree
+   rrd-heartbeat   =   1800
+
+datasource bByteBlocksFree
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/bByteBlocksFree
+   rrd-heartbeat   =   1800
+
+datasource cByteBlocksFree
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/cByteBlocksFree
+   rrd-heartbeat   =   1800
+
+datasource dByteBlocksFree
+   rrd-ds-type     =   GAUGE
+   ds-source       =   snmp://%snmp%/dByteBlocksFree
+   rrd-heartbeat   =   1800
+
+#datasource eByteBlocksFree
+#   rrd-ds-type     =   GAUGE
+#   ds-source       =   snmp://%snmp%/eByteBlocksFree
+#   rrd-heartbeat   =   1800
+
+datasource ccarStatSwitchedPkts
+        ds-source       =       snmp://%snmp%/ccarStatSwitchedPkts.%inst%.%rest%
+
+datasource ccarStatSwitchedBytes
+        ds-source       =       snmp://%snmp%/ccarStatSwitchedBytes.%inst%.%rest%
+
+datasource ccarStatFilteredPkts
+        ds-source       =       snmp://%snmp%/ccarStatFilteredPkts.%inst%.%rest%
+
+datasource ccarStatFilteredBytes
+        ds-source       =       snmp://%snmp%/ccarStatFilteredBytes.%inst%.%rest%
+
+datasource ccarStatSwitchedPkts
+        ds-source       =       snmp://%snmp%/ccarStatSwitchedPkts.%inst%.%rest%
+
+datasource cbQosCMPrePolicyByte
+        ds-source       =       snmp://%snmp%/cbQosCMPrePolicyByte.%inst%
+datasource cbQosCMPrePolicyByte64
+        ds-source       =       snmp://%snmp%/cbQosCMPrePolicyByte64.%inst%
+datasource cbQosCMPostPolicyByte
+        ds-source       =       snmp://%snmp%/cbQosCMPostPolicyByte.%inst%
+datasource cbQosCMPostPolicyByte64
+        ds-source       =       snmp://%snmp%/cbQosCMPostPolicyByte64.%inst%
+datasource cbQosCMPrePolicyPkt
+        ds-source       =       snmp://%snmp%/cbQosCMPrePolicyPkt.%inst%
+datasource cbQosCMPrePolicyPkt64
+        ds-source       =       snmp://%snmp%/cbQosCMPrePolicyPkt64.%inst%
+datasource cbQosCMDropPkt
+        ds-source       =       snmp://%snmp%/cbQosCMDropPkt.%inst%
+datasource cbQosCMDropPkt64
+        ds-source       =       snmp://%snmp%/cbQosCMDropPkt64.%inst%
+datasource cbQosCMDropByte
+        ds-source       =       snmp://%snmp%/cbQosCMDropByte.%inst%
+datasource cbQosCMDropByte64
+        ds-source       =       snmp://%snmp%/cbQosCMDropByte64.%inst%
+
+
+datasource chassisPs1Status
+    ds-source   = snmp://%snmp%/chassisPs1Status
+    rrd-ds-type = GAUGE
+
+datasource chassisPs2Status
+    ds-source   = snmp://%snmp%/chassisPs2Status
+    rrd-ds-type = GAUGE
+
+datasource chassisFanStatus
+    ds-source   = snmp://%snmp%/chassisFanStatus
+    rrd-ds-type = GAUGE
+
+datasource chassisTempAlarm
+    ds-source   = snmp://%snmp%/chassisTempAlarm
+    rrd-ds-type = GAUGE
+
+datasource cpmCPUTotal1min
+    ds-source   = snmp://%snmp%/cpmCPUTotal1min.%inst%
+    rrd-ds-type = GAUGE
+
+datasource cpmCPUTotal5min
+    ds-source   = snmp://%snmp%/cpmCPUTotal5min.%inst%
+    rrd-ds-type = GAUGE
+
+datasource ciscoMemoryPoolUsed
+    ds-source   = snmp://%snmp%/ciscoMemoryPoolUsed.%inst%
+    rrd-ds-type = GAUGE
+
+datasource ciscoMemoryPoolFree
+    ds-source   = snmp://%snmp%/ciscoMemoryPoolFree.%inst%
+    rrd-ds-type = GAUGE
+
+datasource slotcpu1min
+    ds-source   = snmp://%snmp%/cpmCPUTotal1minRev.%cpu%
+    rrd-ds-type = GAUGE
+
+datasource slotcpu5min
+    ds-source   = snmp://%snmp%/cpmCPUTotal5minRev.%cpu%
+    rrd-ds-type = GAUGE
+
+datasource bandwidthUsageCurrent
+    ds-source   = snmp://%snmp%/bandwidthUsageCurrent
+    rrd-ds-type = GAUGE
+
+datasource bandwidthUsagePeak
+    ds-source   = snmp://%snmp%/bandwidthUsagePeak
+    rrd-ds-type = GAUGE
+
+datasource sysInfoUtilDisplay
+    ds-source   = snmp://%snmp%/sysInfoUtilDisplay
+    rrd-ds-type = GAUGE
+
+### Uncomments the next four data sources to use the old method for
+### retrieving layer 2 switching engine stats.
+#
+# datasource cseL2ForwardedTotalPkts
+#   ds-source   = snmp://%snmp%/cseL2ForwardedTotalPkts.%inst%
+#
+# datasource cseL2NewAddressLearns
+#   ds-source   = snmp://%snmp%/cseL2NewAddressLearns.%inst%
+#
+# datasource cseL2AddrLearnFailures
+#   ds-source   = snmp://%snmp%/cseL2AddrLearnFailures.%inst%
+#
+# datasource cseL2DstAddrLookupMisses
+#   ds-source   = snmp://%snmp%/cseL2DstAddrLookupMisses.%inst%
+
+### Uncomments the next four data sources and ensure that the path to
+### the walkL2SE script is correct to use the new method for retrieving
+### layer 2 switching engine stats.
+###
+### If you want to receive email notification when a supervisor change
+### (failover) is detected, add an email address to the end of the command.
+### Eg.
+###
+### exec:1:"\$HOME/cricket/util/walkL2SE %snmp% %rrd-datafile% admin@foo.com"
+#### Catalyst CatOS layer 2 switch statistics
+
+datasource cseL2ForwardedTotalPkts
+    ds-source   = exec:1:"\$HOME/cricket/util/walkL2SE %snmp% %rrd-datafile%"
+
+datasource cseL2NewAddressLearns
+    ds-source   = exec:2:"\$HOME/cricket/util/walkL2SE %snmp% %rrd-datafile%"
+
+datasource cseL2AddrLearnFailures
+    ds-source   = exec:3:"\$HOME/cricket/util/walkL2SE %snmp% %rrd-datafile%"
+
+datasource cseL2DstAddrLookupMisses
+    ds-source   = exec:4:"\$HOME/cricket/util/walkL2SE %snmp% %rrd-datafile%"
+
+###############################################################################
+#
+# targetType's are the device definitions that will tell cricket what to retrieve
+# from the device, and how should should be displayed. Each target that is defined
+# in a target file should be associated with a targetType, so that cricket knows
+# how to treat the target.
+#
+# Empty target statements can be used for some targets that you don't want to pull
+# data from. Examples are Chassis's of devices for which the OIDs haven't been detailed
+# yet(temperature, cpu, memory). 
+#
+# See cricket.sourceforge.net for documentation on the definitions found in
+#  this file
+# 
+#
+###############################################################################
+
+
+targetType	Cisco-7000-Router
+	ds		=	"cpu1min, cpu5min, tempInlet, tempOutlet, 
+				mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				temperature: tempInlet tempOutlet,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-7200-Router
+        rra    		=	"5minAve, 30minAve, 2hrAve, 2hrMax, 1dayAve, 1dayMax, 
+	ds		=	"cpu1min, cpu5min, tempInlet, tempOutlet, 
+				mem5minUsed, mem5minFree, processorRam"
+	view		=	"cpu: cpu1min cpu5min,
+				temperature: tempInlet tempOutlet,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-7500-Router
+	ds  	=	"cpu1min, cpu5min, tempInlet, tempOutlet, 
+				mem5minUsed, mem5minFree, processorRam"
+	view   	=	"cpu: cpu1min cpu5min,
+				temperature: tempInlet tempOutlet,
+				memory: mem5minUsed mem5minFree processorRam"
+targetType      Cisco-2800-Router
+        ds              =       "cpu1min, cpu5min, tempInlet, tempState, mem5minUsed, mem5minFree, processorRam"
+        view    =       "cpu: cpu1min cpu5min,
+                                temperature: tempInlet tempState,
+                                memory: mem5minUsed mem5minFree processorRam"
+
+targetType     Cisco-1200-AP
+       ds              =       "mem5minUsed, mem5minFree, processorRam"
+       view            =       "memory: mem5minUsed mem5minFree processorRam"
+
+# 3600 routers do not report temperature -- they only
+# report tempterature states:
+#               normal(1),
+#               warning(2),
+#               critical(3),
+#               shutdown(4),
+#               notPresent(5) 
+
+targetType	Cisco-3600-Router
+	ds		=	"cpu1min, cpu5min, tempState, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				tempAlarm: tempState,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-4500-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-2600-Router
+	ds		=	"cpu1min, cpu5min, tempState, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				tempAlarm: tempState,
+				memory: mem5minUsed mem5minFree processorRam"
+
+# 800 and 2500 routers don't even report the temperature. Feh.
+
+targetType	Cisco-2500-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree"
+
+targetType      Cisco-800-Router
+        ds              =       "cpu1min, cpu5min, processorRam"
+        view    =       "cpu: cpu1min cpu5min,
+                                memory: processorRam"
+
+# If all else failes, assume that all Ciscos at least return CPU and memory.
+
+targetType	Cisco-Generic-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-Unknown-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-PIX-Firewall
+	ds		=	"cpmCPUTotal1min, cpmCPUTotal5min, mem5minUsed, mem5minFree"
+	view	=	"cpu: cpmCPUTotal1min cpmCPUTotal5min,
+                 memory: mem5minUsed mem5minFree"
+
+targetType	Cisco-PIX-Firewall-No-CPU
+	ds		=	"mem5minUsed, mem5minFree"
+	view	=	"memory: mem5minUsed mem5minFree"
+
+targetType	Cisco-Terminal
+	view	=	""
+
+targetType	Cisco-1600-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType	Cisco-1700-Router
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+# Catalyst 3550 switches return CPU and memory.
+targetType	Catalyst-3550-Switch
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+# Catalyst 2950 switches return CPU and memory.
+targetType	Catalyst-2950-Switch
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+# Catalyst 1900 switches return CPU and memory.
+targetType	Catalyst-1900-Switch
+	ds		=	"bandwidthUsageCurrent, bandwidthUsagePeak, sysInfoUtilDisplay"
+	view	=	"bandwidth: bandwidthUsageCurrent bandwidthUsagePeak,
+				utilization: sysInfoUtilDisplay"
+
+
+# Catalyst 2900XL and 3500XL switchs return CPU and memory.
+
+targetType	Catalyst-XL-Switch
+	ds		=	"cpu1min, cpu5min, mem5minUsed, mem5minFree, processorRam"
+	view	=	"cpu: cpu1min cpu5min,
+				memory: mem5minUsed mem5minFree processorRam"
+
+targetType  Catalyst-Generic-Switch
+    ds  =   "chassisTempAlarm, chassisFanStatus, chassisPs1Status, chassisPs2Status"
+    view  =   "temp: chassisTempAlarm chassisFanStatus,
+               power: chassisPs1Status chassisPs2Status"
+
+### Cisco Altiga VPN 3000 Concentrators
+
+targetType	Cisco-vpn3000
+	ds		=	"vpnCPUutil, vpnCagetemp, vpnCPUtemp"
+	view		=	"cpu: vpnCPUutil,
+				 temperature: vpnCagetemp vpnCPUtemp"
+
+targetType     Cisco-vpn-tunnels
+	ds		=	"vpnActivePhase1ipSecSessions, 
+				alTotalSessionCount, alActiveSessionMaxUsers, alActiveManagementSessionCount, alActiveLanToLanSessionCount, alActiveRemoteAccessSessionCount, alPptpStatsTotalSessions"
+	view		=	"sessionsPptp: alPptpStatsTotalSessions,
+				 sessionsIpSec: vpnActivePhase1ipSecSessions,
+				 sessionsActive: alActiveLanToLanSessionCount alActiveManagementSessionCount alActiveRemoteAccessSessionCount alActiveSessionMaxUsers"
+
+
+### Cisco Aironet Wireless Access Points
+
+targetType	Cisco-Aironet-Associations
+	ds		=	"Clients-Associated, Clients-Total, AccessPoints, Bridges-Associated, Bridges-Total"
+	view		=	"Associations: Clients-Total Clients-Associated AccessPoints Bridges-Associated Bridges-Total"
+
+### SAA (RTR) Cisco service agent types
+
+targetType      ftpAppl
+	ds		=	"rttMonLatestFtpRttOperCompletionTime, rttMonLatestRttOperSense"
+	view	=	"rttAgent: rttMonLatestFtpRttOperCompletionTime rttMonLatestRttOperSense"
+
+targetType      ipIcmpEcho
+	ds		=	"rttMonLatestRttOperCompletionTime, rttMonLatestRttOperSense"
+	view	=	"rttAgent: rttMonLatestRttOperCompletionTime rttMonLatestRttOperSense"
+
+targetType      httpAppl
+	ds		=	"rttMonLatestHTTPOperRTT, rttMonLatestHTTPOperSense, 
+                                 rttMonLatestHTTPOperDNSRTT, rttMonLatestHTTPOperTCPConnectRTT, 
+                                 rttMonLatestHTTPOperTransactionRTT"
+	view	=	"rttHttp: rttMonLatestHTTPOperRTT rttMonLatestHTTPOperSense 
+                                    rttMonLatestHTTPOperTCPConnectRTT rttMonLatestHTTPOperDNSRTT,
+                         rttPreHttp: rttMonLatestHTTPOperTCPConnectRTT rttMonLatestHTTPOperSense rttMonLatestHTTPOperDNSRTT"
+
+targetType	ipUdpEchoAppl
+	ds	=	"rttMonLatestRttOperCompletionTime, rttMonLatestRttOperSense"
+	view	=	"rttAgent: rttMonLatestRttOperCompletionTime rttMonLatestRttOperSense"
+
+targetType      jitterAppl
+        ds      =       "rttMonLatestRttOperCompletionTime, rttMonLatestJitterOperRTTMin, rttMonLatestJitterOperRTTMax, rttMonLatestRttOperSense,
+                                rttMonLatestJitterOperMOS, rttMonLatestJitterOperICPI,
+                                rttMonLatestJitterOperPacketLossSD, rttMonLatestJitterOperPacketLossDS, rttMonLatestJitterOperPacketOutOfSequence,
+                                        rttMonLatestJitterOperPacketMIA, rttMonLatestJitterOperPacketLateArrival,
+                                rttMonLatestJitterOperAvgJitter,
+                                        rttMonLatestJitterOperAvgJitterSD, rttMonLatestJitterOperAvgJitterDS,
+                                        rttMonLatestJitterOperAvgJitterOWSD, rttMonLatestJitterOperAvgJitterOWDS"
+        view    =       "rttAgent: rttMonLatestRttOperCompletionTime rttMonLatestJitterOperRTTMin rttMonLatestJitterOperRTTMax,
+
+                        rttOper:  rttMonLatestRttOperSense,
+                         rttCalcs:  rttMonLatestJitterOperICPI rttMonLatestJitterOperMOS,
+                         rttLoss:  rttMonLatestJitterOperPacketLossSD rttMonLatestJitterOperPacketLossDS,
+                         rttError:  rttMonLatestJitterOperPacketOutOfSequence
+                                        rttMonLatestJitterOperPacketMIA rttMonLatestJitterOperPacketLateArrival,
+                         rttJitter: rttMonLatestJitterOperAvgJitter
+                                        rttMonLatestJitterOperAvgJitterSD rttMonLatestJitterOperAvgJitterDS
+                                        rttMonLatestJitterOperAvgJitterOWSD rttMonLatestJitterOperAvgJitterOWDS"
+
+# Get more information from:
+# http://www.cisco.com/en/US/partner/products/ps6350/products_configuration_guide_chapter09186a0080441850.html#wp1052080
+# http://www.cisco.com/en/US/partner/products/sw/iosswrel/ps1839/products_feature_guide09186a0080087c58.html
+
+
+### PIX NUmber of connections globally
+
+targetType     Cisco-pix-stats
+       ds               =   "pixConnections, aByteBlocksFree, bByteBlocksFree, cByteBlocksFree,  dByteBlocksFree"
+       view             =   "pixConnections: pixConnections,
+                             freeBlocks: aByteBlocksFree bByteBlocksFree cByteBlocksFree dByteBlocksFree"
+
+targetType switch-layer2
+    ds      = "cseL2ForwardedTotalPkts,
+                cseL2NewAddressLearns,
+                cseL2AddrLearnFailures,
+                cseL2DstAddrLookupMisses"
+    view    = "L2TotalPkts:     cseL2ForwardedTotalPkts,
+                L2AddrStats:    cseL2NewAddressLearns
+                                cseL2AddrLearnFailures
+                                cseL2DstAddrLookupMisses"
+
+targetType switch-cpu
+    ds    =   "cpmCPUTotal5min"
+    view  =   "cpu: cpmCPUTotal5min"
+    
+targetType switch-mem
+    ds    =   "ciscoMemoryPoolUsed, ciscoMemoryPoolFree"
+    view  =   "memory: ciscoMemoryPoolUsed ciscoMemoryPoolFree"
+
+### Interface target types.
+
+targetType  frame-interface
+	ds		=	"frCircuitReceivedOctets,
+				frCircuitSentOctets,
+				frCircuitReceivedFECNs, 
+				frCircuitReceivedBECNs"
+	view	=	"Octets: frCircuitReceivedOctets frCircuitSentOctets,
+				FECN/BECN: frCircuitReceivedFECNs 
+				frCircuitReceivedBECNs"
+targetType  cisco-ap-interface
+       ds      =               "ifInOctets, ifOutOctets,
+                               ifInErrors, ifOutErrors"
+       view    =               "Octets: ifInOctets ifOutOctets,
+                               Errors: ifInErrors ifOutErrors"
+
+
+targetType  cisco-interface
+	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
+				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+				locIfInRunts, locIfInGiants, locIfInCRC, locIfInFrame,
+				locIfInOverrun, locIfInIgnored, locIfInAbort,
+				locIfResets, locIfCarTrans, locIfCollisions,
+				locIfInputQueueDrops, locIfOutputQueueDrops"
+	view	=	"Octets: ifInOctets ifOutOctets,
+				UcastPackets: ifInUcastPackets ifOutUcastPackets,
+				Collisions: locIfCollisions,
+				QueueDrops: locIfInputQueueDrops 
+				locIfOutputQueueDrops,
+				Errors: locIfInCRC locIfInFrame locIfInOverrun
+				locIfInAbort locIfResets locIfCarTrans"
+targetType  cisco-interface-nu
+	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
+				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+				ifInNUcastPackets, ifOutNUcastPackets,
+				locIfInRunts, locIfInGiants, locIfInCRC, locIfInFrame,
+				locIfInOverrun, locIfInIgnored, locIfInAbort,
+				locIfResets, locIfCarTrans, locIfCollisions,
+				locIfInputQueueDrops, locIfOutputQueueDrops"
+	view	=	"Octets: ifInOctets ifOutOctets,
+				UcastPackets: ifInUcastPackets ifOutUcastPackets,
+				NUcastPackets: ifInNUcastPackets ifOutNUcastPackets,
+				Collisions: locIfCollisions,
+				QueueDrops: locIfInputQueueDrops 
+				locIfOutputQueueDrops,
+				Errors: locIfInCRC locIfInFrame locIfInOverrun
+				locIfInAbort locIfResets locIfCarTrans"
+
+targetType  cisco-interface-hc
+	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
+				ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts,
+				locIfInRunts, locIfInGiants, locIfInCRC, locIfInFrame,
+				locIfInOverrun, locIfInIgnored, locIfInAbort,
+				locIfResets, locIfCarTrans, locIfCollisions,
+				locIfInputQueueDrops, locIfOutputQueueDrops"
+	view	=	"Octets: ifHCInOctets ifHCOutOctets,
+				UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
+				Collisions: locIfCollisions,
+				QueueDrops: locIfInputQueueDrops 
+				locIfOutputQueueDrops,
+				Errors: locIfInCRC locIfInFrame locIfInOverrun
+				locIfInAbort locIfResets locIfCarTrans"
+targetType  cisco-interface-nu-hc
+	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
+				ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts,
+                                ifHCInMulticastPkts, ifHCOutMulticastPkts,
+                                ifHCInBroadcastPkts, ifHCOutBroadcastPkts,
+				locIfInRunts, locIfInGiants, locIfInCRC, locIfInFrame,
+				locIfInOverrun, locIfInIgnored, locIfInAbort,
+				locIfResets, locIfCarTrans, locIfCollisions,
+				locIfInputQueueDrops, locIfOutputQueueDrops"
+	view	=	"Octets: ifHCInOctets ifHCOutOctets,
+				UcastPackets: ifInUcastPackets ifOutUcastPackets,
+				McastPackets: ifHCInMulticastPackets ifHCOutMulticastPackets,
+				BcastPackets: ifHCInBroadcastPackets ifHCOutBroadcastPackets,
+				Collisions: locIfCollisions,
+				QueueDrops: locIfInputQueueDrops 
+				locIfOutputQueueDrops,
+				Errors: locIfInCRC locIfInFrame locIfInOverrun
+				locIfInAbort locIfResets locIfCarTrans"
+
+targetType  dial-peer
+    ds		=	"dialCtlPeerStatsConnectTime,
+			 dialCtlPeerStatsChargedUnits,
+			 dialCtlPeerStatsSuccessCalls,
+			 dialCtlPeerStatsFailCalls,
+			 dialCtlPeerStatsAcceptCalls,
+			 dialCtlPeerStatsRefuseCalls"
+    view	=	"ConnectTime: dialCtlPeerStatsConnectTime,
+			 Calls: dialCtlPeerStatsSuccessCalls
+				dialCtlPeerStatsFailCalls
+				dialCtlPeerStatsAcceptCalls
+				dialCtlPeerStatsRefuseCalls"
+
+targetType  rate-limit
+    ds          =       "ccarStatSwitchedPkts,ccarStatSwitchedBytes,
+			ccarStatFilteredPkts,ccarStatFilteredBytes"
+    view        =       "Shaping-Pkts: ccarStatSwitchedPkts ccarStatFilteredPkts,
+                         Shaping-Bytes: ccarStatSwitchedBytes ccarStatFilteredBytes"
+targetType  cisco-cbwfq-qos
+    ds          =       "cbQosCMPrePolicyByte, cbQosCMPostPolicyByte,
+                cbQosCMPrePolicyPkt, cbQosCMDropPkt, cbQosCMDropByte"
+    view        =       "PrePolicyPkt: cbQosCMPrePolicyPkt,
+                         PrePolicyByte: cbQosCMPrePolicyByte,
+                         PostPolicyByte: cbQosCMPostPolicyByte,
+                         DropPkts: cbQosCMDropPkt,
+                         DropBytes: cbQosCMDropByte"
+
+targetType cisco-vip-cpu
+    ds      =   "slotcpu1min, slotcpu5min"
+    view    =   "VipCPU: slotcpu1min slotcpu5min"
+
+###############################################################################
+#
+## monitorType definitions
+#
+# The short definition: These are monitor threshold templates that can be
+# associated with targets in the config-tree. Each monitorType is reference using
+# the monitor-type key and the value is the monitorType.
+#
+## These are the device definitions that will tell cricket what to monitor
+# from the device, and how should should acted on. Each target that is defined
+# in a target file can be associated with a monitorType, so that cricket knows
+# how to treat threshold monitoring for the target.
+#
+# Empty monitorType statements can be used for some targets that you don't want to monitor.
+# Examples are Chassis's of devices for which the OIDs haven't been detailed
+# yet(temperature, cpu, memory).
+#
+# See cricket.sourceforge.net for documentation on the definitions found in
+#  this file
+#
+###############################################################################
+
+monitorType Chassis
+    monitor-thresholds = "cpu5min:value:n:75:META:router-cpu:red:SPAN:3,
+         cpu5min:value:n:1:META:router-cpu:yellow:SPAN:3"
+
+
+###############################################################################
+#
+#
+## map definitions for Cisco Catalyst CatOS switches
+#
+#
+###############################################################################
+
+
+map module-port
+    base-oid    = ifName
+    match       = "%module-number%/%port-number%"
+
+map mem-stats
+    base-oid    = ciscoMemoryPoolName
+    match       = DRAM
+
+map cpu-stats
+    base-oid    = cpmCPUTotalPhysicalIndex
+    match       = /^.+$/
+
+
+# This is a neat map that will let you tie Cricket target
+# names to the extended interface descriptions that Ciscos
+# support (called "aliases" by the MIB). For example,
+# if your target name is "corporate-ds3", then do
+# this on your Cisco:
+#
+#    router#config term
+#    router(config)#int Hssi/0/0/0
+#    router(config-if)#description [corporate-ds3] 45 Mbps DS3 to Corporate
+#    router(config-if)#^Z
+#
+# And set inst to "map(alias-matches-target)" for that target.
+
+map alias-matches-target
+    base-oid    =   ifAlias
+    match       =   /^.*\\[%auto-target-name%\\].*$/
+
+###############################################################################
+#
+# "graph" statements define how the data should be displayed in the graphic.
+# Most of the variables defined are directly mapped to the rrdtool graph tool
+# that is used to generate the graphics.
+#
+#
+###############################################################################
+
+
+# Cisco Firewall Free Blocks
+graph   aByteBlocksFree
+    color       =   purple
+    legend      =   "Available 4 byte blocks"
+graph  bByteBlocksFree
+    color       =   dark-green
+    legend      =   "Available 80 byte blocks"
+graph   cByteBlocksFree
+    color       =   blue
+    legend      =   "Available 256 byte blocks"
+graph  dByteBlocksFree
+    color       =   brown
+    legend      =   "Available 1550 byte blocks"
+graph  eByteBlocksFree
+    color       =   grey
+    legend      =   "Available 2560 byte blocks"
+
+# Cisco Firewall Chassis Stats
+graph   Pcpu1min
+    units       =   "%"
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "Percent CPU utilization"
+    legend      =   "1 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min       =   0
+    y-max       =   100
+    show-max    =   true
+    max-color   =   neongrn
+    draw-max-as =   LINE2
+
+graph   Pcpu5min
+    units       =   "%"
+    color       =   blue
+    draw-as     =   AREA
+    y-axis      =   "Percent CPU utilization"
+    legend      =   "5 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min       =   0
+    y-max       =   100
+
+# Aironet Wireless Access Points
+graph   AccessPoints
+    color       =   dark-red
+    draw-as     =   LINE3
+    legend      =   "Access points"
+graph   Clients-Associated
+    color       =   dark-green
+    draw-as     =   LINE3
+    legend      =   "Clients presently associated"
+graph   Clients-Total
+    color       =   blue
+    draw-as     =   LINE3
+    legend      =   "Total clients on subnet"
+graph Bridges-Associated
+    color       =   brown
+    draw-as     =   LINE3
+    legend      =   "Bridges presently associated"
+graph Bridges-Total
+    color       =   grey
+    draw-as     =   LINE3
+    legend      =   "Total bridges on subnet"
+
+# Altiga VPN3000
+graph vpnCPUutil
+    units	=   "%"
+#    color	=   dark-green
+    draw-as	=   AREA
+    y-axis	=   "Percent CPU utilisation"
+    legend	=   "CPU utilisation"
+#   fixed y-axis, since this is a percentage
+#   y-min	=   0
+#   y-max       =   100
+
+graph vpnCPUtemp
+#    color	=   dark-green
+#    draw-as	=   AREA
+    y-axis	=   "degrees Centigrade"
+    units	=   "&#176"
+    space	=   ""
+    legend 	=   "CPU temperature in C"
+    precision	=   integer
+
+graph vpnCagetemp
+#    color	=   blue
+    draw-as	=   AREA
+    y-axis	=   "degrees Centigrade"
+    units	=   "&#176"
+    space	=   ""
+    legend	=   "Cage temperature in C"
+    y-axis	=   "Cagetemp"
+    units	=   "Cagetemp"
+
+
+graph vpnActivePhase1ipSecSessions
+    color	=   blue
+    draw-as	=   AREA
+    space	=   ""
+    legend	=   "Active ipSec sessions"
+    y-axis	=   "SessionsIpSec"
+    units	=   "SessionsIpSec"
+
+graph alTotalSessionCount
+    color	=   green
+    draw-as	=   AREA
+    space	=   ""
+    legend	=   "New Sessions"
+    y-axis	=   "SessionsNew"
+    units	=   "SessionsNew"
+
+graph alActiveSessionCount
+    color	=   green
+    draw-as	=   AREA
+    space	=   ""
+    legend	=   "Active sessions"
+    y-axis	=   "SessionsActive"
+    units	=   "SessionsActive"
+
+graph alActiveLanToLanSessionCount
+    color	=   yellow
+    draw-as	=   AREA
+    space	=   ""
+    legend	=   "Active LanToLan sessions"
+    y-axis	=   "Sessions"
+    units	=   "SessionsLanToLan"
+
+graph alActiveRemoteAccessSessionCount
+    color	=   green
+    draw-as	=   STACK
+    space	=   ""
+    legend	=   "Active RAS sessions"
+#    y-axis	=   "SessionsRAS"
+    units	=   "SessionsRAS"
+
+graph alActiveManagementSessionCount
+    color	=   dark-green
+    draw-as	=   STACK
+    space	=   ""
+    legend	=   "Active management sessions"
+#    y-axis	=   "SessionsMgmt"
+    units	=   "SessionsMgmt"
+
+graph alActiveSessionMaxUsers
+    color	=   blue
+    space	=   ""
+    legend	=   "Max number of sessions"
+#    y-axis	=   "SessionsMax"
+    units	=   "SessionsMax"
+
+graph alPptpStatsTotalSessions
+    color	=   blue
+    draw-as	=   AREA
+    space	=   ""
+    legend	=   "PPTP Sessions"
+    y-axis	=   "SessionsPptp"
+    units	=   "SessionsPptp"
+
+# PIX Number of connections active in PIX
+graph pixConnections
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "Number of connections in PIX globally"
+    y-axis      =   "Connections"
+    units       =   "conn"
+    y-min	=   0
+    show-max	=   true
+    max-color	=   neongrn
+    draw-max-as	=   LINE2
+
+graph rttMonLatestHTTPOperDNSRTT
+    color       =   dark-blue
+    draw-as     =   LINE1
+    legend      =   "Round-trip for DNS resolution"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+
+graph rttMonLatestHTTPOperTCPConnectRTT
+    color       =   pink
+    draw-as     =   LINE1
+    legend      =   "Round-trip time for TCP handshake"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+
+graph rttMonLatestHTTPOperRTT
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "Round-trip time to remote web server"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   true
+    max-color   =   neongrn
+
+graph rttMonLatestFtpRttOperCompletionTime
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "Round-trip time to remote FTP server"
+    y-axis      =   "Seconds"
+    inf-marker  =   true
+    units       =   "s"
+    y-min       =   0
+    scale       =   "1000,/"
+    show-max	=   false
+    max-color	=   neongrn
+    draw-max-as	=   LINE2
+
+graph rttMonLatestRttOperCompletionTime
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "Round-trip time to remote router"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min	=   0
+    show-max	=   false
+    max-color	=   neongrn
+    draw-max-as	=   LINE2
+
+graph rttMonLatestRttOperSense
+    color       =   dark-red
+    draw-as     =   LINE1
+    legend      =   "Op Val 1(Ok)2(Disc)4(TmOut)5(Busy)6(NoConn)7(Drop)8(BadSeq)9(BadData)10(App)16(Error)"
+    y-axis      =   "Operation Value"
+    units       =   "RTT operational value"
+    inf-marker  =   true
+    y-min	=   0
+
+graph rttMonLatestJitterOperRTTMin
+    color	=   blue
+    draw-as	=   LINE2
+    legend	=   "Min RTT to remote router"
+    y-axis	=   "Milliseconds"
+    inf-marker	=   true
+    units	=   "ms"
+    y-min	=   0
+    show-max	=   true
+    max-color	=   neongrn
+    draw-max-as	=   LINE1
+
+graph rttMonLatestJitterOperRTTMax
+    color	=   blue
+    draw-as	=   LINE2
+    legend	=   "Max RTT to remote router"
+    y-axis	=   "Milliseconds"
+    inf-marker	=   true
+    units	=   "ms"
+    y-min	=   0
+    show-max	=   true
+    max-color	=   neongrn
+    draw-max-as	=   LINE1
+
+graph rttMonLatestJitterOperMOS
+    color       =   blue
+    draw-as     =   LINE1
+    legend      =   "MOS (Mean Opinion Score)"
+    y-axis      =   "1.00 - 5.00"
+    scale       =   "100,/"
+    units       =   "units"
+    inf-marker  =   true
+    y-min       =   0
+
+graph rttMonLatestJitterOperICPI
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "CPIF (Calculated Planning Impairment Factor)"
+    y-axis      =   " "
+    units       =   "units"
+    inf-marker  =   true
+    y-min       =   0
+
+graph rttMonLatestJitterOperRTTMin
+    color       =   blue
+    draw-as     =   LINE1
+    legend      =   "Round-trip time Minimum"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   blue
+    draw-max-as =   LINE1
+
+graph rttMonLatestJitterOperRTTMax
+  color       =   red
+    draw-as     =   LINE1
+    legend      =   "Round-trip time Maximum"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   orange
+    draw-max-as =   LINE1
+
+graph rttMonLatestJitterOperPacketLossSD
+    color       =   blue
+    draw-as     =   LINE1
+    legend      =   "Packet Loss Source to Destination"
+    y-axis      =   "Packets"
+    inf-marker  =   true
+    units       =   "pkts"
+    y-min       =   0
+    show-max    =   false
+#    max-color   =   dark-blue
+#    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperPacketLossDS
+    color       =   green
+    draw-as     =   AREA
+    legend      =   "Packet Loss Destination to Source"
+    y-axis      =   "Packets"
+    inf-marker  =   true
+    units       =   "pkts"
+    y-min       =   0
+    show-max    =   false
+
+#    max-color   =   neongrn
+#    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperPacketOutOfSequence
+    color       =   dark-red
+    draw-as     =   LINE1
+    legend      =   "Packet Out of Sequence"
+    y-axis      =   "Packets"
+    inf-marker  =   true
+    units       =   "pkts"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   red
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperPacketMIA
+    color       =   orange
+    draw-as     =   LINE1
+    legend      =   "Packets Missing In Action"
+    y-axis      =   "Packets"
+    inf-marker  =   true
+    units       =   "pkts"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   yellow
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperPacketLateArrival
+    color       =   purple
+    draw-as     =   LINE1
+    legend      =   "Late Arriving Packets"
+    y-axis      =   "Packets"
+    inf-marker  =   true
+    units       =   "pkts"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   purply
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperAvgJitter
+    color       =   dark-green
+    draw-as     =   AREA
+    legend      =   "Average Jitter"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   neongrn
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperAvgJitterSD
+    color       =   dark-red
+    draw-as     =   LINE1
+    legend      =   "Average Jitter Source to Destination"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   red
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperAvgJitterDS
+    color       =   dark-blue
+    draw-as     =   LINE1
+    legend      =   "Average Jitter Destination to Source"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   blue
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperAvgJitterOWSD
+    color       =   orange
+    draw-as     =   LINE1
+    legend      =   "Average Jitter One Way Source to Destination"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   yellow
+    draw-max-as =   LINE2
+
+graph rttMonLatestJitterOperAvgJitterOWDS
+    color       =   purple
+    draw-as     =   LINE1
+    legend      =   "Average Jitter One Way Destination to Source"
+    y-axis      =   "Milliseconds"
+    inf-marker  =   true
+    units       =   "ms"
+    y-min       =   0
+    show-max    =   false
+    max-color   =   purply
+    draw-max-as =   LINE2
+
+# Cisco Chassis
+graph   cpu1min
+    units	=   "%"
+    color	=   dark-green
+    draw-as	=   AREA
+    y-axis 	=   "Percent CPU utilization"
+    legend 	=   "1 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min	=   0
+    y-max  	=   100
+    show-max    =   true
+    max-color   =   neongrn
+    draw-max-as =   LINE2
+
+graph   cpu5min
+    units	=   "%"
+    color	=   blue
+    y-axis	=   "Percent CPU utilization"
+    legend 	=   "5 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min	=   0
+    y-max	=   100
+
+graph   tempInlet
+    color	=   dark-green
+    draw-as	=   AREA
+    y-axis 	=   "degrees Celsius"
+    units	=   "&#176;C"
+#    y-axis      =   "degrees Farenheit"
+#    units       =   "&#176;F"
+#    scale       =   9,*,5,/,32,+
+    space	=   ""
+    legend	=   "Inlet temperature"
+    precision	=   integer
+
+graph   tempOutlet
+    color   	=   blue
+    y-axis  	=   "degrees Celsius"
+    units	=   "&#176;C"
+#    y-axis      =   "degrees Farenheit"
+#    units       =   "&#176;F"
+#    scale       =   9,*,5,/,32,+
+    space	=   ""
+    legend  	=   "Outlet temperature"
+    precision	=	integer
+
+graph   mem5minUsed
+    color	=   dark-green
+    draw-as	=   AREA
+    y-min	=   0
+    y-axis 	=   "Bytes"
+    legend 	=   "5 minute used memory"
+
+graph   mem5minFree
+    color   	=   blue
+    draw-as	=   LINE2
+    y-axis  	=   "Bytes"
+    legend  	=   "5 minute free memory"
+
+graph   processorRAM
+    color   	=   magenta
+    draw-as	=   LINE1
+    y-axis  	=   "Bytes"
+    legend  	=   "Total processor RAM"
+
+# Interfaces
+
+graph   locIfCollisions
+    color       =   red
+    y-axis      =   "collisions per second"
+    legend      =   "Collisions"
+    units       =   "coll/sec"
+
+graph   locIfInputQueueDrops
+    y-axis      =   "packets per second"
+    legend      =   "Input queue drops"
+    units       =   "pkt/sec"
+
+graph   locIfOutputQueueDrops
+    y-axis      =   "output queue drops"
+    legend      =   "Output queue drops"
+    units       =   "pkt/sec"
+
+graph   locIfInCRC
+    y-axis      =   "crc errors"
+    legend      =   "CRC errors"
+    scale       =   300,*
+    units       =   "errors"
+    draw-as     =   AREA
+
+graph   locIfInFrame
+    y-axis      =   "frame errors"
+    legend      =   "Frame errors"
+    scale       =   300,*
+    units       =   "errors"
+    draw-as     =   STACK
+
+graph   locIfInOverrun
+    y-axis      =   "overrun errors"
+    legend      =   "Overrun errors"
+    scale       =   300,*
+    units       =   "errors"
+    draw-as     =   STACK
+
+graph   locIfInAbort
+    y-axis      =   "aborted packets"
+    legend      =   "Aborts"
+    scale       =   300,*
+    units       =   "packets"
+    draw-as     =   STACK
+
+graph   locIfResets
+    y-axis      =   "internal if resets"
+    legend      =   "Internal interface resets"
+    scale       =   300,*
+    units       =   "resets"
+    draw-as     =   STACK
+
+graph   locIfCarTrans
+    y-axis      =   "carrier signal transition"
+    legend      =   "Carrier signal transitions"
+    scale       =   300,*
+    units       =   "carrier transisitions"
+    draw-as     =   STACK
+
+graph   frCircuitReceivedFECNs
+    y-axis      =   "FECNs"
+    legend      =   "Forward congestion"
+    units       =   "frames/sec"
+
+graph   frCircuitReceivedBECNs
+    y-axis      =   "BECNs"
+    legend      =   "Backward congestion"
+    units       =   "frames/sec"
+
+graph   frCircuitReceivedOctets
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "bits per second"
+    units       =   "bits/sec"
+    legend      =   "Bits in"
+    scale       =   8,*
+    y-min       =   0
+    show-max    =   true
+    max-color   =   green
+    draw-max-as =   LINE1
+
+graph   frCircuitSentOctets
+    color       =   blue
+    y-axis      =   "bits per second"
+    units       =   "bits/sec"
+    legend      =   "Bits out"
+    scale       =   8,*
+    y-min       =   0
+    show-max    =   true
+    max-color   =   magenta
+    draw-max-as =   LINE1
+
+graph   dialCtlPeerStatsConnectTime
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "seconds"
+    units       =   "sec"
+    legend      =   "Peer connect time"
+
+graph   dialCtlPeerStatsChargedUnits
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "calls"
+    units       =   "calls"
+    legend      =   "Successfull calls"
+    y-min       =   0
+
+graph   dialCtlPeerStatsSuccessCalls
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "calls"
+    units       =   "calls"
+    legend      =   "Successfull calls"
+    scale       =   300,*
+
+graph   dialCtlPeerStatsFailCalls
+    color       =   red
+    draw-as     =   STACK
+    y-axis      =   "calls"
+    units       =   "calls"
+    legend      =   "Failed calls"
+    scale       =   300,*
+
+graph   dialCtlPeerStatsAcceptCalls
+    color       =   blue
+    draw-as     =   LINE1
+    y-axis      =   "calls"
+    units       =   "calls"
+    legend      =   "Accepted calls"
+    scale       =   300,*
+
+graph   dialCtlPeerStatsRefuseCalls
+    color       =   magenta
+    draw-as     =   LINE1
+    y-axis      =   "calls"
+    units       =   "calls"
+    legend      =   "Refused calls"
+    scale       =   300,*
+
+graph chassisTempAlarm
+    color       =   red
+    draw-as     =   AREA
+    y-axis      =   "state"
+    units       =   ""
+    legend      =   "Temp alarm"
+    y-max       =   8
+    y-min       =   -3
+    scale       =   "1,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisFanStatus
+    color       =   blue
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "Fan Status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisPs1Status
+    color       =   magenta
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "PS1 Status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisPs2Status
+    color       =   green
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "PS2 Status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph   slotcpu1min
+    units       =   "%"
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "Percent CPU utilization"
+    legend      =   "1 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min       =   0
+    y-max       =   100
+    show-max    =   true
+    max-color   =   neongrn
+    draw-max-as =   LINE2
+
+graph   slotcpu5min
+    units       =   "%"
+    color       =   blue
+    y-axis      =   "Percent CPU utilization"
+    legend      =   "5 minute CPU utilization"
+    # fixed y-axis, since this is a percentage
+    y-min       =   0
+    y-max       =   100
+
+graph   tempState
+    legend  =   "Current temperature state:<br><ul><li>Normal(1)<li>Warning
+(2)<li>Critical (3)<li>Shutdown (4)<li>Not Present(5)<li>Not Functioning (6)</ul>"
+
+graph cseL2ForwardedTotalPkts
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "packets per second"
+    units       =   "pkt/sec"
+    legend      =   "Average num packets forwarded at layer 2"
+    show-max    =   true
+    max-color   =   neongrn
+    draw-max-as =   LINE2
+
+graph cseL2NewAddressLearns
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "addresses per second"
+    units       =   "addr/sec"
+    legend      =   "Average addresses learned"
+
+graph cseL2DstAddrLookupMisses
+    color       =   blue
+    y-axis      =   "misses per second"
+    units       =   "miss/sec"
+    legend      =   "Average address lookup misses"
+
+graph cseL2AddrLearnFailures
+    color       =   magenta
+    y-axis      =   "failures per second"
+    units       =   "fails/sec"
+    legend      =   "Average address learn failures"
+
+graph   cbQosCMPrePolicyByte
+    legend      =   "cbQosCMPrePolicyByte"
+    y-axis      =   "bits per second"
+    units       =   "bit/sec"
+    scale       =   8,*
+    bytes       =   true
+    use-gprint  =   false
+    show-max    =   false
+
+graph   cbQosCMPostPolicyByte
+    legend      =   "cbQosCMPostPolicyByte"
+    y-axis      =   "bits per second"
+    units       =   "bit/sec"
+    scale       =   8,*
+    bytes       =   true
+    use-gprint  =   false
+    show-max    =   false
+
+graph   cbQosCMDropByte
+    legend      =   "cbQosCMDropByte"
+    y-axis      =   "bits per second"
+    units       =   "bit/sec"
+    scale       =   8,*
+    bytes       =   true
+    use-gprint  =   false
+    show-max    =   false
+
+graph   cbQosCMPrePolicyPkt
+    legend      =   "cbQosCMPrePolicyPkt"
+    y-axis      =   "packets per second"
+    units       =   "pkt/sec"
+    bytes       =   true
+    use-gprint  =   false
+    show-max    =   false
+
+graph   cbQosCMDropPkt
+    legend      =   "cbQosCMDropPkt"
+    y-axis      =   "packets per second"
+    units       =   "pkt/sec"
+    bytes       =   true
+    use-gprint  =   false
+    show-max    =   false
+
+graph chassisPs1Status
+    color       =   magenta
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "PS1 status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisPs2Status
+    color       =   green
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "PS2 status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisTempAlarm
+    color       =   red
+    draw-as     =   AREA
+    y-axis      =   "state"
+    units       =   ""
+    legend      =   "Temp alarm"
+    y-max       =   8
+    y-min       =   -3
+    scale       =   "1,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph chassisFanStatus
+    color       =   blue
+    draw-as     =   STACK
+    y-axis      =   "status"
+    units       =   ""
+    legend      =   "Fan Status"
+    scale       =   "2,-"
+    precision   =   0
+    show-avg-max = 0
+
+graph bandwidthUsageCurrent
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "Mbit/sec"
+    units       =   "Mbit/sec"
+    legend      =   "Bandwidth currently consumed"
+
+graph bandwidthUsagePeak
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "Mbit/sec"
+    units       =   "Mbit/sec"
+    legend      =   "Highest bandwidth utilized"
+
+graph sysInfoUtilDisplay
+    color       =   dark-green
+    draw-as     =   AREA
+    y-axis      =   "utilization meter LED"
+    units       =   ""
+    legend      =   "Number of utilization meter LEDs currently lit on the front panel"

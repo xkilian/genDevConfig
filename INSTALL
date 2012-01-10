@@ -1,0 +1,210 @@
+##############################################################################
+#
+# INSTALL: genDevConfig
+#
+##############################################################################
+
+genDevConfig - Generate a Cricket config tree for a network device.
+
+For the given device, generate a Cricket config tree directory. Within this
+directory it will place a "targets" file which will contain the following 
+logical information:
+
+     device-name
+         chassis_target
+
+         custom_target1
+         ...
+         custom_targetN
+
+         interface_target1
+         ...
+         interface_targetN
+
+
+##############################################################################
+#
+# Elements of genDevConfig
+#
+##############################################################################
+
+ - util/genDevConfig                  # The script
+ - util/CHANGES                       # Functional changes
+ - util/CREDITS                       # Thank you notes to contributors
+ - util/INSTALL                       # How to install this script in Cricket
+ - etc/                               # Expected location of genDevConfig-conf.pl
+ - sample-config/genConfig/Defaults   # The cricket config-tree Defaults 
+ - sample-config/genConfig/Defaults.* # The cricket config-tree module Defaults
+ - lib/genConfig/File.pm              # Utility library for genDevConfig
+ - lib/genConfig/SNMP.pm              # Utility library for genDevConfig
+ - lib/genConfig/Utils.pm             # Utility library for genDevConfig
+ - lib/genConfig/plugin.pm            # Utility library for genDevConfig
+ - lib/genConfig/pluginUtils.pm       # Utility library for genDevConfig
+ - lib/genConfig/log.pm               # Utility library for genDevConfig imported from Cricket 1.05
+ - lib/genConfig/snmpUtils.pm         # Utility library for genDevConfig imported from Cricket 1.05
+ - lib/monitorConfig                  # The configuration file for 
+                                      # Cricket monitor thresholds
+ - plugins/genConfig/                 # The plugin directory containing plugins
+ - plugins/genConfig/CiscoIOS.pm      # A plugin
+ - plugins/genConfig/CatalystCatOS.pm # Another plugin
+ - plugins/genConfig/...
+
+##############################################################################
+#
+# Installation
+#
+##############################################################################
+
+### Prerequisites
+
+1 - Insure you have the right version of Perl. You should be using Perl 5.004 or higher. You can check by running "perl -V".
+
+2 - Install the modules you need. You need to install the following Perl modules for genDevConfig to work correctly
+
+You need to have the following perl modules installed
+
+Module             From
+--------------------------------------------------------------------
+SNMP_Session       http://code.google.com/p/snmp-session/downloads/detail?name=SNMP_Session-1.13.tar.gz&can=2&q=
+Date::Parse        CPAN: by-authors/id/GBARR/TimeDate-*.tar.gz
+MD5                CPAN: by-authors/id/GAAS/Digest-MD5-*.tar.gz
+
+### Step 0 
+
+If you want to integrate the script directly in your cricket installation. STOP. download genDevConfig version 2.x instead of release 3.x [This series] series which is meant for standalone installation not within the Cricket directories.
+
+
+### Step 1
+
+Copy genDevConfig file structure to your $genDevConfig/ directory.
+
+Make sure the genDevConfig script is executable by your user. And that all
+files are owned by the user.
+the
+
+
+### Step 4 (Copying the Defaults file to your cricket-config tree)
+
+If you use the genDevConfig Defaults file included in this release within
+your Cricket config-tree (see the example below). You should replace the
+Defaults files with the new versions. 
+
+Note: If you do *NOT* use a vanilla version of the genDevConfig Defaults
+file, then you must copy the changes from the new Defaults file to your
+own custom Defaults.
+
+Example of creating and copying the Default files:
+
+  # For lazy bash users
+  $ export CRICKET=/path/to/cricket-base
+  $ cd $CRICKET/cricket-config
+  $ mkdir telecom-tree
+  $ cp $CRICKET/sample-config/genDevConfig/Defaults* \
+       $CRICKET/cricket-config/telecom-tree/
+
+
+##############################################################################
+#
+# Using genDevConfig - Basic
+#
+##############################################################################
+
+### Step 1 
+
+Find out the community string and IP adress of the device you want to reach
+
+
+### Step 2
+
+Add the hostname to your /etc/hosts file or into DNS
+
+
+### Step 3
+
+Do a test call of the device before anything else
+
+./genDevConfig -C community-name --verbose HOSTNAME
+
+You can consult www.acktomic.com/cricket/genRtrConfig.html for more information on how to call genDevConfig from the command-line.
+
+### Step 4
+
+Verify the creation of the configuration for chassis, interfaces..
+
+vi HOSTNAME/targets
+
+
+
+##############################################################################
+#
+# Using genDevConfig - Advanced
+#
+# For even more information lookup the Cricket genDevConfig pages at:
+# http://www.acktomic.com
+#
+##############################################################################
+
+
+If multiple interfaces with identical interface descriptions are
+found, these interfaces will have their inst numbers hard coded and
+the ifIndex. 
+
+A warning will appear at the bottom of the HTML pages generated by the
+grapher unless the --nodupwarn flag is given.  (requires mods to the
+default HTML page-footer entry)
+
+Interfaces that are administratively down, in test mode, have a speed
+of 0, or have certain interface types (null, LAPD, DS0, DS1, software
+loopback) will be commented out in the config.
+
+Temperature Graphs:  For those routers that support temperature readings, the
+graphs default to degrees Celsius.  This can be changed in the
+./cricket-config/telecom-tree/Defaults file as follows:
+
+ graph   tempInlet
+     color       =   dark-green
+     draw-as     =   AREA
+     y-axis      =   "degrees Celsius"
+     units       =   "&#176;C"
+ #    y-axis      =   "degrees Farenheit"
+ #    units       =   "&#176;F"
+ #    scale       =   9,*,5,/,32,+
+     space       =   ""
+     legend      =   "Inlet temperature"
+     precision   =   integer
+
+ graph   tempOutlet
+     color       =   blue
+     y-axis      =   "degrees Celsius"
+     units       =   "&#176;C"
+ #    y-axis      =   "degrees Farenheit"
+ #    units       =   "&#176;F"
+ #    scale       =   9,*,5,/,32,+
+     space       =   ""
+     legend      =   "Outlet temperature"
+     precision   =       integer
+
+To display degrees Fahrenheit, comment out the y-axis and units lines in both
+graph definitions, uncomment the three lines following, (y-axis, units,
+and scale) and recompile the comfig tree.  This does not affect data storage,
+only the way it's displayed.
+
+
+This is one possible way to handle routers with Cricket.
+There may or may not be better ones for any given environment.
+Suggestions and improvements welcome.
+
+Gotchas:
+
+   If you're using Cricket 1.02 or earlier, you'll need to uncomment the
+   SNMP v2 section in the Defaults file (sample-config/cisco-routers/Defaults)
+   and make sure you have SNMP_Session 0.77 or later.
+
+   Some Bay routers return interface type 'Other' for 100BaseT interfaces,
+   causing those interfaces to be commented out in the target file.  Try -e.
+
+   Some Cisco routers return incorrect interface types for some interfaces.
+   Example: Tunnel interfaces return type 0 under IOS 12.0.7T on a 7206
+   rather than the expected type 131.  Try "-e 'Tunnel.*'".
+
+

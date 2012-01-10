@@ -1,0 +1,72 @@
+# This file is used by $genDeConfig/util/genRtrConfig
+#
+# Place this file under $genDevConfig/lib/monitorConfig
+#
+#
+# Thresholds can be set for each target-type which is defined 
+# in the Config-Tree subtree that is generated.
+
+# Note: 
+# There must be three spaces before each line. As these lines will be
+# inserted as is within the Cricket config-tree. The cricket config-tree
+# requires the presence of white space when treating data for a specific target
+
+
+# Each config type must match a pre-defined "target-type" within the config tree and
+# especially one that will be used within genDevConfig
+
+
+config Chassis
+
+   monitor-thresholds = "cpu5min:value:n:75:MAIL:%mail-pgm%:root\\\@localhost,
+   cpu5min:value:n:60:MAIL:%mail-pgm%:netflow\\\@localhost,
+   mem5minUsed:quotient:>60pct::processorRam:MAIL:%mail-pgm%:root\\\@localhost,
+   mem5minUsed:quotient:>85pct::processorRam:MAIL:%mail-pgm%:root\\\@localhost"
+
+
+config Chassis-PIX
+# No thresholds
+
+
+# Service Assurance Agents on Cisco Routers
+config saa-rtt
+   monitor-thresholds = "rttMonLatestRttOperSense:value:n:2:MAIL:%mail-pgm%:root\\\@localhost,
+   rttMonLatestRttOperCompletionTime:value:n:200:MAIL:%mail-pgm%:root\\\@localhost,
+   rttMonLatestRttOperCompletionTime:value:n:400:MAIL:%mail-pgm%:root\\\@localhost"
+
+
+# General Cisco Interface with robust detection
+config cisco-interface
+
+
+
+# General Cisco Interface with robust detection
+config cisco-interface-hc
+
+
+# Access interfaces where users or non-critical servers are connected
+# Apply only minimal threshold detection
+config cisco-interface-access
+
+
+# Access interfaces where users or non-critical servers are connected
+# Apply only minimal threshold detection
+config cisco-interface-access-hc
+
+
+config frame-interface
+
+
+config sub-interface
+
+
+config standard-interface
+
+
+config standard-interface-hc
+
+
+config standard-interface-access
+
+
+config standard-interface-access-hc

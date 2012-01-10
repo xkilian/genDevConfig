@@ -1,0 +1,180 @@
+# Generic network device sub-tree defaults - for use with genDevConfig
+#
+#
+# This file is formated with a tab width of 4.
+#
+#
+# For additional information on the features and use of genDevConfig consult
+# http://www.acktomic.com/cricket/cricket.htm or see the help provided on the
+# command-line in your distribution of genDevConfig.
+#
+#
+###############################################################################
+
+###############################################################################
+#
+# Setup the default variables that apply to all targets that are defined
+# within this part of the config-tree hierarchy.
+#
+# All variables can be overriden by redefinition higher in the config-tree.
+#
+#
+###############################################################################
+
+
+
+# NetScreen Firewall MIBs
+
+OID     nsResCpuLast5Min            1.3.6.1.4.1.3224.16.1.3.0
+OID     nsResMemLeft                1.3.6.1.4.1.3224.16.2.2.0
+
+# Netscreen Session Numbers
+
+OID     nsResSessAllocate           1.3.6.1.4.1.3224.16.3.2
+OID     nsResSessFailed             1.3.6.1.4.1.3224.16.3.4
+
+# Netscreen Attack Recognition
+
+OID     nsIdsAttkMonSynAttk         1.3.6.1.4.1.3224.3.2.1.3
+OID     nsIdsAttkMonIcmpFlood       1.3.6.1.4.1.3224.3.2.1.9
+OID     nsIdsAttkMonPortScan        1.3.6.1.4.1.3224.3.2.1.12
+OID     nsIdsAttkMonIpSweep         1.3.6.1.4.1.3224.3.2.1.13
+
+
+###############################################################################
+#
+# Datasources define the type of data and the period of the data retrieved
+#
+#
+###############################################################################
+
+### Netscreen Datasource
+
+datasource nsResMemLeft
+    ds-source   = snmp://%snmp%/nsResMemLeft
+    rrd-ds-type = GAUGE
+
+datasource nsResCpuLast5Min
+    ds-source   = snmp://%snmp%/nsResCpuLast5Min
+    rrd-ds-type = GAUGE
+
+datasource nsResSessAllocate
+    ds-source   = snmp://%snmp%/nsResSessAllocate.%inst%
+    rrd-ds-type = GAUGE
+
+datasource nsResSessFailed
+    ds-source   = snmp://%snmp%/nsResSessFailed.%inst%
+
+
+datasource nsIdsAttkMonIcmpFlood
+    ds-source   = snmp://%snmp%/nsIdsAttkMonIcmpFlood.%inst%
+
+datasource nsIdsAttkMonIpSweep
+    ds-source   = snmp://%snmp%/nsIdsAttkMonIpSweep.%inst%
+
+datasource nsIdsAttkMonPortScan
+    ds-source   = snmp://%snmp%/nsIdsAttkMonPortScan.%inst%
+
+datasource nsIdsAttkMonSynAttk
+    ds-source   = snmp://%snmp%/nsIdsAttkMonSynAttk.%inst%
+
+###############################################################################
+#
+# targetType's are the device definitions that will tell cricket what to retrieve
+# from the device, and how should should be displayed. Each target that is defined
+# in a target file should be associated with a targetType, so that cricket knows
+# how to treat the target.
+#
+# Empty target statements can be used for some targets that you don't want to pull
+# data from. Examples are Chassis's of devices for which the OIDs haven't been detailed
+# yet(temperature, cpu, memory). 
+#
+# See cricket.sourceforge.net for documentation on the definitions found in
+#  this file
+# 
+#
+###############################################################################
+
+
+targetType	Netscreen-Firewall
+	ds		=	"nsResCpuLast5Min, nsResMemLeft"
+	view	=	"cpu: nsResCpuLast5Min,
+                 memory: nsResMemLeft"
+
+targetType     Netscreen-sessions
+       ds               =   "nsResSessAllocate, nsResSessFailed"
+       view             =   "Sessions: nsResSessAllocate nsResSessFailed"
+
+targetType     Netscreen-stats
+       ds               =   "nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep"
+       view             =   "detectedAttacks: nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep"
+
+targetType     Netscreen-attacks
+       ds               =   "nsIdsAttkMonSynAttk, nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep, nsIdsAttkMonPortScan"
+       view             =   "detectedAttacks: nsIdsAttkMonSynAttk nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep nsIdsAttkMonPortScan"
+
+
+###############################################################################
+#
+## monitorType definitions
+#
+# The short definition: These are monitor threshold templates that can be
+# associated with targets in the config-tree. Each monitorType is reference using
+# the monitor-type key and the value is the monitorType.
+#
+## These are the device definitions that will tell cricket what to monitor
+# from the device, and how should should acted on. Each target that is defined
+# in a target file can be associated with a monitorType, so that cricket knows
+# how to treat threshold monitoring for the target.
+#
+# Empty monitorType statements can be used for some targets that you don't want to monitor.
+# Examples are Chassis's of devices for which the OIDs haven't been detailed
+# yet(temperature, cpu, memory).
+#
+# See cricket.sourceforge.net for documentation on the definitions found in
+#  this file
+#
+###############################################################################
+
+#monitorType chassis
+#    monitor-thresholds = 
+#        "cpu5min:value:n:75:META:router-cpu:dark-red:SPAN:3,
+#         cpu5min:value:n:1:META:router-cpu:yellow:SPAN:3
+#	 "
+
+
+###############################################################################
+#
+#
+## map definitions
+# This dict is used to control the instance mapping code.
+# See the docs for more information about the map dictionary.
+#
+#
+###############################################################################
+
+# none defined
+
+###############################################################################
+#
+# "graph" statements define how the data should be displayed in the graphic.
+# Most of the variables defined are directly mapped to the rrdtool graph tool
+# that is used to generate the graphics.
+#
+#
+###############################################################################
+
+
+graph   nsResSessAllocate
+    color   =   dark-green
+    draw-as =   AREA
+    y-min   =   0
+    y-axis  =   "Sessions"
+    legend  =   "Current allocated sessions"
+
+graph   nsResSessFailed
+    color       =   blue
+    draw-as =   STACK
+    y-axis      =   "Sessions"
+    legend      =   "Failed session allocation"
+
