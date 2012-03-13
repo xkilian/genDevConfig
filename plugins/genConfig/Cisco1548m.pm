@@ -31,7 +31,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 0.02;
+my $VERSION = 0.03;
 
 ### End package init
 
@@ -118,13 +118,14 @@ sub custom_targets {
     my $desc = 'SNMP packets';
     my $targetname = 'snmp_stats';
     
-    $opts->{'file'}->writetarget($targetname, '',
-				 'order'         => $opts->{order},
-				 'inst'          => (keys %snmpinpkts)[0],
-				 'display-name'  => $targetname,
-				 'short-desc'    => $desc,
-				 'long-desc'     => $desc,
-				 'target-type'   => 'snmpstats');
+    $opts->{'file'}->writetarget('service {', '',
+	                         'host_name'           => $opts{$devicename},
+				 'service_description' => $targetname,
+				 '_order'         => $opts->{order},
+				 '_inst'          => (keys %snmpinpkts)[0],
+				 'display_name'   => $targetname,
+				 'notes'          => $desc,
+				 'use'            => 'snmpstats');
     
     $opts->{order} -= 1;
 

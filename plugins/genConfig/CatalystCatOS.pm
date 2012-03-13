@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.04;
+my $VERSION = 1.05;
 
 ### End package init
 
@@ -218,13 +218,15 @@ sub custom_targets {
         my $ldesc = 'Layer2 engine statistics - total switched packets';
         my $targetname = 'layer2engine';
     
-        $file->writetarget($targetname, '',
-			       'order'         =>      $opts->{order},
-			       'inst'          =>      (keys %l2stats)[0],
-			       'display-name'  =>      $targetname,
-			       'short-desc'    =>      $ldesc,
-			       'long-desc'     =>      $ldesc,
-			       'target-type'   =>      'switch-layer2');
+        $file->writetarget('service {', '',
+			   'host_name'           => $opts->{devicename},
+			   'service_description' =>      $targetname,
+			       '_order'          =>      $opts->{order},
+			       '_inst'           =>      (keys %l2stats)[0],
+			       'display_name'    =>      $targetname,
+			       'notes'           =>      $ldesc,
+			       'use'             =>      'switch-layer2'
+	);
     
         $opts->{order} -= 1;
     }
@@ -237,13 +239,14 @@ sub custom_targets {
         $sdesc = "Switch cpu statistics";
         my ($targetname) = 'switch-cpu';
 
-        $file->writetarget($targetname, '',
-            'inst'           => 'map(cpu-stats)',
-            'order'           => $opts->{order},
-            'interface-name'   => $targetname,
-            'long-desc'   => $ldesc,
-            'short-desc'  => $sdesc,
-            'target-type' => 'switch-cpu',
+        $file->writetarget'service {', '',
+	    'host_name'           => $opts->{devicename},				    
+	    'service_description' => $targetname,
+            '_inst'               => 'map(cpu-stats)',
+            '_order'              => $opts->{order},
+            'display_name'        => $targetname,
+            'notes'               => $ldesc,
+            'use'                 => 'switch-cpu',
         );
 
         $opts->{order} -= 1;
@@ -257,13 +260,14 @@ sub custom_targets {
         $sdesc = "Switch memory statistics";
         my ($targetname) = 'switch-mem';
 
-        $file->writetarget($targetname, '',
-            'inst'           => 'map(mem-stats)',
-            'order'           => $opts->{order},
-            'interface-name'   => $targetname,
-            'long-desc'   => $ldesc,
-            'short-desc'  => $sdesc,
-            'target-type' => 'switch-mem',
+        $file->writetarget('service {', '',
+	    'host_name'           => $opts->{devicename},
+	    'service_description' => $targetname,
+            '_inst'               => 'map(mem-stats)',
+            '_order'              => $opts->{order},
+            'display_name'        => $targetname,
+            'notes'               => $ldesc,
+            'use'                 => 'switch-mem',
         );
 
         $opts->{order} -= 1;
@@ -314,7 +318,7 @@ sub custom_interfaces {
 
     ### Collect extra info from Cisco Catalyst MIB
 
-    push(@config, 'target-type' => 'standard-interface' . $hc);
+    push(@config, 'use' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

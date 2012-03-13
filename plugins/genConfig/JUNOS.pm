@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.04;
+my $VERSION = 1.05;
 
 ### End package init
 
@@ -190,9 +190,9 @@ sub discover {
         $opts->{extendedint} = 0   if ($opts->{req_extendedint});
         $opts->{class} = 'juniper';
 
-	# Don't create default chassis target
-	#$opts->{chassisstats} = 0;
-        # Note from Francois Mikus. Do create it! This is where
+	# Create a default chassis, even if no stats are collected
+	# $opts->{chassisstats} = 0;
+        # This is where
 	# we store all user configurable options. Even if no DS's are collected.
 
 	return;
@@ -278,15 +278,17 @@ sub custom_targets {
 			my @config = ();
 
 			push(@config,
-				'order'		=>	$opts->{order},
-				'display-name'	=>	"%devicename% chassis",
-				'short-desc'	=>	$sdesc,
-				'long-desc'	=>	$ldesc,
-				'inst'		=>	0,
-				'rest'		=>	$key,
-				'target-type'	=>	'juniper-chassis-' . $ttype,
+			        'host_name'     =>      $opts->{devicename},
+			        'service_description' => $target,
+				'_order'	=>	$opts->{order},
+				'_display_name'	=>	"%devicename% chassis",
+				#'short-desc'	=>	$sdesc,
+				'notes'	        =>	$ldesc,
+				'_inst'		=>	0,
+				'_rest'		=>	$key,
+				'use'	        =>	'juniper-chassis-' . $ttype,
 			);
-			$file->writetarget($target , '', @config);
+			$file->writetarget(service {, '', @config);
 
 			$opts->{order} -= 1;
 		}
@@ -334,17 +336,19 @@ sub custom_targets {
 			my @config = ();
 
 			push(@config,
-				'order'		=>	$opts->{order},
-				'display-name'	=>	"%devicename% $filter  $counter",
-				'short-desc'	=>	$sdesc,
-				'long-desc'	=>	$ldesc,
-				'inst'		=>	0,
-				'filtername'	=>	$filterdec,
-				'countername'	=>	$counterdec,
-				'fwtype'	=>	$jnx_fwtypes{$key},
-				'target-type'	=>	'juniper-firewall-' . $ttype,
+			     	'service_description' => $target,
+			     	'host_name'       => $opts->{devicename},
+				'_order'		=>	$opts->{order},
+				'display_name'	=>	$opts{devicename} ." $filter  $counter",
+				#'short-desc'	=>	$sdesc,
+				'notes'	=>	$ldesc,
+				'_inst'		=>	0,
+				'_filtername'	=>	$filterdec,
+				'_countername'	=>	$counterdec,
+				'_fwtype'	=>	$jnx_fwtypes{$key},
+				'use'	        =>	'juniper-firewall-' . $ttype,
 			);
-			$file->writetarget($target , '', @config);
+			$file->writetarget('service {', '', @config);
 
 			$opts->{order} -= 1;
 		}
@@ -360,14 +364,16 @@ sub custom_targets {
 		foreach $key (keys(%junipermplslspname)) {
 			my @config = ();
 			push(@config,
-				'tunnel-name'	=>	$junipermplslspname{$key},
-				'inst'		=>	"\"(\'$key\')\"",
-				'order'		=>	$opts->{order},
-				'interface-name'=>	'%tunnel-name%',
-				'long-desc'	=>	'%tunnel-name%',
-				'target-type'	=>	'juniper-mpls-tunnel'
+			     	'service_description' => $junipermplslspname{$key},
+			     	'host_name'       => $opts->{devicename},
+				'_tunnel-name'	=>	$junipermplslspname{$key},
+				'_inst'		=>	"\"(\'$key\')\"",
+				'_order'		=>	$opts->{order},
+				'notes'=>	'%tunnel-name%',
+				'display_name'	=>	'%tunnel-name%',
+				'use'	=>	'juniper-mpls-tunnel'
 			);
-			$file->writetarget($junipermplslspname{$key}, '', @config);
+			$file->writetarget(, '', @config);
 		}
 		$opts->{order} -= 1;
 	}
@@ -414,31 +420,31 @@ sub custom_interfaces {
 
 	if ($iftype{$index} == 32 &&  $ifdescr{$index} =~ /\.\d+$/) {
 
-		push(@config, 'target-type' => 'juniper-sub-interface' . $hc);
+		push(@config, 'use' => 'juniper-sub-interface' . $hc);
 		$match = 1;
 
 		$ifmtu{$index} = 1 if (!defined($ifmtu{$index}) || $ifmtu{$index} == 0);
 
 	} elsif ($iftype{$index} == 6 &&  $ifdescr{$index} =~ /^fxp\d/) {
 
-		push(@config, 'target-type' => 'juniper-standard-interface-hc');
+		push(@config, 'use' => 'juniper-standard-interface-hc');
 		$match = 1;
 
 	} elsif ($iftype{$index} == 37) {
 
-		push(@config, 'target-type' => 'juniper-atm-interface-hc');
+		push(@config, 'use' => 'juniper-atm-interface-hc');
 		$match = 1;
 
 	}  elsif ($iftype{$index} == 135) {
 
 		### VLANs
 
-		push(@config, 'target-type' => 'juniper-sub-interface-hc');
+		push(@config, 'use' => 'juniper-sub-interface-hc');
 		$match = 1;
 
 	}  elsif ($opts->{juniperint}) {
 
-		push(@config, 'target-type' => 'juniper-interface-hc');
+		push(@config, 'use' => 'juniper-interface-hc');
 		$match = 1;
 	}
 

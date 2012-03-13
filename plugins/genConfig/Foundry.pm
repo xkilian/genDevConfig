@@ -33,7 +33,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.06;
+my $VERSION = 1.07;
 
 ### End package init
 
@@ -205,12 +205,13 @@ sub custom_targets {
 
     if ($opts->{model} =~ /ServerIron/) {
         my $targetname = 'slb_summary';
-        $file->writetarget($targetname, '',
-                        'interface-name' => $targetname,
-                        'long-desc'      => "Total L4SLB conn statistics for $opts->{devicename}",
-                        'short-desc'     => "Total L4SLB conn stats for $opts->{devicename}",
-                        'target-type'    => 'foundryL4SLB',
-                        'order'          => $opts->{order},
+        $file->writetarget('service {', '',
+                        'host_name'           => $opts->{devicename},
+                        'service_description' => $targetname,
+                        'display_name'        => $targetname,
+                        'notes'               => "Total L4SLB conn statistics for $opts->{devicename}",
+                        'use'                 => 'foundryL4SLB',
+                        '_order'              => $opts->{order},
                     );
         $opts->{order} -= 1;
     }
@@ -230,12 +231,13 @@ sub custom_targets {
     	my ($servername, $serverip, $adminstate) = ($result->{$row}->{2}, $result->{$row}->{3}, $result->{$row}->{4});
     	next unless (defined $adminstate && $adminstate == 1);
         my $targetname = 'slb_' . $serverip;
-    	$file->writetarget($targetname, '',
-                        'interface-name' => $servername,
-                        'long-desc'      => "Real Server $servername ($serverip)",
-                        'short-desc'     => "Real Server $servername",
-                        'target-type'    => 'foundry-real-server',
-                        'order'          => $opts->{order},
+    	$file->writetarget('service {', '',
+                     	'host_name'           => $opts->{devicename},
+                        'service_description' => $targetname,
+                        'display_name'        => $servername,
+                        'notes'               => "Real Server $servername ($serverip)",
+                        'use'                 => 'foundry-real-server',
+                        '_order'              => $opts->{order},
                     );
         $opts->{order} -= 1;
         $reals{$servername} = $serverip;
@@ -248,12 +250,13 @@ sub custom_targets {
     my ($servername, $serverip, $adminstate) = ($result->{$row}->{2}, $result->{$row}->{3}, $result->{$row}->{4});
     next unless (defined $adminstate && $adminstate == 1);
         my $targetname = 'slb_' . $serverip;
-    	$file->writetarget($targetname, '',
-                        'interface-name' => $servername,
-                        'long-desc'      => "Virtual Server $servername ($serverip)",
-                        'short-desc'     => "Virtual Server $servername",
-                        'target-type'    => 'foundry-virtual-server',
-                        'order'          => $opts->{order},
+    	$file->writetarget('service {', '',
+                     	'host_name'           => $opts->{devicename},
+                        'service_description' => $targetname,
+                        'display_name'        => $servername,
+                        'notes'               => "Virtual Server $servername ($serverip)",
+                        'use'                 => 'foundry-virtual-server',
+                        '_order'              => $opts->{order},
                     );
         $opts->{order} -= 1;
     $virtuals{$servername} = $serverip;
@@ -267,12 +270,13 @@ sub custom_targets {
     next unless (defined $adminstate && $adminstate == 1);
     my $serverip = $reals{$servername};
     my $targetname = 'slb_' . $serverip . '.' . $serverport1;
-    $file->writetarget($targetname, '',
-                        'interface-name' => $servername,
-                        'long-desc'      => "Real Server $servername ($serverip) Port $serverport1",
-                        'short-desc'     => "Real Server $servername-$serverport1",
-                        'target-type'    => 'foundry-real-server-port',
-                        'order'          => $opts->{order},
+    $file->writetarget('service {', '',
+                  	'host_name'           => $opts->{devicename},
+                        'service_description' => $targetname,
+                        'display_name'        => $servername,
+                        'notes'               => "Real Server $servername ($serverip) Port $serverport1",
+                        'use'                 => 'foundry-real-server-port',
+                        '_order'              => $opts->{order},
                     );
     $opts->{order} -= 1;
   }
@@ -285,12 +289,13 @@ sub custom_targets {
     next unless (defined $adminstate && $adminstate == 1);
     my $serverip = $virtuals{$servername};
     my $targetname = 'slb_' . $serverip . '.' . $serverport1;
-    $file->writetarget($targetname, '',
-                        'interface-name' => $servername,
-                        'long-desc'      => "Virtual Server $servername ($serverip) Port $serverport1",
-                        'short-desc'     => "Virtual Server $servername-$serverport1",
-                        'target-type'    => 'foundry-virtual-server-port',
-                        'order'          => $opts->{order},
+    $file->writetarget('service {', '',
+                  	'host_name'           => $opts->{devicename},
+                        'service_description'    => $targetname,
+                        'display_name'           => $servername,
+                        'notes'                  => "Virtual Server $servername ($serverip) Port $serverport1",
+                        'use'                    => 'foundry-virtual-server-port',
+                        '_order'                 => $opts->{order},
                     );
     $opts->{order} -= 1;
   }

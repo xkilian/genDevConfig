@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.06;
+my $VERSION = 1.07;
 
 ### End package init
 
@@ -160,13 +160,15 @@ sub custom_targets {
         $sdesc = "Number of active and failed sessions for the entire firewall";
         my ($targetname) = 'netscreen_sessions_statistics';
 
-        $file->writetarget($targetname, '',
-            'inst'           => '0',
-            'order'          => $opts->{order},
-            'interface-name' => $targetname,
-            'long-desc'      => $ldesc,
-            'short-desc'     => $sdesc,
-            'target-type'    => 'Netscreen-sessions',
+        $file->writetarget('service {', '',
+            'service_desciption' => $targetname,
+            'host_name'           => $opts->{$devicename},
+            '_inst'           => '0',
+            '_order'          => $opts->{order},
+
+            'display_name' => $targetname,
+            'notes'      => $ldesc,
+            'use'    => 'Netscreen-sessions',
         );
         $opts->{order} -= 1;
 
@@ -178,13 +180,13 @@ sub custom_targets {
             $sdesc = "Current number of attacks for ifindex $ifindex";
             $targetname = "netscreen_attack_statistics_if_$ifindex";
 
-            $file->writetarget($targetname, '',
-                'inst'             => $ifindex,
-                'order'            => $opts->{order},
-                'interface-name'   => $targetname,
-                'long-desc'        => $ldesc,
-                'short-desc'       => $sdesc,
-                'target-type'      => 'Netscreen-attacks',
+            $file->writetarget('service {', '',
+         	'host_name'           => $opts->{$devicename},
+                '_inst'             => $ifindex,
+                '_order'            => $opts->{order},
+                'service_description'   => $targetname,
+                'notes'        => $ldesc,
+                'use'      => 'Netscreen-attacks',
             );
 
             $opts->{order} -= 1;
@@ -225,7 +227,7 @@ sub custom_interfaces {
     ### DEVICE CUSTOM INTERFACE CONFIG SECTION
     ###
 
-    push(@config, 'target-type' => 'standard-interface' . $hc);
+    push(@config, 'use' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

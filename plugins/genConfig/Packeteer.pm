@@ -1,7 +1,7 @@
 # -*-perl-*-
 #    genDevConfig plugin module
 #
-#    Copyright (C) 2005 Francois Mikus
+#    Copyright (C) 2005-2012 Francois Mikus
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.00;
+my $VERSION = 1.01;
 
 ### End package init
 
@@ -246,14 +246,16 @@ sub custom_targets {
                     $sdesc = "$speed_str";
             }
 
-            $file->writetarget($target, '',
-                    ('interface-name' => $classFullName{$index},
-                    'target-type'  => 'packeteer-class',
-                    'short-desc'     => $sdesc,
-                    'long-desc'      => $ldesc,
-                    'order'          => $opts->{order},
-                    'inst'           => $index
-                    ) );
+            $file->writetarget('service {', '',
+                  'service_description' => $target,
+                  'host_name' => $opts->{devicename},
+                  'display_name' => $classFullName{$index},
+                  'use'  => 'packeteer-class',
+                  # 'short-desc'     => $sdesc,
+                  'notes'      => $ldesc,
+                  '_order'          => $opts->{order},
+                  '_inst'           => $index
+                  );
 
         $opts->{order} -= 1;
        }
@@ -310,7 +312,7 @@ sub custom_interfaces {
     #
     #if ($iftype{$index} == 32 &&  $ifdescr{$index} =~ /\.\d+$/) {
 
-    #     push(@config, 'target-type' => 'packeteer-sub-interface' . $hc);
+    #     push(@config, 'use' => 'packeteer-sub-interface' . $hc);
     #     # Override runtime data for the mtu of this interface
     #     $ifmtu{$index} = 1 if (!defined($ifmtu{$index}) || $ifmtu{$index} == 0);
     #     # tell the main script that you the plugin did process this interface
@@ -319,7 +321,7 @@ sub custom_interfaces {
     #} elsif ($opts->{packeteerint}) {
     #     # Check if NU Cast packet statistics are requested
     #     my ($nu) = $opts->{nustats} ? '-nu' : '';
-    #     push(@config, 'target-type' => 'packeteer-interface'. $nu . $hc);
+    #     push(@config, 'use' => 'packeteer-interface'. $nu . $hc);
     #     $match = 1;
     #}
 

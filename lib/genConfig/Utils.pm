@@ -79,39 +79,6 @@ sub translateRttTargetAddr {
 
 ###############################################################################
 #
-# Replace monitor-types with appropriate monitor-thresholds.
-#
-###############################################################################
-
-sub applyMonitoringThresholds {
-    my($name, $value) = @_;
-    Debug (" Monitor-debug: Printing out the target keys.");
-    while (($key, $val)= each( %{$value})){
-    Debug (" Monitor-debug: targetkey: $key value: $val");
-    }
-    my $dir = $Common::global::outputdir_ct;
-    if (!$Common::global::monitors || !$dir) {
-       Debug ("Skipping monitoring thresholds for this target.");
-       if (exists($value->{'monitor-type'})) {
-           delete($value->{'monitor-type'});
-       }
-    } elsif (exists($value->{'monitor-type'})) {
-       Debug ("Looking for monitoring thresholds for this target based on monitor-type.");
-       if (checkMonitorType($dir, $value->{'monitor-type'})) {
-           $value->{'monitor-thresholds'} = $_;
-       }
-       delete($value->{'monitor-type'});
-    } elsif (exists($value->{'target-type'}) && $name ne "--default--") {
-       Debug ("Looking for monitoring thresholds for this target based on target-type.");
-       if (checkMonitorType($dir, $value->{'target-type'})) {
-           $value->{'monitor-thresholds'} = $_;
-       }
-    }
-    return;
-}
-
-###############################################################################
-#
 # Interface types based on IANA types
 #
 ###############################################################################

@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.12;
+my $VERSION = 1.13;
 
 ### End package init
 
@@ -509,14 +509,15 @@ sub custom_targets {
             $cpudescr =~ s/,.*$//g;
             my $sdesc = "CPU " . $cpuname . ": " . $cpudescr;
 
-            $file->writetarget($target, '',
-                    'cpu' => $cpu,
-                    'long-desc' => $ldesc,
-                    'short-desc' => $sdesc,
-                    'target-type' => "cisco-vip-cpu",
-                    'display-name' => "%auto-target-name%",
-                    'inst'        => 0,
-                    'order' => $opts->{order},
+            $file->writetarget("service {", '',
+	            'host_name'           => $opts->{devicename},
+                    'service_description' => $target,
+                    '_cpu'                => $cpu,
+                    'notes'               => $ldesc,
+                    'display_name'        => $sdesc,
+                    '_inst'               => 0,
+                    '_order'              => $opts->{order},
+                    'use'                 => "cisco-vip-cpu",
             );
 
             $opts->{order} -= 1;
@@ -582,14 +583,16 @@ sub custom_targets {
                     $targetdesc = "QoS_$ifdescr\_$policydirection\_$name_cell";
                     $targetname = "qos_$ifacedescr\_$policydirection\_$name_cell";
         
-                    $file->writetarget($targetname, '',
-                        'interface-name' => $targetdesc,
-                        'long-desc'      => $ldesc,
-                        'short-desc'     => $sdesc,
-                        'target-type'    => $qostype,
-                        'inst'           => $instance,
-                        'hide'           => 'true',
-                        'order'          => $opts->{order},
+                    $file->writetarget("service {", '',
+			'host_name'           => $opts->{devicename},
+                        'service_description'   => $targetname,
+                        '_interface-name' => $targetdesc,
+                        'notes'          => $ldesc,
+                        'display_name'   => $targetname,
+                        'use'            => $qostype,
+                        '_inst'          => $instance,
+                        '_hide'          => 'true',
+                        '_order'          => $opts->{order},
                     );
                     $opts->{order} -= 1;
     
@@ -619,12 +622,14 @@ sub custom_targets {
             $targetname = "qos_$ifacedescr\_$policydirection";
     
     
-            $file->writetarget($targetname, '',
-                'interface-name'=> $targetdesc,
-                'long-desc' => $ldesc,
-                'short-desc'    => $sdesc,
-                'target-type'   => $qostype,
-                'mtargets'  => "$servicepolicy{$key}",
+            $file->writetarget("service {", '',
+		'host_name'           => $opts->{devicename},
+                'service_description'=> $targetname,
+                '_interface-name'=> $targetdesc,
+                'notes' => $ldesc,
+                'display_name'    => $targetname,
+                'use'   => $qostype,
+                '_mtargets'  => "$servicepolicy{$key}", # FIXME to convert to reference a pnp or graphite mtarget equivalent
                             'order'         => $opts->{order},
             );
                     $opts->{order} -= 1;
@@ -661,14 +666,14 @@ if ($opts->{ciscobox} && keys(%cisco_car)) {
         $ldesc="$ifdescr{$ifindex} $acl $direction ratelimit  - $intdescr{$ifindex}";
 
         push(@config,
-            'order'         =>      $opts->{order},
-            'short-desc'        =>    $sdesc,
-            'long-desc'         =>    $ldesc,
-            'interface-name'    =>    $ifdescr{$ifindex},
-            'rest'              =>    $rest,
-            'target-type'       =>    'rate-limit'
+	    'host_name'           => $opts->{devicename},
+            'service_description' =>  $ifname,
+            '_order'              =>  $opts->{order},
+            'notes'               =>  $ldesc . " " . $rest,
+            'display_name'        =>  $ifdescr{$ifindex},
+            'use'                 =>  'rate-limit'
         );
-        $file->writetarget($ifname , '', @config);
+        $file->writetarget("service {", '', @config);
 
         $opts->{order} -= 1;
     }
@@ -699,13 +704,15 @@ if ($opts->{rtragents} && %rttMonCtrlOperState) {
         #Debug ("Destination for $key tag: $rttMonCtrlAdminTag{$key} addr: $address\n");
         my ($targetname) = 'SaaRtt_Agent_' . $key;
 
-           $file->writetarget($targetname, '',
-            'inst'        => $key,
-            'order'          => $opts->{order},
-            'interface-name'   => $targetname,
-            'long-desc'   => $ldesc,
-            'short-desc'  => $sdesc,
-            'target-type' => $protocol
+           $file->writetarget("service {", '',
+	    'host_name'           => $opts->{devicename},
+            'service_description'        => $targetname,
+            '_inst'        => $key,
+            '_order'       => $opts->{order},
+            'display_name' => $targetname,
+            'notes'        => $ldesc,
+	    #'short-desc'   => $sdesc,
+            'use'          => $protocol
         );
         $opts->{order} -= 1;
     }
@@ -722,11 +729,6 @@ if ($opts->{voip} && %PeerCfgOrigAddr) {
                  "# Args: $opts->{savedargs}\n".
                  "# Date: ". scalar(localtime(time)). "\n\n");
 
-    Info ("Writing dialpeer default configuration");
-    $customfile->writetarget('--default--', '',
-        'directory-desc' => 'Dial Peer Stats',
-        'target-type'    => 'dial-peer',
-        );
     foreach my $key (keys %PeerCfgOrigAddr) {
       Debug ("PeerCfgOrigAddr for peer $key: $PeerCfgOrigAddr{$key}\n");
     }
@@ -785,7 +787,10 @@ sub custom_interfaces {
 
         if ($opts->{voip}) {
             ($peerid) = $ifdescr{$index} =~ /Peer:\s+(\d+)/;
-            push(@config, 'peer-id' => $peerid);
+            push(@config,
+			'_peerid' => $peerid,
+                        'notes' => 'Dial Peer Stats',
+                        'use'    => 'dial-peer');
             $customfile = $opts->{dpfile}; # Select the file to store configs
             $customsdesc .= $PeerCfgOrigAddr{$peerid.'.'.$index}; 
             $customldesc = "Call Address: $PeerCfgOrigAddr{$peerid.'.'.$index}";
@@ -824,15 +829,16 @@ sub custom_interfaces {
             ($mainif, $dlci) = split(/\./, $cfrExtCircuitSubifIndex{$index});
             $ifdescr{$index} = $ifdescr{$mainif};
 
-            push(@config,      'dlci'           => $dlci,
-                               'display-name'   => "$opts->{devicename} $dspname",
-                               'target-type'    => 'frame-interface');
+            push(@config,      '_dlci'           => $dlci,
+                               'notes       '    => "$opts->{devicename} $dspname",
+                               'use'             => 'frame-interface');
 
             $match = 1;
 
         } else {
 
-            push(@config, 'target-type' => 'sub-interface' . $hc);
+            push(@config, 
+		    'use' => 'sub-interface' . $hc);
             $match = 1;
         }
         $opts->{nomtucheck} = 1;
@@ -847,7 +853,8 @@ sub custom_interfaces {
 	# Check if NU Cast packet statistics are required
         my ($nu) = $opts->{nustats} ? '-nu' : '';
 
-        push(@config, 'target-type' => 'cisco-interface' . $nu . $hc);
+        push(@config, 
+		    'use' => 'cisco-interface' . $nu . $hc,);
         $match = 1;
     }
 
@@ -895,7 +902,7 @@ sub custom_files {
     if ($peerid) {
         $customfile->write("\n");
         Info ("Writing dialpeer configuration");
-        $customfile->writetarget($target, $c, @config);
+        $customfile->writetarget("service {", $c, @config);
         $wmatch = 1;
     }
 

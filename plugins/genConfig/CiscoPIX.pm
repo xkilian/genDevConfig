@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.00;
+my $VERSION = 1.01;
 
 ### End package init
 
@@ -183,13 +183,14 @@ sub custom_targets {
         $sdesc = "Number of connections active in the entire firewall";
         my ($targetname) = 'firewall_statistics';
 
-        $file->writetarget($targetname, '',
-            'inst'           => '0',
-            'order'          => $opts->{order},
-            'interface-name'   => $targetname,
-            'long-desc'   => $ldesc,
-            'short-desc'  => $sdesc,
-            'target-type' => 'Cisco-pix-stats',
+        $file->writetarget('service {', '',
+            'host_name'           => $opts->{devicename},
+            'service_description' => $targetname,
+            '_inst'             => '0',
+            '_order'            => $opts->{order},
+            'display_name'      => $targetname,
+            'notes'             => $ldesc,
+            'use'               => 'Cisco-pix-stats',
         );
 
        $opts->{order} -= 1;

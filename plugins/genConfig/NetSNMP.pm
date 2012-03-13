@@ -256,12 +256,14 @@ sub custom_targets {
 
     my $file = $opts->{'file'};
 
-    $file->writetarget("$opts->{devicename}_system", '',
-		       'display-name'   => '%devicename%  OS environment',
-		       'target-type'    => 'hr_System',
-		       'inst'           => '',
-		       'order'          => $opts->{order}--,
-		       );
+    $file->writetarget('service {', '',
+			'service_desciption' => "$opts->{devicename}_system",
+			'host_name' => $opts->{devicename},
+			'display_name'   => "$opts->{devicename}_system",
+		        'use'    => 'hr_System',
+		        '_inst'           => '',
+		        '_order'          => $opts->{order}--,
+		        );
 
     ### Gen UCD Disk IO targets...
 
@@ -294,9 +296,10 @@ sub do_diskio {
 
     my $dsply = $multilev ? "%device%" : "disk %device%";
 	
-    my @defargs = ('target-type'  => "ucd_diskio",
-		   'display-name' => $dsply,
-		   'inst'         => "map(ucd-diskio-device)",
+    my @defargs = ('use'  => "ucd_diskio",
+		   'host_name' => $opts->{devicename},
+		   'display_name' => $dsply,
+		   '_inst'         => "map(ucd-diskio-device)",
 		   );
 
     ### If the user requested a hierarchical setup, then create it and 
@@ -311,9 +314,9 @@ sub do_diskio {
 	subdir($subdir, $opts->{lowercase});
 	$subf = new genConfig::File("$subdir/targets");
 
-	$subf->writetarget('--default--', '', @defargs,
-			   'directory-desc' => 'Per disk I/O statistics',
-			   );
+#	$subf->writetarget('--default--', '', @defargs,
+#			   'directory-desc' => 'Per disk I/O statistics',
+#			   );
 
 	@defargs = ();
 
@@ -330,13 +333,15 @@ sub do_diskio {
 	my $target = "disk_$diskIODevice{$d}";
 	$target =~ s|/|_|g;
 
-	$subf->writetarget($target, '', @defargs,
-			   'device' => $diskIODevice{$d},
-			   'order'  => $opts->{order}--
-			   );
+	$subf->writetarget('service {', '', @defargs,
+			'service_description' => $target,
+			'_device' => $diskIODevice{$d},
+			'notes' => "DiskIOdevice " . $diskIODevice{$d} . " : $target",
+			'_order'  => $opts->{order}--
+			);
     }
 
-    ### If we openned a new file, then close it...
+    ### If we opened a new file, then close it...
 
     if ($multilev) {
 	$subf->close();
@@ -358,11 +363,12 @@ sub do_hrstorage {
     my %sUnits = gettable('hrStorageAllocationUnits');
     my %sSize  = gettable('hrStorageSize');
 
-    my @defargs = ('target-type'  => "hr_Storage",
-		   'display-name' => "%storage%",
-		   'inst'         => "map(hr-storage-name)",
-		   'min-size'     => "%blksize%",
-		   'units'        => "%blksize%,*",
+    my @defargs = ('use'           => "hr_Storage",
+		   'host_name'     => $opts->{devicename},
+		   'display_name'  => "$_storage$",
+		   '_inst'         => "map(hr-storage-name)",
+		   '_min-size'     => "$_blksize$",
+		   '_units'        => "$_blksize$,*",
 		   );
 
     my $multilev = $opts->{req_modular};
@@ -380,9 +386,9 @@ sub do_hrstorage {
 	subdir($subdir, $opts->{lowercase});
 	$subf = new genConfig::File("$subdir/targets");
 
-	$subf->writetarget('--default--', '', @defargs,
-			   'directory-desc' => 'File system statistics',
-			   );
+#	$subf->writetarget('--default--', '', @defargs,
+#			   'directory-desc' => 'File system statistics',
+#			   );
 	
 	@defargs = ();
 
@@ -406,11 +412,12 @@ sub do_hrstorage {
 	my $target = $sName{$f};
 	$target =~ s|/|_|g;
 
-	$subf->writetarget($target, '', @defargs,
-			   'max-size'  => ($sSize{$f} * $sUnits{$f}) * 1.05,
-			   'storage'   => $sName{$f},
-			   'blksize'   => $sUnits{$f},
-			   'order'     => $opts->{order}--,
+	$subf->writetarget('service {', '', @defargs,
+			   'service_description' => $target,
+			   '_max-size'  => ($sSize{$f} * $sUnits{$f}) * 1.05,
+			   '_storage'   => $sName{$f},
+			   '_blksize'   => $sUnits{$f},
+			   '_order'     => $opts->{order}--,
 			   );
     }
 

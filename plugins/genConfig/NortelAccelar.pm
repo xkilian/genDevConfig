@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.04;
+my $VERSION = 1.05;
 
 ### End package init
 
@@ -69,7 +69,7 @@ my @types = ( "$OIDS{'RapidCityMIB'}",
 
 my $snmp;
 
-my $script = "Nortel Accelar/Passport genDevConfig Module";
+my $script = "Nortel/Avaya Accelar/Passport/ERS genDevConfig Module";
 
 ###############################################################################
 ###############################################################################

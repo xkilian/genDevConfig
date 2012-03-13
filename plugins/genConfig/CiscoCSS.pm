@@ -36,7 +36,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.01;
+my $VERSION = 1.02;
 
 ### End package init
 
@@ -426,18 +426,13 @@ sub custom_targets {
                  "# Args: $opts->{savedargs}\n".
                  "# Date: ". scalar(localtime(time)). "\n\n");
 
-      Info ("Writing owner $c_own->{Name}");
-      $own_file->writetarget('--default--', '',
-          'directory-desc' => 'Owner '.$c_own->{Name}
-                              .' ['.$c_own->{EmailAddress}.']',
-          'target-type'    => 'CiscoCSS-Owner'.$opts->{apVer},
-          );
-
-      $own_file->writetarget($c_own->{Name}, '',
-          'order'	   => $opts->{order},
-          'inst' 	   => 'qw('.$c_own->{oid}.')',
-          'target-type'    => 'CiscoCSS-Owner'.$opts->{apVer},
-          );
+      $own_file->writetarget('service {', '',
+	'host_name'           => $opts->{devicename},
+	'service_description' => $c_own->{Name},
+        '_order'	      => $opts->{order},
+        '_inst' 	      => 'qw('.$c_own->{oid}.')',
+        'use'               => 'CiscoCSS-Owner'.$opts->{apVer},
+      );
       $opts->{order}--;
 
       my $sum_order = $opts->{order};
@@ -469,30 +464,28 @@ sub custom_targets {
                      . join('', map { "<li>$_</li>" } @svcs)
                      . '</ul>';
 
-       $cnt_file->writetarget('--default--', '',
-          'directory-desc' => 'Content: '.$sdesc,
-          );
-
-        $cnt_file->writetarget('Content-Totals', '',
-            'inst' 	   => 'qw('.$c_cnt->{oid}.')',
-            'display-name' => 'Content Totals',
-            'target-type'  => 'CiscoCSS-Content'.$opts->{apVer},
-            'short-desc'   => $sdesc,
-            'long-desc'    => $ldesc,
-            'order'	   => $opts->{order},
+        $cnt_file->writetarget('service {', '',
+	    'host_name'           => $opts->{devicename},
+	    'service_description' => 'Content-Totals',	       
+            '_inst' 	          => 'qw('.$c_cnt->{oid}.')',
+            'use'                 => 'CiscoCSS-Content'.$opts->{apVer},
+            'display_name'        => $sdesc,
+            'notes'               => $ldesc,
+            '_order'	          => $opts->{order},
             );
         $opts->{order}--;
 
         push @sum_cnts, $c_cnt->{Name}.'/Content-Totals';
 
-        $cnt_file->writetarget('Service-Comparison', '',
-            'mtargets'     => join(';',@svcs),
-            'display-name' => 'Service Comparison',
-            'target-type'  => 'CiscoCSS-ContentService'.$opts->{apVer},
-            'short-desc'   => 'Comparison of load over all configured Services',
-            'long-desc'    => 'Comparison of load over all configured Services',
-            'order'	   => $opts->{order},
-            );
+        $cnt_file->writetarget('service {', '',
+	    'host_name'           => $opts->{devicename},
+	    'service_description' => 'Service-Comparison',
+            '_mtargets'           => join(';',@svcs),
+            'use'                 => 'CiscoCSS-ContentService'.$opts->{apVer},
+            'display_name'        => 'Comparison of load over all configured Services',
+            'notes'               => 'Comparison of load over all configured Services',
+            '_order'	          => $opts->{order},
+        );
         $opts->{order}--;
 
         foreach my $c_svc (@svcs) {
@@ -509,26 +502,28 @@ sub custom_targets {
                       ->{$c_svc->{Name}}
                       ->{oid};
 
-           $cnt_file->writetarget($c_svc->{Name}, '',
-               'inst'         => 'qw('.$inst.')',
-               'display-name' => $c_svc->{Name},
-               'target-type'  => 'CiscoCSS-ContentService'.$opts->{apVer},
-               'short-desc'   => $sdesc,
-               'long-desc'    => $sdesc,
-               'order'	      => $opts->{order},
+           $cnt_file->writetarget('service {', '',
+	        'host_name'           => $opts->{devicename},
+		'service_description'     => $c_svc->{Name},
+               '_inst'         => 'qw('.$inst.')',
+               'use'  => 'CiscoCSS-ContentService'.$opts->{apVer},
+               'display_name'   => $sdesc,
+               'notes'    => $sdesc,
+               '_order'	      => $opts->{order},
                );
            $opts->{order}--;
         }
       }
 
-      $own_file->writetarget($c_own->{Name}.'-ContentSummary', '',
-          'order'	   => $opts->{order},
-          'display-name'   => 'Content Summary',
-          'short-desc'     => "Comparison of all services under owner $c_own->{Name}",
-          'long-desc'      => "Comparison of all services under owner $c_own->{Name}",
-          'target-type'    => 'CiscoCSS-Content'.$opts->{apVer},
-          'targets'	   => join('; ', @sum_cnts),
-          );
+    $own_file->writetarget('service {', '',
+	'host_name'           => $opts->{devicename},
+	'service_description'  => $c_own->{Name}.'-ContentSummary',
+        '_order'               => $opts->{order},
+        'display_name'         => "Content Summary - Comparison of all services under owner $c_own->{Name}",
+        'notes'                => "Comparison of all services under owner $c_own->{Name}",
+        'use'                  => 'CiscoCSS-Content'.$opts->{apVer},
+        '_targets'	       => join('; ', @sum_cnts),
+    );
 
     }
 
@@ -545,18 +540,20 @@ sub custom_targets {
 
     foreach my $c_svc ( values %{ $css->{apSvc} } )
     {
-      my $sdesc = 'Name: ' . $c_svc->{Name} . '<br>'.
-                  'Address: ' .
-                  join('/',map {$c_svc->{$_}}
-                           qw/IPAddress IPProtocol Port/);
+	my $sdesc = 'Name: ' . $c_svc->{Name} . '<br>'.
+            'Address: ' .
+            join('/',map {$c_svc->{$_}}
+                qw/IPAddress IPProtocol Port/);
 
-      $svc_file->writetarget($c_svc->{Name}, '',
-          'order'	   => $opts->{order},
-          'inst' 	   => 'qw('.$c_svc->{oid}.')',
-          'short-desc'     => $sdesc,
-          'long-desc'      => $sdesc,
-          'target-type'    => 'CiscoCSS-Service'.$opts->{apVer},
-          );
+	$svc_file->writetarget("service {", '',
+	    'host_name'           => $opts->{devicename},
+	    'service_description'   => $c_svc->{Name}
+	    '_order'	    => $opts->{order},
+	    '_inst' 	    => 'qw('.$c_svc->{oid}.')',
+	    'display_name'  => $sdesc,
+	    'notes'         => $sdesc,
+	    'use'           => 'CiscoCSS-Service'.$opts->{apVer},
+        );
 
       $opts->{order}--;
     }
@@ -605,7 +602,7 @@ sub custom_interfaces {
     # Apply logic for filtering --gigonly interfaces
     next if ($opts->{gigonly} && int($ifspeed{$index}) != 1000000000 );
 
-    push(@config, 'target-type' => 'standard-interface' . $hc);
+    push(@config, 'use' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

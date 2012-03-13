@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.01;
+my $VERSION = 1.02;
 
 ### End package init
 
@@ -164,12 +164,14 @@ sub custom_targets {
     $sdesc = "Sensatronics EM1 statistics";
     my ($targetname) = $opts->{devicename};
 
-    $file->writetarget($targetname, '',
-        'order'          => $opts->{order},
-        'interface-name'   => $targetname,
-        'long-desc'   => $ldesc,
-        'short-desc'  => $sdesc,
-        'target-type' => 'sensatronics-em1',
+    $file->writetarget('service {', '',
+        'service_description' => $targetname,
+        'host_name'       => $opts->{devicename},
+        '_order'          => $opts->{order},
+        'display_name'   => $targetname,
+        'notes'   => $ldesc,
+        #'short-desc'  => $sdesc,
+        'use' => 'sensatronics-em1',
     );
 
     $opts->{order} -= 1;

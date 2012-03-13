@@ -4,6 +4,7 @@
 #    genConfig::File module
 #
 #    Copyright (C) 2004 Mike Fisher
+#    Copyright (C) 2005-2012 Francois Mikus
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -102,7 +103,8 @@ sub writepair {
         if ($value =~ /^\s*$/ || $value =~ /\s/ || $value =~ /\./) {
             # Escape xisting quotes...
             $value =~ s/"/\\"/g;
-            $quote = '"';
+	    # $quote = '"';
+	    $quote = ''; # Unquoted for Nagios
         }
         print({$self->{'file'}} "$comment   $name", 
               "\t"x$tabs, "= $quote$value$quote\n");
@@ -119,11 +121,20 @@ sub writetarget {
     my($self, $name, $comment, %value) = @_;
 
     my $f = $self->{'file'};
-    print $f "${comment}target $name\n";
+    print $f "${comment}$name\n";
 
     # Replace monitor-types with actual monitor-thresholds
-    applyMonitoringThresholds($name,\%value);
+    # applyMonitoringThresholds($name,\%value);
+    my @keyorder = ('host_name', 'service_description', 'display_name');
 
+    # Apply the mandatory configuration items in the correct order
+    foreach my $k (@keyorder) {
+        next unless exists($value{$k});
+	$self->writepair($k, $value{$k}, $comment); 
+	delete $value {$k};
+    }
+
+    # foreach my $key (sort keys %value) {
     foreach my $key (sort keys %value) {
         $self->writepair($key, $value{$key}, $comment);
     }
