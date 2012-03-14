@@ -718,19 +718,20 @@ my (@options);
 #        push (@options, $key, $opts{templates}->{$key});
 #    }
 #}
-
+my $displayname = $opts{devicename};
+$displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} eq $opts{ip});
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
         'host_name'       => $opts{devicename},
-	'display_name'    => $opts{devicename} . $opts{ip},
+	'display_name'    => $displayname, ,
 	'alias'           => $opts{alias},
         'address'         => $opts{ip},
 	'_ip'             => $opts{ip},
-        '_sys-location'   => $opts{sysLocation},
+        '_sys_location'   => $opts{sysLocation},
 	'parents'         => '', # FIXME
 	'hostgroups'      => '', # FIXME
 	'notes'           => '',
-#        '_inst'           => 'map(interface-name)', # FIXME This goes into a service template and overridden in services
+        '_inst'           => 'map(interface-name)', # FIXME This goes into a service template and overridden in services
         'use'    => 'default-snmp-template' . ', ' . $opts{htemplates}, # FIXME make sure template is named correctly
         @options,
         );
@@ -987,18 +988,19 @@ if (!$unique) {
 ######################################################################
 EOD
 
-    $file->write(<<EOD) if (!$opts{nodupwarn});
-html    footnotes
-    <TABLE>
-    <TR>
-        <TD VALIGN=TOP><FONT COLOR=RED>Warning: </FONT></TD>
-        <TD>Duplicate interface descriptions have forced the use of
-        hard coded instance numbers for interfaces marked with
-        <FONT COLOR=RED>*</FONT>. Config file should be regenerated
-        after any hardware or interface config changes.</TD>
-        </TR>
-    </TABLE>
-EOD
+#    $file->write(<<EOD) if (!$opts{nodupwarn});
+# FIXME
+#html    footnotes
+#    <TABLE>
+#    <TR>
+#        <TD VALIGN=TOP><FONT COLOR=RED>Warning: </FONT></TD>
+#        <TD>Duplicate interface descriptions have forced the use of
+#        hard coded instance numbers for interfaces marked with
+#        <FONT COLOR=RED>*</FONT>. Config file should be regenerated
+#        after any hardware or interface config changes.</TD>
+#        </TR>
+#    </TABLE>
+#EOD
 }
 Info ("......................... [DONE]");
 Info ("Processing Pre-Process modular output");
@@ -1292,8 +1294,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my $maxoctets = defined($max) ? int($max/8) : undef;
     if ($opts{show_max} == 1 && defined($max)) {
 	push(@config,
-        'rrd_max'             => $max,
-        'rrd_max_octets'      => $maxoctets,
+        '_rrd_max'             => $max,
+        '_rrd_max_octets'      => $maxoctets,
 	);
     }
 
@@ -1405,7 +1407,8 @@ $c="# ";
 		'service_description'  => $target,
                 'host_name'            => $opts{devicename});
 
-        $file->write("#\n");
+        # FIXME Why a comment?
+	# $file->write("#\n");
         $file->writetarget("service {", $c, @config);
     }
 }

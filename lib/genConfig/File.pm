@@ -101,13 +101,13 @@ sub writepair {
         # quote empty (or white-space only) lines, or lines which
         # will have embedded spaces or dots.
         if ($value =~ /^\s*$/ || $value =~ /\s/ || $value =~ /\./) {
-            # Escape xisting quotes...
+            # Escape existing quotes...
             $value =~ s/"/\\"/g;
 	    # $quote = '"';
 	    $quote = ''; # Unquoted for Nagios
         }
         print({$self->{'file'}} "$comment   $name", 
-              "\t"x$tabs, "= $quote$value$quote\n");
+              "\t"x$tabs, "$quote$value$quote\n");
     }
 }
 
@@ -121,7 +121,7 @@ sub writetarget {
     my($self, $name, $comment, %value) = @_;
 
     my $f = $self->{'file'};
-    print $f "${comment}$name\n";
+    print $f "${comment}define $name\n";
 
     # Replace monitor-types with actual monitor-thresholds
     # applyMonitoringThresholds($name,\%value);
@@ -138,7 +138,10 @@ sub writetarget {
     foreach my $key (sort keys %value) {
         $self->writepair($key, $value{$key}, $comment);
     }
-
+    
+    # Add the register statement as these are not templates
+    $self->writepair('register', 1, $comment);
+    print $f "${comment}}\n";    
     print $f "\n";
 }
 

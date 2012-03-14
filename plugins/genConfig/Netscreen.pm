@@ -162,9 +162,9 @@ sub custom_targets {
 
         $file->writetarget('service {', '',
             'service_desciption' => $targetname,
-            'host_name'           => $opts->{$devicename},
-            '_inst'           => '0',
-            '_order'          => $opts->{order},
+            'host_name'          => $opts->{devicename},
+            '_inst'              => '0',
+            '_order'             => $opts->{order},
 
             'display_name' => $targetname,
             'notes'      => $ldesc,
@@ -181,7 +181,7 @@ sub custom_targets {
             $targetname = "netscreen_attack_statistics_if_$ifindex";
 
             $file->writetarget('service {', '',
-         	'host_name'           => $opts->{$devicename},
+         	'host_name'           => $opts->{devicename},
                 '_inst'             => $ifindex,
                 '_order'            => $opts->{order},
                 'service_description'   => $targetname,

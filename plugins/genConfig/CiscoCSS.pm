@@ -547,7 +547,7 @@ sub custom_targets {
 
 	$svc_file->writetarget("service {", '',
 	    'host_name'           => $opts->{devicename},
-	    'service_description'   => $c_svc->{Name}
+	    'service_description'   => $c_svc->{Name},
 	    '_order'	    => $opts->{order},
 	    '_inst' 	    => 'qw('.$c_svc->{oid}.')',
 	    'display_name'  => $sdesc,

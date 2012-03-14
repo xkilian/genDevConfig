@@ -119,7 +119,7 @@ sub custom_targets {
     my $targetname = 'snmp_stats';
     
     $opts->{'file'}->writetarget('service {', '',
-	                         'host_name'           => $opts{$devicename},
+	                         'host_name'           => $opts->{devicename},
 				 'service_description' => $targetname,
 				 '_order'         => $opts->{order},
 				 '_inst'          => (keys %snmpinpkts)[0],

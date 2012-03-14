@@ -365,10 +365,10 @@ sub do_hrstorage {
 
     my @defargs = ('use'           => "hr_Storage",
 		   'host_name'     => $opts->{devicename},
-		   'display_name'  => "$_storage$",
+		   'display_name'  => "\$_storage\$",
 		   '_inst'         => "map(hr-storage-name)",
-		   '_min-size'     => "$_blksize$",
-		   '_units'        => "$_blksize$,*",
+		   '_min-size'     => "\$_blksize\$",
+		   '_units'        => "\$_blksize\$,*",
 		   );
 
     my $multilev = $opts->{req_modular};

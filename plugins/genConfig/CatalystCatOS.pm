@@ -239,7 +239,7 @@ sub custom_targets {
         $sdesc = "Switch cpu statistics";
         my ($targetname) = 'switch-cpu';
 
-        $file->writetarget'service {', '',
+        $file->writetarget('service {', '',
 	    'host_name'           => $opts->{devicename},				    
 	    'service_description' => $targetname,
             '_inst'               => 'map(cpu-stats)',

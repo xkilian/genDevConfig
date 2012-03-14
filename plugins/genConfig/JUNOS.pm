@@ -288,7 +288,7 @@ sub custom_targets {
 				'_rest'		=>	$key,
 				'use'	        =>	'juniper-chassis-' . $ttype,
 			);
-			$file->writetarget(service {, '', @config);
+			$file->writetarget('service {', '', @config);
 
 			$opts->{order} -= 1;
 		}
@@ -339,7 +339,7 @@ sub custom_targets {
 			     	'service_description' => $target,
 			     	'host_name'       => $opts->{devicename},
 				'_order'		=>	$opts->{order},
-				'display_name'	=>	$opts{devicename} ." $filter  $counter",
+				'display_name'	=>	$opts->{devicename} . " $filter  $counter",
 				#'short-desc'	=>	$sdesc,
 				'notes'	=>	$ldesc,
 				'_inst'		=>	0,
@@ -365,15 +365,15 @@ sub custom_targets {
 			my @config = ();
 			push(@config,
 			     	'service_description' => $junipermplslspname{$key},
-			     	'host_name'       => $opts->{devicename},
-				'_tunnel-name'	=>	$junipermplslspname{$key},
-				'_inst'		=>	"\"(\'$key\')\"",
-				'_order'		=>	$opts->{order},
-				'notes'=>	'%tunnel-name%',
-				'display_name'	=>	'%tunnel-name%',
-				'use'	=>	'juniper-mpls-tunnel'
+			     	'host_name'        => $opts->{devicename},
+				'_tunnel-name'     =>	$junipermplslspname{$key},
+				'_inst'            =>	"\"(\'$key\')\"",
+				'_order'           =>	$opts->{order},
+				'notes'            =>	'%tunnel-name%',
+				'display_name'     =>	'%tunnel-name%',
+				'use'              =>	'juniper-mpls-tunnel'
 			);
-			$file->writetarget(, '', @config);
+			$file->writetarget('service {', '', @config);
 		}
 		$opts->{order} -= 1;
 	}
