@@ -17,30 +17,30 @@
 ### Foundry switches and load balancers
 
 [OID]
-foundryL4SLBTotalConnections        = 1.3.6.1.4.1.1991.1.1.4.1.4
-foundryL4SLBUnsuccessfulConnections  = 1.3.6.1.4.1.1991.1.1.4.1.25
+foundryL4SLBTotalConnections        = .1.3.6.1.4.1.1991.1.1.4.1.4
+foundryL4SLBUnsuccessfulConnections  = .1.3.6.1.4.1.1991.1.1.4.1.25
 
  
-snaggblcpuutil5minavg               = 1.3.6.1.4.1.1991.1.1.2.1.53.0
+snaggblcpuutil5minavg               = .1.3.6.1.4.1.1991.1.1.2.1.53.0
 
-snl4realserverportstatuscurrentconnection       = 1.3.6.1.4.1.1991.1.1.4.24.1.1.7
-snl4realserverportstatuspeakconnection    = 1.3.6.1.4.1.1991.1.1.4.24.1.1.13
-snl4realserverportstatusrxbytes     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.11
-snl4realserverportstatusrxpkts      = 1.3.6.1.4.1.1991.1.1.4.24.1.1.9
-snl4realserverportstatustotalconnection     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.8
-snl4realserverportstatustxbytes     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.12
-snl4realserverportstatustxpkts      = 1.3.6.1.4.1.1991.1.1.4.24.1.1.10
+snl4realserverportstatuscurrentconnection       = .1.3.6.1.4.1.1991.1.1.4.24.1.1.7
+snl4realserverportstatuspeakconnection    = .1.3.6.1.4.1.1991.1.1.4.24.1.1.13
+snl4realserverportstatusrxbytes     = .1.3.6.1.4.1.1991.1.1.4.24.1.1.11
+snl4realserverportstatusrxpkts      = .1.3.6.1.4.1.1991.1.1.4.24.1.1.9
+snl4realserverportstatustotalconnection     = .1.3.6.1.4.1.1991.1.1.4.24.1.1.8
+snl4realserverportstatustxbytes     = .1.3.6.1.4.1.1991.1.1.4.24.1.1.12
+snl4realserverportstatustxpkts      = .1.3.6.1.4.1.1991.1.1.4.24.1.1.10
 
-snl4realserverstatisticcurconnections   = 1.3.6.1.4.1.1991.1.1.4.23.1.1.5
-snl4realserverstatisticreceivepkts  = 1.3.6.1.4.1.1991.1.1.4.23.1.1.3
-snl4realserverstatistictotalconnections     = 1.3.6.1.4.1.1991.1.1.4.23.1.1.6
-snl4realserverstatistictransmitpkts  = 1.3.6.1.4.1.1991.1.1.4.23.1.1.4
+snl4realserverstatisticcurconnections   = .1.3.6.1.4.1.1991.1.1.4.23.1.1.5
+snl4realserverstatisticreceivepkts  = .1.3.6.1.4.1.1991.1.1.4.23.1.1.3
+snl4realserverstatistictotalconnections     = .1.3.6.1.4.1.1991.1.1.4.23.1.1.6
+snl4realserverstatistictransmitpkts  = .1.3.6.1.4.1.1991.1.1.4.23.1.1.4
 
-snl4virtualserverportstatisticcurrentconnection             = 1.3.6.1.4.1.1991.1.1.4.26.1.1.4
-snl4virtualserverportstatistictotalconnection           = 1.3.6.1.4.1.1991.1.1.4.26.1.1.5
-snl4virtualserverstatisticreceivepkts   = 1.3.6.1.4.1.1991.1.1.4.25.1.1.3
-snl4virtualserverstatistictotalconnections        = 1.3.6.1.4.1.1991.1.1.4.25.1.1.5
-snl4virtualserverstatistictransmitpkts    = 1.3.6.1.4.1.1991.1.1.4.25.1.1.4
+snl4virtualserverportstatisticcurrentconnection             = .1.3.6.1.4.1.1991.1.1.4.26.1.1.4
+snl4virtualserverportstatistictotalconnection           = .1.3.6.1.4.1.1991.1.1.4.26.1.1.5
+snl4virtualserverstatisticreceivepkts   = .1.3.6.1.4.1.1991.1.1.4.25.1.1.3
+snl4virtualserverstatistictotalconnections        = .1.3.6.1.4.1.1991.1.1.4.25.1.1.5
+snl4virtualserverstatistictransmitpkts    = .1.3.6.1.4.1.1991.1.1.4.25.1.1.4
 
 
 

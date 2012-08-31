@@ -26,59 +26,59 @@
 
 ### OIDS For juniper MPLS Statistics
 
-    OidmplsLspOctets                       = 1.3.6.1.4.1.2636.3.2.3.1.3
-    OidmplsLspPackets                      = 1.3.6.1.4.1.2636.3.2.3.1.4
+    OidmplsLspOctets                       = .1.3.6.1.4.1.2636.3.2.3.1.3
+    OidmplsLspPackets                      = .1.3.6.1.4.1.2636.3.2.3.1.4
     
     ### OIDS Juniper
     
-    OidJnxInErrors                       = 1.3.6.1.4.1.2636.3.3.1.1.9
-    OidJnxInFrameErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.10
-    OidJnxInQDrops                       = 1.3.6.1.4.1.2636.3.3.1.1.11
-    OidJnxInRunts                        = 1.3.6.1.4.1.2636.3.3.1.1.12
-    OidJnxInGiants                       = 1.3.6.1.4.1.2636.3.3.1.1.13
-    OidJnxInDiscards                     = 1.3.6.1.4.1.2636.3.3.1.1.14
-    OidJnxInHslCrcErrors                 = 1.3.6.1.4.1.2636.3.3.1.1.15
-    OidJnxInHslFifoOverFlows             = 1.3.6.1.4.1.2636.3.3.1.1.16
-    OidJnxInL3Incompletes                = 1.3.6.1.4.1.2636.3.3.1.1.17
-    OidJnxInL2ChanErrors                 = 1.3.6.1.4.1.2636.3.3.1.1.18
-    OidJnxInL2MismatchTimeouts           = 1.3.6.1.4.1.2636.3.3.1.1.19
-    OidJnxInInvalidVCs                   = 1.3.6.1.4.1.2636.3.3.1.1.20
-    OidJnxInFifoErrors                   = 1.3.6.1.4.1.2636.3.3.1.1.21
-    OidJnxBucketDrops                    = 1.3.6.1.4.1.2636.3.3.1.1.22
-    OidJnxSramErrors                     = 1.3.6.1.4.1.2636.3.3.1.1.23
-    OidJnxOutErrors                      = 1.3.6.1.4.1.2636.3.3.1.1.24
-    OidJnxCollisions                     = 1.3.6.1.4.1.2636.3.3.1.1.25
-    OidJnxCarrierTrans                   = 1.3.6.1.4.1.2636.3.3.1.1.26
-    OidJnxOutQDrops                      = 1.3.6.1.4.1.2636.3.3.1.1.27
-    OidJnxOutAgedErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.28
-    OidJnxOutFifoErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.29
-    OidJnxOutHslFifoUnderFlows           = 1.3.6.1.4.1.2636.3.3.1.1.30
-    OidJnxOutHslCrcErrors                = 1.3.6.1.4.1.2636.3.3.1.1.31
+    OidJnxInErrors                       = .1.3.6.1.4.1.2636.3.3.1.1.9
+    OidJnxInFrameErrors                  = .1.3.6.1.4.1.2636.3.3.1.1.10
+    OidJnxInQDrops                       = .1.3.6.1.4.1.2636.3.3.1.1.11
+    OidJnxInRunts                        = .1.3.6.1.4.1.2636.3.3.1.1.12
+    OidJnxInGiants                       = .1.3.6.1.4.1.2636.3.3.1.1.13
+    OidJnxInDiscards                     = .1.3.6.1.4.1.2636.3.3.1.1.14
+    OidJnxInHslCrcErrors                 = .1.3.6.1.4.1.2636.3.3.1.1.15
+    OidJnxInHslFifoOverFlows             = .1.3.6.1.4.1.2636.3.3.1.1.16
+    OidJnxInL3Incompletes                = .1.3.6.1.4.1.2636.3.3.1.1.17
+    OidJnxInL2ChanErrors                 = .1.3.6.1.4.1.2636.3.3.1.1.18
+    OidJnxInL2MismatchTimeouts           = .1.3.6.1.4.1.2636.3.3.1.1.19
+    OidJnxInInvalidVCs                   = .1.3.6.1.4.1.2636.3.3.1.1.20
+    OidJnxInFifoErrors                   = .1.3.6.1.4.1.2636.3.3.1.1.21
+    OidJnxBucketDrops                    = .1.3.6.1.4.1.2636.3.3.1.1.22
+    OidJnxSramErrors                     = .1.3.6.1.4.1.2636.3.3.1.1.23
+    OidJnxOutErrors                      = .1.3.6.1.4.1.2636.3.3.1.1.24
+    OidJnxCollisions                     = .1.3.6.1.4.1.2636.3.3.1.1.25
+    OidJnxCarrierTrans                   = .1.3.6.1.4.1.2636.3.3.1.1.26
+    OidJnxOutQDrops                      = .1.3.6.1.4.1.2636.3.3.1.1.27
+    OidJnxOutAgedErrors                  = .1.3.6.1.4.1.2636.3.3.1.1.28
+    OidJnxOutFifoErrors                  = .1.3.6.1.4.1.2636.3.3.1.1.29
+    OidJnxOutHslFifoUnderFlows           = .1.3.6.1.4.1.2636.3.3.1.1.30
+    OidJnxOutHslCrcErrors                = .1.3.6.1.4.1.2636.3.3.1.1.31
     
-    OidjnxFWCounterPacketCount             = 1.3.6.1.4.1.2636.3.5.2.1.4
-    OidjnxFWCounterByteCount               = 1.3.6.1.4.1.2636.3.5.2.1.5
+    OidjnxFWCounterPacketCount             = .1.3.6.1.4.1.2636.3.5.2.1.4
+    OidjnxFWCounterByteCount               = .1.3.6.1.4.1.2636.3.5.2.1.5
     
-    OidjnxAtmIfTxCellCount                 = 1.3.6.1.4.1.2636.3.10.1.1.5
-    OidjnxAtmIfRxCellCount                 = 1.3.6.1.4.1.2636.3.10.1.1.6
-    OidjnxAtmIfTxIdleCellCount             = 1.3.6.1.4.1.2636.3.10.1.1.7
-    OidjnxAtmIfUncorrHCSErrs               = 1.3.6.1.4.1.2636.3.10.1.1.8
-    OidjnxAtmIfCorrHCSErrs                 = 1.3.6.1.4.1.2636.3.10.1.1.9
-    OidjnxAtmIfTxCellFIFOOverRuns          = 1.3.6.1.4.1.2636.3.10.1.1.10
-    OidjnxAtmIfRxCellFIFOOverRuns          = 1.3.6.1.4.1.2636.3.10.1.1.11
-    OidjnxAtmIfRxCellFIFOUnderRuns         = 1.3.6.1.4.1.2636.3.10.1.1.12
-    OidjnxAtmIfInInvalidVCCells            = 1.3.6.1.4.1.2636.3.10.1.1.13
-    OidjnxAtmIfInNoBufferOAMCells          = 1.3.6.1.4.1.2636.3.10.1.1.14
-    OidjnxAtmIfInNoBufDropPkts             = 1.3.6.1.4.1.2636.3.10.1.1.15
-    OidjnxAtmIfOutVCQueueDrops             = 1.3.6.1.4.1.2636.3.10.1.1.16
-    OidjnxAtmIfInBadCrcs                   = 1.3.6.1.4.1.2636.3.10.1.1.17
-    OidjnxAtmIfInLenErrPkts                = 1.3.6.1.4.1.2636.3.10.1.1.18
-    OidjnxAtmIfInTimeoutPkts               = 1.3.6.1.4.1.2636.3.10.1.1.19
+    OidjnxAtmIfTxCellCount                 = .1.3.6.1.4.1.2636.3.10.1.1.5
+    OidjnxAtmIfRxCellCount                 = .1.3.6.1.4.1.2636.3.10.1.1.6
+    OidjnxAtmIfTxIdleCellCount             = .1.3.6.1.4.1.2636.3.10.1.1.7
+    OidjnxAtmIfUncorrHCSErrs               = .1.3.6.1.4.1.2636.3.10.1.1.8
+    OidjnxAtmIfCorrHCSErrs                 = .1.3.6.1.4.1.2636.3.10.1.1.9
+    OidjnxAtmIfTxCellFIFOOverRuns          = .1.3.6.1.4.1.2636.3.10.1.1.10
+    OidjnxAtmIfRxCellFIFOOverRuns          = .1.3.6.1.4.1.2636.3.10.1.1.11
+    OidjnxAtmIfRxCellFIFOUnderRuns         = .1.3.6.1.4.1.2636.3.10.1.1.12
+    OidjnxAtmIfInInvalidVCCells            = .1.3.6.1.4.1.2636.3.10.1.1.13
+    OidjnxAtmIfInNoBufferOAMCells          = .1.3.6.1.4.1.2636.3.10.1.1.14
+    OidjnxAtmIfInNoBufDropPkts             = .1.3.6.1.4.1.2636.3.10.1.1.15
+    OidjnxAtmIfOutVCQueueDrops             = .1.3.6.1.4.1.2636.3.10.1.1.16
+    OidjnxAtmIfInBadCrcs                   = .1.3.6.1.4.1.2636.3.10.1.1.17
+    OidjnxAtmIfInLenErrPkts                = .1.3.6.1.4.1.2636.3.10.1.1.18
+    OidjnxAtmIfInTimeoutPkts               = .1.3.6.1.4.1.2636.3.10.1.1.19
     
-    OidjnxOperatingTemp                    = 1.3.6.1.4.1.2636.3.1.13.1.7
-    OidjnxOperatingCPU                     = 1.3.6.1.4.1.2636.3.1.13.1.8
-    OidjnxOperatingISR                     = 1.3.6.1.4.1.2636.3.1.13.1.9
-    OidjnxOperatingBuffer                  = 1.3.6.1.4.1.2636.3.1.13.1.11
-    OidjnxOperatingHeap                    = 1.3.6.1.4.1.2636.3.1.13.1.12
+    OidjnxOperatingTemp                    = .1.3.6.1.4.1.2636.3.1.13.1.7
+    OidjnxOperatingCPU                     = .1.3.6.1.4.1.2636.3.1.13.1.8
+    OidjnxOperatingISR                     = .1.3.6.1.4.1.2636.3.1.13.1.9
+    OidjnxOperatingBuffer                  = .1.3.6.1.4.1.2636.3.1.13.1.11
+    OidjnxOperatingHeap                    = .1.3.6.1.4.1.2636.3.1.13.1.12
 
      ### Datasources
      

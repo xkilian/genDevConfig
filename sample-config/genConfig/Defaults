@@ -24,79 +24,79 @@
     # Define the OIDs that will form the DATASOURCES
     
     # MIB2
-    OidsysUptime =                           .1.3.6.2.1.1.3.0
-    OidifNumber =                            .1.3.6.2.1.2.1.0
-    OidifIndex =                             .1.3.6.2.1.2.2.1.1
-    OidifDescr =                             .1.3.6.2.1.2.2.1.2
-    OidifType =                              .1.3.6.2.1.2.2.1.3
-    OidifMtu =                               .1.3.6.2.1.2.2.1.4
-    OidifSpeed =                             .1.3.6.2.1.2.2.1.5
-    OidifPhysAddress =                       .1.3.6.2.1.2.2.1.6
-    OidifAdminStatus =                       .1.3.6.2.1.2.2.1.7
-    OidifOperStatus =                        .1.3.6.2.1.2.2.1.8
-    OidifLastChange =                        .1.3.6.2.1.2.2.1.9
-    OidifInOctets =                          .1.3.6.2.1.2.2.1.10
-    OidifInUcastPkts =                       .1.3.6.2.1.2.2.1.11
-    OidifInNUcastPkts =                      .1.3.6.2.1.2.2.1.12
-    OidifInDiscards =                        .1.3.6.2.1.2.2.1.13
-    OidifInErrors =                          .1.3.6.2.1.2.2.1.14
-    OidifInUnknownProtos =                   .1.3.6.2.1.2.2.1.15
-    OidifOutOctets =                         .1.3.6.2.1.2.2.1.16
-    OidifOutUcastPkts =                      .1.3.6.2.1.2.2.1.17
-    OidifOutNUcastPkts =                     .1.3.6.2.1.2.2.1.18
-    OidifOutDiscards =                       .1.3.6.2.1.2.2.1.19
-    OidifOutErrors =                         .1.3.6.2.1.2.2.1.20
-    OidifOutQLen =                           .1.3.6.2.1.2.2.1.21
-    OidifHCInOctets =                        .1.3.6.2.1.31.1.1.1.6
-    OidifHCInUcastPkts =                     .1.3.6.2.1.31.1.1.1.7
-    OidifHCInMulticastPkts =                 .1.3.6.2.1.31.1.1.1.8
-    OidifHCInBroadcastPkts =                 .1.3.6.2.1.31.1.1.1.9
-    OidifHCOutOctets =                       .1.3.6.2.1.31.1.1.1.10
-    OidifHCOutUcastPkts =                    .1.3.6.2.1.31.1.1.1.11
-    OidifHCOutMulticastPkts =                .1.3.6.2.1.31.1.1.1.12
-    OidifHCOutBroadcastPkts =                .1.3.6.2.1.31.1.1.1.13
-    OidifAlias =                             .1.3.6.2.1.31.1.1.1.18
-    OidipOutRequests =                       .1.3.6.2.1.4.10.0
-    OidipForwDatagrams =                     .1.3.6.2.1.4.6.0
+    OidsysUptime =                           .1.3.6.1.2.1.1.3.0
+    OidifNumber =                            .1.3.6.1.2.1.2.1.0
+    OidifIndex =                             .1.3.6.1.2.1.2.2.1.1
+    OidifDescr =                             .1.3.6.1.2.1.2.2.1.2
+    OidifType =                              .1.3.6.1.2.1.2.2.1.3
+    OidifMtu =                               .1.3.6.1.2.1.2.2.1.4
+    OidifSpeed =                             .1.3.6.1.2.1.2.2.1.5
+    OidifPhysAddress =                       .1.3.6.1.2.1.2.2.1.6
+    OidifAdminStatus =                       .1.3.6.1.2.1.2.2.1.7
+    OidifOperStatus =                        .1.3.6.1.2.1.2.2.1.8
+    OidifLastChange =                        .1.3.6.1.2.1.2.2.1.9
+    OidifInOctets =                          .1.3.6.1.2.1.2.2.1.10
+    OidifInUcastPkts =                       .1.3.6.1.2.1.2.2.1.11
+    OidifInNUcastPkts =                      .1.3.6.1.2.1.2.2.1.12
+    OidifInDiscards =                        .1.3.6.1.2.1.2.2.1.13
+    OidifInErrors =                          .1.3.6.1.2.1.2.2.1.14
+    OidifInUnknownProtos =                   .1.3.6.1.2.1.2.2.1.15
+    OidifOutOctets =                         .1.3.6.1.2.1.2.2.1.16
+    OidifOutUcastPkts =                      .1.3.6.1.2.1.2.2.1.17
+    OidifOutNUcastPkts =                     .1.3.6.1.2.1.2.2.1.18
+    OidifOutDiscards =                       .1.3.6.1.2.1.2.2.1.19
+    OidifOutErrors =                         .1.3.6.1.2.1.2.2.1.20
+    OidifOutQLen =                           .1.3.6.1.2.1.2.2.1.21
+    OidifHCInOctets =                        .1.3.6.1.2.1.31.1.1.1.6
+    OidifHCInUcastPkts =                     .1.3.6.1.2.1.31.1.1.1.7
+    OidifHCInMulticastPkts =                 .1.3.6.1.2.1.31.1.1.1.8
+    OidifHCInBroadcastPkts =                 .1.3.6.1.2.1.31.1.1.1.9
+    OidifHCOutOctets =                       .1.3.6.1.2.1.31.1.1.1.10
+    OidifHCOutUcastPkts =                    .1.3.6.1.2.1.31.1.1.1.11
+    OidifHCOutMulticastPkts =                .1.3.6.1.2.1.31.1.1.1.12
+    OidifHCOutBroadcastPkts =                .1.3.6.1.2.1.31.1.1.1.13
+    OidifAlias =                             .1.3.6.1.2.1.31.1.1.1.18
+    OidipOutRequests =                       .1.3.6.1.2.1.4.10.0
+    OidipForwDatagrams =                     .1.3.6.1.2.1.4.6.0
 
     # These are from the MIB2 ifmib.
 
-    OidifName =                              .1.3.6.2.1.31.1.1.1.1
+    OidifName =                              .1.3.6.1.2.1.31.1.1.1.1
 
     # OIDs for Etherlike MIB devices
 
-    Oiddot3StatsAlignmentErrors =            .1.3.6.2.1.10.7.2.1.2
-    Oiddot3StatsFCSErrors =                  .1.3.6.2.1.10.7.2.1.3
-    Oiddot3StatsSingleCollisionFrames =      .1.3.6.2.1.10.7.2.1.4
-    OidOiddot3StatsMultipleCollisionFrames =    .1.3.6.2.1.10.7.2.1.5
-    Oiddot3StatsDeferredTransmissions =      .1.3.6.2.1.10.7.2.1.7
-    Oiddot3StatsLateCollisions =             .1.3.6.2.1.10.7.2.1.8
-    Oiddot3StatsExcessiveCollisions =        .1.3.6.2.1.10.7.2.1.9
-    Oiddot3StatsCarrierSenseErrors =         .1.3.6.2.1.10.7.2.1.11
-    Oiddot3StatsFrameTooLongs =              .1.3.6.2.1.10.7.2.1.13
-    Oiddot3StatsDuplexStatus =               .1.3.6.2.1.10.7.2.1.19
+    Oiddot3StatsAlignmentErrors =            .1.3.6.1.2.1.10.7.2.1.2
+    Oiddot3StatsFCSErrors =                  .1.3.6.1.2.1.10.7.2.1.3
+    Oiddot3StatsSingleCollisionFrames =      .1.3.6.1.2.1.10.7.2.1.4
+    OidOiddot3StatsMultipleCollisionFrames =    .1.3.6.1.2.1.10.7.2.1.5
+    Oiddot3StatsDeferredTransmissions =      .1.3.6.1.2.1.10.7.2.1.7
+    Oiddot3StatsLateCollisions =             .1.3.6.1.2.1.10.7.2.1.8
+    Oiddot3StatsExcessiveCollisions =        .1.3.6.1.2.1.10.7.2.1.9
+    Oiddot3StatsCarrierSenseErrors =         .1.3.6.1.2.1.10.7.2.1.11
+    Oiddot3StatsFrameTooLongs =              .1.3.6.1.2.1.10.7.2.1.13
+    Oiddot3StatsDuplexStatus =               .1.3.6.1.2.1.10.7.2.1.19
 
     # T1 Controller OIDS from RFC1406
     # The number of Errored Seconds
-    Oiddsx1CurrentESs =                      .1.3.6.2.1.10.18.7.1.2
+    Oiddsx1CurrentESs =                      .1.3.6.1.2.1.10.18.7.1.2
     # The number of Severely Errored Seconds
-    Oiddsx1CurrentSESs =                     .1.3.6.2.1.10.18.7.1.3
+    Oiddsx1CurrentSESs =                     .1.3.6.1.2.1.10.18.7.1.3
     # The number of Severely Errored Framing Seconds
-    Oiddsx1CurrentSEFSs =                    .1.3.6.2.1.10.18.7.1.4
+    Oiddsx1CurrentSEFSs =                    .1.3.6.1.2.1.10.18.7.1.4
     # The number of Unavailable Seconds
-    Oiddsx1CurrentUASs =                     .1.3.6.2.1.10.18.7.1.5
+    Oiddsx1CurrentUASs =                     .1.3.6.1.2.1.10.18.7.1.5
     # The number of Controlled Slip Seconds
-    Oiddsx1CurrentCSSs =                     .1.3.6.2.1.10.18.7.1.6
+    Oiddsx1CurrentCSSs =                     .1.3.6.1.2.1.10.18.7.1.6
     # The number of Path Coding Violations
-    Oiddsx1CurrentPCVs =                     .1.3.6.2.1.10.18.7.1.7
+    Oiddsx1CurrentPCVs =                     .1.3.6.1.2.1.10.18.7.1.7
     # The number of Line Errored Seconds
-    Oiddsx1CurrentLESs =                     .1.3.6.2.1.10.18.7.1.8
+    Oiddsx1CurrentLESs =                     .1.3.6.1.2.1.10.18.7.1.8
     # The number of Bursty Errored Seconds
-    Oiddsx1CurrentBESs =                     .1.3.6.2.1.10.18.7.1.9
+    Oiddsx1CurrentBESs =                     .1.3.6.1.2.1.10.18.7.1.9
     # The number of Degraded Minutes
-    Oiddsx1CurrentDMs =                      .1.3.6.2.1.10.18.7.1.10
+    Oiddsx1CurrentDMs =                      .1.3.6.1.2.1.10.18.7.1.10
     # The number of Line Code Violations
-    Oiddsx1CurrentLCVs =                     .1.3.6.2.1.10.18.7.1.11
+    Oiddsx1CurrentLCVs =                     .1.3.6.1.2.1.10.18.7.1.11
 
 
 
