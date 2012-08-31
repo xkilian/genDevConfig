@@ -160,7 +160,14 @@
         ds	=    "sysUpTimeInstance,rcSysBufferUtil,rcSysCpuUtil,rcSysSwitchFabricUtil,ChassisTemperature,memoryTotalBytes,memoryUtilKBytes,memoryFreeBytes"
     
     [[Nortel-ES-470]]
-        ds	=    "sysUpTimeInstance,s5ChasUtilMemoryAvailable,s5ChasUtilMemoryMinAvailable,FanOperState,PowerOperState"
+        ds	=    "sysUpTimeInstance,s5ChasUtilMemoryAvailable,s5ChasUtilMemoryMinAvailable"
+
+    [[ERS-Chassis-PS]]
+        ds	=    "PowerOperState"
+
+    [[ERS-Chassis-Fan]]
+        ds	=    "FanOperState"
+
 
 
 ###############################################################################
