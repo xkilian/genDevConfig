@@ -1,125 +1,102 @@
-# Generic network device sub-tree defaults - for use with genDevConfig
+# Generic network device sub-tree defaults
+# Use with genDevConfig and Shinken SnmpBooster module
 #
-#
-# This file is formated with a tab width of 4.
-#
-###############################################################################
-# If you're using this version of genDevConfig with Cricket 1.02 or earlier
-# you will need SNMP_Session 0.77 or later, or a new version of Net_SNMP.
-###############################################################################
-#
-# For additional information on the features and use of genDevConfig consult
-# http://www.acktomic.com/cricket/cricket.htm or see the help provided on the
-# command-line in your distribution of genDevConfig.
-#
+# This file is indetented using 4 space.
 #
 ###############################################################################
-
-
-###############################################################################
 #
-# Setup the default variables that apply to all targets that are defined
-# within this part of the config-tree hierarchy.
+# Setup the default variables that apply to all services that are defined
+# within this part of the configuration file hierarchy.
 #
-# All variables can be overriden by redefinition higher in the config-tree.
+# All variables can be overriden by a template loaded later in the process.
 #
+# Datasources define the type of data, the period, scaling and limits
 #
 ###############################################################################
 
-Target	--default--
-	rrd-datafile 	= %dataDir%/%auto-target-name%.rrd
-	snmp-host		= %router%
-	router			= ""
-	# you could set a router-specific community string here:
-	# snmp-community	= not-public
-	#
-	# Provide no default type, since each router will be different,
-	# and if we want to specify each model explicitly, or
-	# get a warning.
-	directory-desc  = "LAN WAN Network Devices"
-	target-type		= undef
-        rrd-min            = 0
-	mail-pgm = /bin/mail
-	persistent-alarms = false
+# DATASOURCES for most MIB-II devices
 
-# OIDs for most MIB-II devices
+[DATASOURCE]
+    # Default values that are used if undefined in each DATASOURCE
+    ds_type      = DERIVE
+    ds_min       = 0
 
-OID     sysUptime              1.3.6.1.2.1.1.3.0
-OID     ifNumber               1.3.6.1.2.1.2.1.0
+    # Define the OIDs that will form the DATASOURCES
+    
+    # MIB2
+    OidsysUptime =                           1.3.6.1.2.1.1.3.0
+    OidifNumber =                            1.3.6.1.2.1.2.1.0
+    OidifIndex =                             1.3.6.1.2.1.2.2.1.1
+    OidifDescr =                             1.3.6.1.2.1.2.2.1.2
+    OidifType =                              1.3.6.1.2.1.2.2.1.3
+    OidifMtu =                               1.3.6.1.2.1.2.2.1.4
+    OidifSpeed =                             1.3.6.1.2.1.2.2.1.5
+    OidifPhysAddress =                       1.3.6.1.2.1.2.2.1.6
+    OidifAdminStatus =                       1.3.6.1.2.1.2.2.1.7
+    OidifOperStatus =                        1.3.6.1.2.1.2.2.1.8
+    OidifLastChange =                        1.3.6.1.2.1.2.2.1.9
+    OidifInOctets =                          1.3.6.1.2.1.2.2.1.10
+    OidifInUcastPkts =                       1.3.6.1.2.1.2.2.1.11
+    OidifInNUcastPkts =                      1.3.6.1.2.1.2.2.1.12
+    OidifInDiscards =                        1.3.6.1.2.1.2.2.1.13
+    OidifInErrors =                          1.3.6.1.2.1.2.2.1.14
+    OidifInUnknownProtos =                   1.3.6.1.2.1.2.2.1.15
+    OidifOutOctets =                         1.3.6.1.2.1.2.2.1.16
+    OidifOutUcastPkts =                      1.3.6.1.2.1.2.2.1.17
+    OidifOutNUcastPkts =                     1.3.6.1.2.1.2.2.1.18
+    OidifOutDiscards =                       1.3.6.1.2.1.2.2.1.19
+    OidifOutErrors =                         1.3.6.1.2.1.2.2.1.20
+    OidifOutQLen =                           1.3.6.1.2.1.2.2.1.21
+    OidifHCInOctets =                        1.3.6.1.2.1.31.1.1.1.6
+    OidifHCInUcastPkts =                     1.3.6.1.2.1.31.1.1.1.7
+    OidifHCInMulticastPkts =                 1.3.6.1.2.1.31.1.1.1.8
+    OidifHCInBroadcastPkts =                 1.3.6.1.2.1.31.1.1.1.9
+    OidifHCOutOctets =                       1.3.6.1.2.1.31.1.1.1.10
+    OidifHCOutUcastPkts =                    1.3.6.1.2.1.31.1.1.1.11
+    OidifHCOutMulticastPkts =                1.3.6.1.2.1.31.1.1.1.12
+    OidifHCOutBroadcastPkts =                1.3.6.1.2.1.31.1.1.1.13
+    OidifAlias =                             1.3.6.1.2.1.31.1.1.1.18
+    OidipOutRequests =                       1.3.6.1.2.1.4.10.0
+    OidipForwDatagrams =                     1.3.6.1.2.1.4.6.0
 
-OID     ifIndex                1.3.6.1.2.1.2.2.1.1
-OID     ifDescr                1.3.6.1.2.1.2.2.1.2
-OID     ifType                 1.3.6.1.2.1.2.2.1.3
-OID     ifMtu                  1.3.6.1.2.1.2.2.1.4
-OID     ifSpeed                1.3.6.1.2.1.2.2.1.5
-OID     ifPhysAddress          1.3.6.1.2.1.2.2.1.6
-OID     ifAdminStatus          1.3.6.1.2.1.2.2.1.7
-OID     ifOperStatus           1.3.6.1.2.1.2.2.1.8
-OID     ifLastChange           1.3.6.1.2.1.2.2.1.9
-OID     ifInOctets             1.3.6.1.2.1.2.2.1.10
-OID     ifInUcastPkts          1.3.6.1.2.1.2.2.1.11
-OID     ifInNUcastPkts         1.3.6.1.2.1.2.2.1.12
-OID     ifInDiscards           1.3.6.1.2.1.2.2.1.13
-OID     ifInErrors             1.3.6.1.2.1.2.2.1.14
-OID     ifInUnknownProtos      1.3.6.1.2.1.2.2.1.15
-OID     ifOutOctets            1.3.6.1.2.1.2.2.1.16
-OID     ifOutUcastPkts         1.3.6.1.2.1.2.2.1.17
-OID     ifOutNUcastPkts        1.3.6.1.2.1.2.2.1.18
-OID     ifOutDiscards          1.3.6.1.2.1.2.2.1.19
-OID     ifOutErrors            1.3.6.1.2.1.2.2.1.20
-OID     ifOutQLen              1.3.6.1.2.1.2.2.1.21
-OID     ifHCInOctets           1.3.6.1.2.1.31.1.1.1.6
-OID     ifHCInUcastPkts        1.3.6.1.2.1.31.1.1.1.7
-OID     ifHCInMulticastPkts    1.3.6.1.2.1.31.1.1.1.8
-OID     ifHCInBroadcastPkts    1.3.6.1.2.1.31.1.1.1.9
-OID     ifHCOutOctets          1.3.6.1.2.1.31.1.1.1.10
-OID     ifHCOutUcastPkts       1.3.6.1.2.1.31.1.1.1.11
-OID     ifHCOutMulticastPkts    1.3.6.1.2.1.31.1.1.1.12
-OID     ifHCOutBroadcastPkts    1.3.6.1.2.1.31.1.1.1.13
-OID     ifAlias                1.3.6.1.2.1.31.1.1.1.18
- 
-# OID's we'll be using in this tree
-OID     ipOutRequests           1.3.6.1.2.1.4.10.0
-OID     ipForwDatagrams         1.3.6.1.2.1.4.6.0
+    # These are from the MIB2 ifmib.
 
-# These are from the MIB2 ifmib.
+    OidifName =                              1.3.6.1.2.1.31.1.1.1.1
 
-OID     ifName                      1.3.6.1.2.1.31.1.1.1.1
+    # OIDs for Etherlike MIB devices
 
-# OIDs for Etherlike MIB devices
+    Oiddot3StatsAlignmentErrors =            1.3.6.1.2.1.10.7.2.1.2
+    Oiddot3StatsFCSErrors =                  1.3.6.1.2.1.10.7.2.1.3
+    Oiddot3StatsSingleCollisionFrames =      1.3.6.1.2.1.10.7.2.1.4
+    OidOiddot3StatsMultipleCollisionFrames =    1.3.6.1.2.1.10.7.2.1.5
+    Oiddot3StatsDeferredTransmissions =      1.3.6.1.2.1.10.7.2.1.7
+    Oiddot3StatsLateCollisions =             1.3.6.1.2.1.10.7.2.1.8
+    Oiddot3StatsExcessiveCollisions =        1.3.6.1.2.1.10.7.2.1.9
+    Oiddot3StatsCarrierSenseErrors =         1.3.6.1.2.1.10.7.2.1.11
+    Oiddot3StatsFrameTooLongs =              1.3.6.1.2.1.10.7.2.1.13
+    Oiddot3StatsDuplexStatus =               1.3.6.1.2.1.10.7.2.1.19
 
-OID     dot3StatsAlignmentErrors          1.3.6.1.2.1.10.7.2.1.2
-OID     dot3StatsFCSErrors                1.3.6.1.2.1.10.7.2.1.3
-OID     dot3StatsSingleCollisionFrames    1.3.6.1.2.1.10.7.2.1.4
-OID     dot3StatsMultipleCollisionFrames  1.3.6.1.2.1.10.7.2.1.5
-OID     dot3StatsDeferredTransmissions    1.3.6.1.2.1.10.7.2.1.7
-OID     dot3StatsLateCollisions           1.3.6.1.2.1.10.7.2.1.8
-OID     dot3StatsExcessiveCollisions      1.3.6.1.2.1.10.7.2.1.9
-OID     dot3StatsCarrierSenseErrors       1.3.6.1.2.1.10.7.2.1.11
-OID     dot3StatsFrameTooLongs            1.3.6.1.2.1.10.7.2.1.13
-OID     dot3StatsDuplexStatus             1.3.6.1.2.1.10.7.2.1.19
-
-# T1 Controller OIDS from RFC1406
-# The number of Errored Seconds
-OID    dsx1CurrentESs          1.3.6.1.2.1.10.18.7.1.2
-# The number of Severely Errored Seconds
-OID    dsx1CurrentSESs         1.3.6.1.2.1.10.18.7.1.3
-# The number of Severely Errored Framing Seconds
-OID    dsx1CurrentSEFSs        1.3.6.1.2.1.10.18.7.1.4
-# The number of Unavailable Seconds
-OID    dsx1CurrentUASs         1.3.6.1.2.1.10.18.7.1.5
-# The number of Controlled Slip Seconds
-OID    dsx1CurrentCSSs         1.3.6.1.2.1.10.18.7.1.6
-# The number of Path Coding Violations
-OID    dsx1CurrentPCVs         1.3.6.1.2.1.10.18.7.1.7
-# The number of Line Errored Seconds
-OID    dsx1CurrentLESs         1.3.6.1.2.1.10.18.7.1.8
-# The number of Bursty Errored Seconds
-OID    dsx1CurrentBESs         1.3.6.1.2.1.10.18.7.1.9
-# The number of Degraded Minutes
-OID    dsx1CurrentDMs          1.3.6.1.2.1.10.18.7.1.10
-# The number of Line Code Violations
-OID    dsx1CurrentLCVs         1.3.6.1.2.1.10.18.7.1.11
+    # T1 Controller OIDS from RFC1406
+    # The number of Errored Seconds
+    Oiddsx1CurrentESs =                      1.3.6.1.2.1.10.18.7.1.2
+    # The number of Severely Errored Seconds
+    Oiddsx1CurrentSESs =                     1.3.6.1.2.1.10.18.7.1.3
+    # The number of Severely Errored Framing Seconds
+    Oiddsx1CurrentSEFSs =                    1.3.6.1.2.1.10.18.7.1.4
+    # The number of Unavailable Seconds
+    Oiddsx1CurrentUASs =                     1.3.6.1.2.1.10.18.7.1.5
+    # The number of Controlled Slip Seconds
+    Oiddsx1CurrentCSSs =                     1.3.6.1.2.1.10.18.7.1.6
+    # The number of Path Coding Violations
+    Oiddsx1CurrentPCVs =                     1.3.6.1.2.1.10.18.7.1.7
+    # The number of Line Errored Seconds
+    Oiddsx1CurrentLESs =                     1.3.6.1.2.1.10.18.7.1.8
+    # The number of Bursty Errored Seconds
+    Oiddsx1CurrentBESs =                     1.3.6.1.2.1.10.18.7.1.9
+    # The number of Degraded Minutes
+    Oiddsx1CurrentDMs =                      1.3.6.1.2.1.10.18.7.1.10
+    # The number of Line Code Violations
+    Oiddsx1CurrentLCVs =                     1.3.6.1.2.1.10.18.7.1.11
 
 
 
@@ -127,337 +104,353 @@ OID    dsx1CurrentLCVs         1.3.6.1.2.1.10.18.7.1.11
 #
 # Datasources define the type of data and the period of the data retrieved
 #
-#
 ###############################################################################
 
-dataSource --default--
-    rrd-ds-type        = DERIVE
-    # if no updates are received for 30 minutes, consider the datasource
-    # unknown -- i.e. dead
-    rrd-heartbeat      = 1800
-    rrd-min            = 0
+    [[FileSize]]
+        ds_type = GAUGE
+        ds_unit = KB
+        ds_oid  = $OidFileSize.%(instance)s
+    [[sysContact]]
+        ds_type = TEXT
+        ds_oid  = $OidSysContact.0
+    [[sysName]]
+        ds_type = TEXT
+        ds_oid  = $OidSysName.0
+    [[sysDescr]]
+        ds_type = TEXT
+        ds_oid  = $OidSysDescr.0
+    [[IfAdminStatus]]
+        ds_type = GAUGE
+        ds_oid  = $OidIfAdminStatus.%(instance)s
+    [[IfOperStatus]]
+        ds_type = GAUGE
+        ds_oid  = $OidIfOperStatus.%(instance)s
+    [[ifInOctets]]
+        ds_name = in
+        ds_unit = Kbps
+        ds_calc = 8,mul,1000,div
+        # in=252352.4Kbps;;;0;100000
+        ds_oid = $OidifInOctets.%(instance)s
 
-dataSource  ifInOctets
-    ds-source        =   snmp://%snmp%/ifInOctets.%inst%
-dataSource  ifOutOctets
-    ds-source        =   snmp://%snmp%/ifOutOctets.%inst%
+    [[ifOutOctets]]
+        ds_name = out
+        ds_unit = Kbps
+        ds_calc = 8,mul,1000,div
+        # out=252352.4Kbps;;;0;100000
+        ds_oid = $OidifOutOctets.%(instance)s
 
-datasource ipForwDatagrams
-	ds-source	=	snmp://%snmp%/ipForwDatagrams
-datasource ipOutRequests
-	ds-source	=	snmp://%snmp%/ipOutRequests
-
-
-dataSource dot3StatsAlignmentErrors
-    ds-source        =   snmp://%snmp%/dot3StatsAlignmentErrors.%inst%
-dataSource dot3StatsFCSErrors
-    ds-source        =   snmp://%snmp%/dot3StatsFCSErrors.%inst%
-dataSource dot3StatsSingleCollisionFrames
-    ds-source        =   snmp://%snmp%/dot3StatsSingleCollisionFrames.%inst%
-dataSource dot3StatsMultipleCollisionFrames
-    ds-source        =   snmp://%snmp%/dot3StatsMultipleCollisionFrames.%inst%
-dataSource dot3StatsDeferredTransmissions
-    ds-source        =   snmp://%snmp%/dot3StatsDeferredTransmissions.%inst%
-dataSource dot3StatsLateCollisions
-    ds-source        =   snmp://%snmp%/dot3StatsLateCollisions.%inst%
-dataSource dot3StatsExcessiveCollisions
-    ds-source        =   snmp://%snmp%/dot3StatsExcessiveCollisions.%inst%
-dataSource dot3StatsCarrierSenseErrors
-    ds-source        =   snmp://%snmp%/dot3StatsCarrierSenseErrors.%inst%
-dataSource dot3StatsFrameTooLongs
-    ds-source        =   snmp://%snmp%/dot3StatsFrameTooLongs.%inst%
-
-# ifInOctets and ifOutOctets come from above, since they
-# are used by switch-ports as well
-
-datasource	ifInErrors
-	ds-source	=	snmp://%snmp%/ifInErrors.%inst%
-datasource	ifOutErrors
-	ds-source	=	snmp://%snmp%/ifOutErrors.%inst%
-datasource	ifInUcastPackets
-	ds-source	=	snmp://%snmp%/ifInUcastPkts.%inst%
-datasource	ifOutUcastPackets
-	ds-source	=	snmp://%snmp%/ifOutUcastPkts.%inst%
-datasource	ifInNUcastPackets
-	ds-source	=	snmp://%snmp%/ifInNUcastPkts.%inst%
-datasource	ifOutNUcastPackets
-	ds-source	=	snmp://%snmp%/ifOutNUcastPkts.%inst%
-datasource	ifInDiscards
-	ds-source	=	snmp://%snmp%/ifInDiscards.%inst%
-datasource	ifOutDiscards
-	ds-source	=	snmp://%snmp%/ifOutDiscards.%inst%
-datasource	ifOutQLen
-	ds-source	=	snmp://%snmp%/ifOutQLen.%inst
-
-# High capacity counters.  These require SNMPv2.
-
-datasource	ifHCInOctets        
-	ds-source	=	snmp://%snmp%/ifHCInOctets.%inst%
-datasource	ifHCInUcastPkts        
-	ds-source	=	snmp://%snmp%/ifHCInUcastPkts.%inst%
-datasource	ifHCInMulticastPkts        
-	ds-source	=	snmp://%snmp%/ifHCInMulticastPkts.%inst%
-datasource	ifHCInBroadcastPkts        
-	ds-source	=	snmp://%snmp%/ifHCInBroadcastPkts.%inst%
+    [[ipForwDatagrams]]
+        ds_oid = $OidipForwDatagrams
+    [[ipOutRequests]]
+        ds_oid = $OidipOutRequests
 
 
-datasource	ifHCOutOctets       
-	 ds-source	=	snmp://%snmp%/ifHCOutOctets.%inst%
-datasource	ifHCOutUcastPkts        
-	ds-source	=	snmp://%snmp%/ifHCOutUcastPkts.%inst%
-datasource	ifHCOutMulticastPkts        
-	ds-source	=	snmp://%snmp%/ifHCOutMulticastPkts.%inst%
-datasource	ifHCOutBroadcastPkts        
-	ds-source	=	snmp://%snmp%/ifHCOutBroadcastPkts.%inst%
-
-# Datasources for T1 controllers
-datasource dsx1CurrentESs
-    ds-source  = snmp://%snmp%/dsx1CurrentESs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentSESs
-    ds-source  = snmp://%snmp%/dsx1CurrentSESs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentSEFSs
-    ds-source  = snmp://%snmp%/dsx1CurrentSEFSs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentUASs
-    ds-source  = snmp://%snmp%/dsx1CurrentUASs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentCSSs
-    ds-source  = snmp://%snmp%/dsx1CurrentCSSs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentPCVs
-    ds-source  = snmp://%snmp%/dsx1CurrentPCVs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentLESs
-    ds-source  = snmp://%snmp%/dsx1CurrentLESs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentBESs
-    ds-source  = snmp://%snmp%/dsx1CurrentBESs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentDMs
-    ds-source  = snmp://%snmp%/dsx1CurrentDMs.%inst%
-    rrd-ds-type = GAUGE
-datasource dsx1CurrentLCVs
-    ds-source  = snmp://%snmp%/dsx1CurrentLCVs.%inst%
-    rrd-ds-type = GAUGE
-
-###############################################################################
-#
-# targetType's are the device definitions that will tell cricket what to retrieve
-# from the device, and how should should be displayed. Each target that is defined
-# in a target file should be associated with a targetType, so that cricket knows
-# how to treat the target.
-#
-# Empty target statements can be used for some targets that you don't want to pull
-# data from. Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory). 
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-# 
-#
-###############################################################################
-
-
-targetType    --default--
-        rra    =    "5minAve, 30minAve, 2hrAve, 2hrMax, 1dayAve, 1dayMax"
-
-targetType	Device-Traffic
-	ds		=	"ipForwDatagrams, ipOutRequests"
-	view	=	"traffic: ipForwDatagrams ipOutRequests"
-
-# Generic Device
-
-targetType	Generic-Device
-	view	=	""
-
-### Interface target types.
-
-targetType	standard-interface
-	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets"
-	view	=	"Octets: ifInOctets ifOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				Errors: ifInErrors ifOutErrors"
-
-targetType	extended-interface
-	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-		                dot3statsAlignmentErrors, dot3statsFCSErrors,
-                                dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
-                                dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
-	                        dot3statsDeferredTransmissions,
-                                ifInDiscards, ifOutDiscards,
-		                ifOutQLen"
-	view	=	"Octets: ifInOctets ifOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
-				QueueLen: ifOutQLen,
-				Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
-				Error Details: dot3statsAlignmentErrors dot3statsFCSErrors 
-		      		dot3statsFramesTooLong dot3statsCarrierSenseErrors
-				dot3statsDeferredTransmissions"
-targetType	extended-interface-nu
-	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-				ifInNUcastPackets, ifOutNUcastPackets,
-		                dot3statsAlignmentErrors, dot3statsFCSErrors,
-                                dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
-                                dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
-	                        dot3statsDeferredTransmissions,
-                                ifInDiscards, ifOutDiscards,
-		                ifOutQLen"
-	view	=	"Octets: ifInOctets ifOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				NUcastPackets: ifInNUcastPackets ifOutNUcastPackets,
-				Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
-				QueueLen: ifOutQLen,
-				Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
-				Error Details: dot3statsAlignmentErrors dot3statsFCSErrors 
-		      		dot3statsFramesTooLong dot3statsCarrierSenseErrors
-				dot3statsDeferredTransmissions"
-
-targetType	extended-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifHCInUcastPackets, ifHCOutUcastPackets,
-		                dot3statsAlignmentErrors, dot3statsFCSErrors,
-                                dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
-                                dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
-	                        dot3statsDeferredTransmissions,
-                                ifInDiscards, ifOutDiscards,
-		                ifOutQLen"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
-				Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
-				QueueLen: ifOutQLen,
-				Errors: ifInErrors ifOutErrors
-				Error Details: dot3statsAlignmentErrors dot3statsFCSErrors 
-		      		dot3statsFramesTooLong dot3statsCarrierSenseErrors
-				dot3statsDeferredTransmissions"
-
-targetType	extended-interface-nu-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifHCInUcastPackets, ifHCOutUcastPackets,
-				ifHCInNUcastPackets, ifHCOutNUcastPackets,
-		                dot3statsAlignmentErrors, dot3statsFCSErrors,
-                                dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
-                                dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
-	                        dot3statsDeferredTransmissions,
-                                ifInDiscards, ifOutDiscards,
-		                ifOutQLen"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
-				NUcastPackets: ifHCInNUcastPackets ifHCOutNUcastPackets,
-				Collisions: dot3StatsSingleCollisionFrames
-				    dot3StatsMultipleCollisionFrames
-				QueueLen: ifOutQLen,
-				Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
-                    Errors Details: dot3statsAlignmentErrors dot3statsFCSErrors 
-		      		    dot3statsFramesTooLong dot3statsCarrierSenseErrors
-                                    dot3statsDeferredTransmissions"
-
-targetType	standard-interface-nu
-	ds		=	"ifInOctets, ifOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-				ifInNUcastPackets, ifOutNUcastPackets"
-	view	=	"Octets: ifInOctets ifOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				NUcastPackets: ifInNUcastPackets ifOutNUcastPackets,
-				Errors: ifInErrors ifOutErrors"
-
-targetType	standard-interface-hc
-    ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"
-    view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
-				Errors: ifInErrors ifOutErrors"
-
-targetType	standard-interface-nu-hc
-    ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts,
-				ifHCInMulticastPkts, ifHCInMulticastPkts,
-				ifHCInBroadcastPkts, ifHCInBroadcastPkts"
-    view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
-				McastPackets: ifHCInMulticastPackets ifHCOutMulticastPackets,
-				BcastPackets: ifHCInBroadcastPackets ifHCOutBroadcastPackets,
-				Errors: ifInErrors ifOutErrors"
-
-targetType	sub-interface
-	ds		=	"ifInOctets, ifOutOctets"
-	view	=	"Octets: ifInOctets ifOutOctets"
-
-targetType	sub-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets"
-
-targetType dsx-controller
-    ds     =   "dsx1CurrentESs, dsx1CurrentSESs, dsx1CurrentSEFSs,
-                 dsx1CurrentUASs, dsx1CurrentCSSs, dsx1CurrentPCVs,
-                 dsx1CurrentLESs, dsx1CurrentBESs, dsx1CurrentDMs, dsx1CurrentLCVs"
-    view    =   "Errors: dsx1CurrentPCVs dsx1CurrentLCVs,
-                 Line: dsx1CurrentLCVs dsx1CurrentLESs,
-                 ErroredSec: dsx1CurrentESs dsx1CurrentSESs dsx1CurrentSEFSs
-                   dsx1CurrentCSSs dsx1CurrentBESs,
-                 Service: dsx1CurrentUASs dsx1CurrentDMs"
-
+    [[dot3StatsAlignmentErrors]]
+        ds_oid = $Oiddot3StatsAlignmentErrors.%(instance)s
+    [[dot3StatsFCSErrors]]
+        ds_oid = $Oiddot3StatsFCSErrors.%(instance)s
+    [[dot3StatsSingleCollisionFrames]]
+        ds_oid = $Oiddot3StatsSingleCollisionFrames.%(instance)s
+    [[dot3StatsMultipleCollisionFrames]]
+        ds_oid = $Oiddot3StatsMultipleCollisionFrames.%(instance)s
+    [[dot3StatsDeferredTransmissions]]
+        ds_oid = $Oiddot3StatsDeferredTransmissions.%(instance)s
+    [[dot3StatsLateCollisions]]
+        ds_oid = $Oiddot3StatsLateCollisions.%(instance)s
+    [[dot3StatsExcessiveCollisions]]
+        ds_oid = $Oiddot3StatsExcessiveCollisions.%(instance)s
+    [[dot3StatsCarrierSenseErrors]]
+        ds_oid = $Oiddot3StatsCarrierSenseErrors.%(instance)s
+    [[dot3StatsFrameTooLongs]]
+        ds_oid = $Oiddot3StatsFrameTooLongs.%(instance)s
+    
+    [[ifInErrors]]
+        ds_oid = $OidifInErrors.%(instance)s
+    [[ifOutErrors]]
+        ds_oid = $OidifOutErrors.%(instance)s
+    [[ifInUcastPackets]]
+        ds_oid = $OidifInUcastPkts.%(instance)s
+    [[ifOutUcastPackets]]
+        ds_oid = $OidifOutUcastPkts.%(instance)s
+    [[ifInNUcastPackets]]
+        ds_oid = $OidifInNUcastPkts.%(instance)s
+    [[ifOutNUcastPackets]]
+        ds_oid = $OidifOutNUcastPkts.%(instance)s
+    [[ifInDiscards]]
+        ds_oid = $OidifInDiscards.%(instance)s
+    [[ifOutDiscards]]
+        ds_oid = $OidifOutDiscards.%(instance)s
+    [[ifOutQLen]]
+        ds_oid = $OidifOutQLen.%inst
+    
+    # High capacity counters. These require SNMPv2.
+    
+    [[ifHCInOctets]]
+        ds_name = in
+        ds_unit = Mbps
+        ds_calc = 8,mul,1000000,div
+        ds_type = DERIVE64
+        ds_oid = $OidifHCInOctets.%(instance)s
+    [[ifHCInUcastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCInUcastPkts.%(instance)s
+    [[ifHCInMulticastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCInMulticastPkts.%(instance)s
+    [[ifHCInBroadcastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCInBroadcastPkts.%(instance)s
+    
+    
+    [[ifHCOutOctets]]
+        ds_max = $OidifSpeed
+        ds_name = out
+        ds_unit = Mbps
+        ds_calc = 8,mul,1000000,div
+        ds_type = DERIVE64
+        ds_oid = $OidifHCOutOctets.%(instance)s
+    [[ifHCOutUcastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCOutUcastPkts.%(instance)s
+    [[ifHCOutMulticastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCOutMulticastPkts.%(instance)s
+    [[ifHCOutBroadcastPkts]]
+        ds_type = DERIVE64
+        ds_oid = $OidifHCOutBroadcastPkts.%(instance)s
+    
+    # Datasources for T1 controllers
+    [[dsx1CurrentESs]]
+        ds_oid = $Oiddsx1CurrentESs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentSESs]]
+        ds_oid = $Oiddsx1CurrentSESs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentSEFSs]]
+        ds_oid = $Oiddsx1CurrentSEFSs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentUASs]]
+        ds_oid = $Oiddsx1CurrentUASs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentCSSs]]
+        ds_oid = $Oiddsx1CurrentCSSs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentPCVs]]
+        ds_oid = $Oiddsx1CurrentPCVs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentLESs]]
+        ds_oid = $Oiddsx1CurrentLESs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentBESs]]
+        ds_oid = $Oiddsx1CurrentBESs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentDMs]]
+        ds_oid = $Oiddsx1CurrentDMs.%(instance)s
+        ds_type = GAUGE
+    [[dsx1CurrentLCVs]]
+        ds_oid = $Oiddsx1CurrentLCVs.%(instance)s
+        ds_type = GAUGE
 
 ###############################################################################
 #
-## monitorType definitions
+# DSTEMPLATE are definitions that will tell the collection engine what to retrieve
+# from the device, and how they should be displayed. Each service that is defined
+# in a Shinken configuration file should be associated with a DSTEMPLATE.
 #
-# The short definition: These are monitor threshold templates that can be
-# associated with targets in the config-tree. Each monitorType is reference using
-# the monitor-type key and the value is the monitorType.
-#
-## These are the device definitions that will tell cricket what to monitor
-# from the device, and how should should acted on. Each target that is defined
-# in a target file can be associated with a monitorType, so that cricket knows
-# how to treat threshold monitoring for the target.
-#
-# Empty monitorType statements can be used for some targets that you don't want to monitor.
-# Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory).
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-#
-###############################################################################
-
-#monitorType chassis
-#    monitor-thresholds = 
-#        "cpu5min:value:n:75:META:router-cpu:dark-red:SPAN:3,
-#         cpu5min:value:n:1:META:router-cpu:yellow:SPAN:3"
-#
-
-
-###############################################################################
-#
-#
-## html definitions 
-#
+# DSTEMPLATE is optional in the target definition as you may not want to pull
+# data for it. Examples are Chassis's of devices for which the OIDs
+# haven't been detailed yet(temperature, cpu, memory). 
 #
 ###############################################################################
 
 
-html short-desc                 Device Chassis
+[DSTEMPLATE]
+    # Default values inherited by all device definitions
+    ds = ""
+    graph = ""
+
+    [[Device-Traffic]]
+        ds = ipForwDatagrams,ipOutRequests
+        graph = "traffic: ipForwDatagrams ipOutRequests"
+    
+    # Generic Device
+    
+    [[Generic-Device]]
+    
+    ### Interface target types.
+    
+    [[standard-interface]]
+        ds          = 	"""ifInOctets, ifOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets"""
+        graph        = 	"""Octets: ifInOctets ifOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[extended-interface]]
+        ds          = 	"""ifInOctets, ifOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+        dot3statsAlignmentErrors, dot3statsFCSErrors,
+        dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
+        dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
+        dot3statsDeferredTransmissions,
+        ifInDiscards, ifOutDiscards,
+        ifOutQLen"""
+        graph        = 	"""Octets: ifInOctets ifOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
+        QueueLen: ifOutQLen,
+        Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
+        Error Details: dot3statsAlignmentErrors dot3statsFCSErrors
+        dot3statsFramesTooLong dot3statsCarrierSenseErrors
+        dot3statsDeferredTransmissions"""
+    [[extended-interface-nu]]
+        ds          = 	"""ifInOctets, ifOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+        ifInNUcastPackets, ifOutNUcastPackets,
+        dot3statsAlignmentErrors, dot3statsFCSErrors,
+        dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
+        dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
+        dot3statsDeferredTransmissions,
+        ifInDiscards, ifOutDiscards,
+        ifOutQLen"""
+        graph        = 	"""Octets: ifInOctets ifOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        NUcastPackets: ifInNUcastPackets ifOutNUcastPackets,
+        Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
+        QueueLen: ifOutQLen,
+        Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
+        Error Details: dot3statsAlignmentErrors dot3statsFCSErrors
+        dot3statsFramesTooLong dot3statsCarrierSenseErrors
+        dot3statsDeferredTransmissions"""
+    
+    [[extended-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifHCInUcastPackets, ifHCOutUcastPackets,
+        dot3statsAlignmentErrors, dot3statsFCSErrors,
+        dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
+        dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
+        dot3statsDeferredTransmissions,
+        ifInDiscards, ifOutDiscards,
+        ifOutQLen"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
+        Collisions: dot3StatsSingleCollisionFrames dot3StatsMultipleCollisionFrames
+        QueueLen: ifOutQLen,
+        Errors: ifInErrors ifOutErrors
+        Error Details: dot3statsAlignmentErrors dot3statsFCSErrors
+        dot3statsFramesTooLong dot3statsCarrierSenseErrors
+        dot3statsDeferredTransmissions"""
+    
+    [[extended-interface-nu-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifHCInUcastPackets, ifHCOutUcastPackets,
+        ifHCInNUcastPackets, ifHCOutNUcastPackets,
+        dot3statsAlignmentErrors, dot3statsFCSErrors,
+        dot3statsCarrierSenseErrors,dot3statsFramesTooLong,
+        dot3StatsSingleCollisionFrames,dot3StatsMultipleCollisionFrames,
+        dot3statsDeferredTransmissions,
+        ifInDiscards, ifOutDiscards,
+        ifOutQLen"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
+        NUcastPackets: ifHCInNUcastPackets ifHCOutNUcastPackets,
+        Collisions: dot3StatsSingleCollisionFrames
+        dot3StatsMultipleCollisionFrames
+        QueueLen: ifOutQLen,
+        Errors: ifInErrors ifOutErrors ifInDiscards ifOutDiscards,
+        Errors Details: dot3statsAlignmentErrors dot3statsFCSErrors
+        dot3statsFramesTooLong dot3statsCarrierSenseErrors
+        dot3statsDeferredTransmissions"""
+    
+    [[standard-interface-nu]]
+        ds          = 	"""ifInOctets, ifOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+        ifInNUcastPackets, ifOutNUcastPackets"""
+        graph        = 	"""Octets: ifInOctets ifOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        NUcastPackets: ifInNUcastPackets ifOutNUcastPackets,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[standard-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[standard-interface-nu-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts,
+        ifHCInMulticastPkts, ifHCInMulticastPkts,
+        ifHCInBroadcastPkts, ifHCInBroadcastPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifHCInUcastPackets ifHCOutUcastPackets,
+        McastPackets: ifHCInMulticastPackets ifHCOutMulticastPackets,
+        BcastPackets: ifHCInBroadcastPackets ifHCOutBroadcastPackets,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[sub-interface]]
+        ds = "ifInOctets, ifOutOctets"
+        graph = "Octets: ifInOctets ifOutOctets"
+    
+    [[sub-interface-hc]]
+        ds = "ifHCInOctets, ifHCOutOctets"
+        graph = "Octets: ifHCInOctets ifHCOutOctets"
+    
+    [[dsx-controller]]
+        ds          = 	"""dsx1CurrentESs, dsx1CurrentSESs, dsx1CurrentSEFSs,
+        dsx1CurrentUASs, dsx1CurrentCSSs, dsx1CurrentPCVs,
+        dsx1CurrentLESs, dsx1CurrentBESs, dsx1CurrentDMs, dsx1CurrentLCVs"""
+        graph        = 	"""Errors: dsx1CurrentPCVs dsx1CurrentLCVs,
+        Line: dsx1CurrentLCVs dsx1CurrentLESs,
+        ErroredSec: dsx1CurrentESs dsx1CurrentSESs dsx1CurrentSEFSs
+        dsx1CurrentCSSs dsx1CurrentBESs,
+        Service: dsx1CurrentUASs dsx1CurrentDMs"""
 
 
 ###############################################################################
 #
+## TRIGGER definitions
 #
-## map definitions
-# This dict is used to control the instance mapping code.
-# See the docs for more information about the map dictionary.
+# The trigger dictionnary defines expressions to be applied on retrieved values.
+# They are referenced using the trigger variable in the Shinken configuration.
+# Note the use of underscore for the Shinken configuration
+# and - for the trigger-name in the Defaults file.
 #
+# Triggers that do not resolve correctly or contain errors will return
+# unknown status and log an error message in the plugin output.
+#
+# For examples see: genConfig.triggers
+#
+###############################################################################
+
+#[TRIGGER]
+    # Set service to UNKNOWN(3) by default
+    #   default_status = 3
+    #[[trigger_name1]]
+    #    warning =  datasource.function(), <constant>, <operator>
+    #    critical = datasource.function(), datasource.function(), <operator>
+    #    critical = datasource.function(), <constant>, <operator>, <constant>, <operator>
+    
+    #[TRIGGERGROUP]
+    #   trigger_group_name1 = trigger_name1, trigger_name2
+
+
+###############################################################################
+#
+# MAP definitions dynamically find the SNMP instance
+#
+# REGULAR EXPRESSION MATCHES ARE NOT SUPPORTED AT THIS TIME
+# They are documented in case they are implemented later on.
+# The instance must fully match as passed in the check arguments
 #
 ###############################################################################
 
 
-map interface-name
-    base-oid    =   ifDescr
-    match       =   %interface-name%
+[MAP]
+[[interface-name]]
+    base_oid = .1.3.6.1.2.1.2.2.1.2
+#    base_oid = ifDescr
 
 
 ###############################################################################
@@ -471,353 +464,353 @@ map interface-name
 
 # Interfaces
 
-graph   ifInOctets
-    color       =   dark-green
-    draw-as     =   AREA
-    legend      =   "Average bits in"
-    y-axis      =   "bits per second"
-    units       =   "bits/sec"
-    y-min       =   0
-    scale       =   8,*
-#    bytes       =   true
-    show-max    =   true
-    max-color   =   neongrn
-    draw-max-as =   LINE1
+[GRAPH]
+[[ifInOctets]]
+    color = dark-green
+    draw-as = AREA
+    legend = "Average bits in"
+    y-axis = "bits per second"
+    units = "bits/sec"
+    y-min = 0
+    scale = 8,*
+# bytes = true
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
 
-graph   ifOutOctets
-    color       =   blue
-    legend      =   "Average bits out"
-    y-axis      =   "bits per second"
-    units       =   "bits/sec"
-    y-min       =   0
-    scale       =   8,*
-#    bytes       =   true
-    show-max    =   true
-    max-color   =   skyblue
-    draw-max-as =   LINE1
+[[ifOutOctets]]
+    color = blue
+    legend = "Average bits out"
+    y-axis = "bits per second"
+    units = "bits/sec"
+    y-min = 0
+    scale = 8,*
+# bytes = true
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
 
-graph   ifInUcastPackets
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets in"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifInUcastPackets]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets in"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifOutUcastPackets
-    color       =   blue
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets out"
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifOutUcastPackets]]
+    color = blue
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets out"
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
-graph   ifInNUcastPackets
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets in"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifInNUcastPackets]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets in"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifOutNUcastPackets
-    color       =   blue
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets out"
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifOutNUcastPackets]]
+    color = blue
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets out"
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
  
-graph   ifInErrors
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "errors per second"
-    units       =   "err/sec"
-    legend      =   "Average errors in"
+[[ifInErrors]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "errors per second"
+    units = "err/sec"
+    legend = "Average errors in"
 
-graph   ifOutErrors
-    color       =   blue
-    y-axis      =   "errors per second"
-    legend      =   "Average errors out"
-    units       =   "err/sec"
+[[ifOutErrors]]
+    color = blue
+    y-axis = "errors per second"
+    legend = "Average errors out"
+    units = "err/sec"
 
-graph	ifInDiscards
-    color       =   green
-    legend     =    "Average discards in"
-    units        =    "pkt/sec"
+[[ifInDiscards]]
+    color = green
+    legend = "Average discards in"
+    units = "pkt/sec"
 
-graph	ifOutDiscards
-    color       =   purple
-    legend    =    "Average discards out"
-    units       =    "pkt/sec"
+[[ifOutDiscards]]
+    color = purple
+    legend = "Average discards out"
+    units = "pkt/sec"
 
-graph	ifOutQLen
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "output queue length"
-    legend    =    "Output packet queue length"
-    units       =    "packets"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifOutQLen]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "output queue length"
+    legend = "Output packet queue length"
+    units = "packets"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
 
-graph   ifHCInOctets
-    color       =   dark-green
-    draw-as     =   AREA
-    legend      =   "Average bits in"
-    y-axis      =   "bits per second"
-    units       =   "bits/sec"
-    scale       =   8,*
-    y-min	=   0
-#    bytes	=   true
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifHCInOctets]]
+    color = dark-green
+    draw-as = AREA
+    legend = "Average bits in"
+    y-axis = "bits per second"
+    units = "bits/sec"
+    scale = 8,*
+    y-min = 0
+# bytes = true
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifHCOutOctets
-    color       =   blue
-    legend      =   "Average bits out"
-    y-axis      =   "bits per second"
-    units       =   "bits/sec"
-    scale       =   8,*
-    y-min       =   0
-#    bytes	=   true
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifHCOutOctets]]
+    color = blue
+    legend = "Average bits out"
+    y-axis = "bits per second"
+    units = "bits/sec"
+    scale = 8,*
+    y-min = 0
+# bytes = true
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
-graph   ifHCInUcastPackets
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets in"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifHCInUcastPackets]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets in"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifHCOutUcastPackets
-    color       =   blue
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets out"
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifHCOutUcastPackets]]
+    color = blue
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets out"
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
-graph   ifHCInBroadcastPackets
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets in"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifHCInBroadcastPackets]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets in"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifHCOutBroadcastPackets
-    color       =   blue
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets out"
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifHCOutBroadcastPackets]]
+    color = blue
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets out"
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
-graph   ifHCInMulticastPackets
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets in"
-    show-max	=   true
-    max-color	=   neongrn
-    draw-max-as	=   LINE1
+[[ifHCInMulticastPackets]]
+    color = dark-green
+    draw-as = AREA
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets in"
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE1
  
-graph   ifHCOutMulticastPackets
-    color       =   blue
-    y-axis      =   "packets per second"
-    units       =   "pkt/sec"
-    legend      =   "Average num packets out"
-    show-max	=   true
-    max-color	=   skyblue
-    draw-max-as	=   LINE1
+[[ifHCOutMulticastPackets]]
+    color = blue
+    y-axis = "packets per second"
+    units = "pkt/sec"
+    legend = "Average num packets out"
+    show-max = true
+    max-color = skyblue
+    draw-max-as = LINE1
 
-graph   ipForwDatagrams
-    color       =   dark-green
-    y-axis      =   "Packets per second"
-    legend      =   "Packet traffic forwarded by device"
-    units       =   "packets/sec"
-    draw-as     =   AREA
-    show-max    =   true
-    max-color   =   neongrn
-    draw-max-as =   LINE2
+[[ipForwDatagrams]]
+    color = dark-green
+    y-axis = "Packets per second"
+    legend = "Packet traffic forwarded by device"
+    units = "packets/sec"
+    draw-as = AREA
+    show-max = true
+    max-color = neongrn
+    draw-max-as = LINE2
 
-graph   ipOutRequests
-    color       =   blue
-    y-axis      =   "Packets per second"
-    legend      =   "Packet traffic generated by device"
-    units       =   "packets/sec"
-    draw-as     =   STACK
+[[ipOutRequests]]
+    color = blue
+    y-axis = "Packets per second"
+    legend = "Packet traffic generated by device"
+    units = "packets/sec"
+    draw-as = STACK
 
 ###
 ### Ethernet Errors stacked
 ###
 
-graph	dot3statsAlignmentErrors
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Frame alignment errors"
-    scale       =   300,*
-    units       =   "errors"
-    draw-as     =   AREA
+[[dot3statsAlignmentErrors]]
+    y-axis = "errors per 5 minute"
+    legend = "Frame alignment errors"
+    scale = 300,*
+    units = "errors"
+    draw-as = AREA
 
-graph	dot3statsFCSErrors 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "FCS errors"
-    scale       =   300,*
-    units       =   "errors"
-    draw-as     =   STACK
+[[dot3statsFCSErrors]]
+    y-axis = "errors per 5 minute"
+    legend = "FCS errors"
+    scale = 300,*
+    units = "errors"
+    draw-as = STACK
 
-graph	dot3statsFramesTooLong 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Frames too long"
-    scale       =   300,*
-    units       =   "errors"
-    draw-as     =   STACK
+[[dot3statsFramesTooLong]]
+    y-axis = "errors per 5 minute"
+    legend = "Frames too long"
+    scale = 300,*
+    units = "errors"
+    draw-as = STACK
 
-graph	dot3statsCarrierSenseErrors
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Carrier sense errors"
-    scale       =   300,*
-    units       =   "errors"
-    draw-as     =   STACK
+[[dot3statsCarrierSenseErrors]]
+    y-axis = "errors per 5 minute"
+    legend = "Carrier sense errors"
+    scale = 300,*
+    units = "errors"
+    draw-as = STACK
 
-graph   dot3statsDeferredTransmissions 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Deferred transmissions"
-    scale       =   300,*
-    units       =   "errors"
-    draw-as     =   STACK
+[[dot3statsDeferredTransmissions]]
+    y-axis = "errors per 5 minute"
+    legend = "Deferred transmissions"
+    scale = 300,*
+    units = "errors"
+    draw-as = STACK
 
-graph	ifInDiscards
-    legend     =    "Average discards in"
-    units        =    "pkt/sec"
+[[ifInDiscards]]
+    legend = "Average discards in"
+    units = "pkt/sec"
 
-graph	ifOutDiscards
-    legend    =    "Average discards out"
-    units       =    "pkt/sec"
+[[ifOutDiscards]]
+    legend = "Average discards out"
+    units = "pkt/sec"
 
 ###
 ### Collision graph Stacked
 ###
-graph	dot3statsSingleCollFrames
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Single collision frames"
-    scale       =   300,*
-    units       =   "collsions"
-    draw-as     =   AREA
+[[dot3statsSingleCollFrames]]
+    y-axis = "errors per 5 minute"
+    legend = "Single collision frames"
+    scale = 300,*
+    units = "collsions"
+    draw-as = AREA
 
-graph   dot3statsMultipleCollFrames 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Multiple collision frames"
-    scale       =   300,*
-    units       =   "align errors"
-    draw-as     =   STACK
+[[dot3statsMultipleCollFrames]]
+    y-axis = "errors per 5 minute"
+    legend = "Multiple collision frames"
+    scale = 300,*
+    units = "align errors"
+    draw-as = STACK
 
-graph	dot3statsLateCollisions 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Late collisions"
-    scale       =   300,*
-    units       =   "collsions"
-    draw-as     =   STACK
+[[dot3statsLateCollisions]]
+    y-axis = "errors per 5 minute"
+    legend = "Late collisions"
+    scale = 300,*
+    units = "collsions"
+    draw-as = STACK
 
-graph	dot3statsExcessiveCollisions 
-    y-axis      =   "errors per 5 minute"
-    legend      =   "Excessive collisions"
-    scale       =   300,*
-    units       =   "collisions"
-    draw-as     =   STACK
+[[dot3statsExcessiveCollisions]]
+    y-axis = "errors per 5 minute"
+    legend = "Excessive collisions"
+    scale = 300,*
+    units = "collisions"
+    draw-as = STACK
 
 ###
 ### Internal Errors
 ###
-graph	dot3statsInternalMacTransmitErrors
-    y-axis      =   "errors per 5 minute" 
-    color       =   dark-red
-    scale       =   300,*
-    draw-as     =   AREA
-    units      =   "errors"
+[[dot3statsInternalMacTransmitErrors]]
+    y-axis = "errors per 5 minute"
+    color = dark-red
+    scale = 300,*
+    draw-as = AREA
+    units = "errors"
 
-graph   dot3statsInternalMacReceiveErrors
-    y-axis      =   "errors per 5 minute"
-    color       =   dark-green
-    scale       =   300,*
-    units      =   "errors"
+[[dot3statsInternalMacReceiveErrors]]
+    y-axis = "errors per 5 minute"
+    color = dark-green
+    scale = 300,*
+    units = "errors"
 
-graph  dot3StatsDuplexStatus 
-    units       =   ""
-    color       =   dark-green
-    draw-as     =   AREA
-    y-axis      =   "duplex status"
-    y-min       =   0
-    y-max       =   3
-    legend    =   "Duplex status:<br><ul><li>(1) unknown<li>(2) half<li>(3) full</ul>"
+[[dot3StatsDuplexStatus]]
+    units = ""
+    color = dark-green
+    draw-as = AREA
+    y-axis = "duplex status"
+    y-min = 0
+    y-max = 3
+    legend = "Duplex status:<br><ul><li>(1) unknown<li>(2) half<li>(3) full</ul>"
 
-graph dsx1CurrentESs
-    color       =   red
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Errored Seconds"
-graph dsx1CurrentSESs
-    color       =   green
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Severely Errored Seconds"
-graph dsx1CurrentSEFSs
-    color       =   blue
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Severely Errored Framing Seconds"
-graph dsx1CurrentUASs
-    color       =   green
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Unavailable Seconds"
-graph dsx1CurrentCSSs
-    color       =   orange
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Controlled Slip Seconds"
-graph dsx1CurrentPCVs
-    color       =   green
-    y-axis      =   "#/15min"
-    units       =   "#"
-    legend      =   "The number of Path Coding Violations"
-graph dsx1CurrentLESs
-    color       =   green
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Line Errored Seconds"
-graph dsx1CurrentBESs
-    color       =   dark-green
-    y-axis      =   "#sec/15min"
-    units       =   "sec"
-    legend      =   "The number of Bursty Errored Seconds"
-graph dsx1CurrentDMs
-    color       =   blue
-    y-axis      =   "#min/15min"
-    units       =   "min"
-    legend      =   "The number of Degraded Minutes"
-graph dsx1CurrentLCVs
-    color       =   blue
-    y-axis      =   "#/15min"
-    units       =   "#"
-    legend      =   "The number of Line Code Violations"
-
+[[dsx1CurrentESs]]
+    color = red
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Errored Seconds"
+[[dsx1CurrentSESs]]
+    color = green
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Severely Errored Seconds"
+[[dsx1CurrentSEFSs]]
+    color = blue
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Severely Errored Framing Seconds"
+[[dsx1CurrentUASs]]
+    color = green
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Unavailable Seconds"
+[[dsx1CurrentCSSs]]
+    color = orange
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Controlled Slip Seconds"
+[[dsx1CurrentPCVs]]
+    color = green
+    y-axis = "#/15min"
+    units = "#"
+    legend = "The number of Path Coding Violations"
+[[dsx1CurrentLESs]]
+    color = green
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Line Errored Seconds"
+[[dsx1CurrentBESs]]
+    color = dark-green
+    y-axis = "#sec/15min"
+    units = "sec"
+    legend = "The number of Bursty Errored Seconds"
+[[dsx1CurrentDMs]]
+    color = blue
+    y-axis = "#min/15min"
+    units = "min"
+    legend = "The number of Degraded Minutes"
+[[dsx1CurrentLCVs]]
+    color = blue
+    y-axis = "#/15min"
+    units = "#"
+    legend = "The number of Line Code Violations"

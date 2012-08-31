@@ -1,313 +1,307 @@
+# Generic network device sub-tree defaults
+# Use with genDevConfig and Shinken SnmpBooster module
 #
-# Juniper network device sub-tree defaults - for use with genDevConfig
+# This file is indetented using 4 space.
 #
+###############################################################################
 #
-# This file is formated with a tab (no spaces!)
+# Setup the default variables that apply to all services that are defined
+# within this part of the configuration file hierarchy.
+#
+# All variables can be overriden by a template loaded later in the process.
+#
+# Datasources define the type of data, the period, scaling and limits
+#
+###############################################################################
 #
 #    Copyright (C) 2003 Cougar < cougar @ random . ee >
-#
-###############################################################################
-#
-# Setup the default variables that apply to all targets that are defined
-# within this part of the config-tree hierarchy.
-#
-# All variables can be overriden by redefinition higher in the config-tree.
-#
+#                  2012 fmikus < fmikus @ acktomic . com >
 #
 ###############################################################################
 
 
+
+
+[DATASOURCE]
 
 ### OIDS For juniper MPLS Statistics
 
-OID     mplsLspOctets           1.3.6.1.4.1.2636.3.2.3.1.3
-OID     mplsLspPackets          1.3.6.1.4.1.2636.3.2.3.1.4
+    OidmplsLspOctets                       = 1.3.6.1.4.1.2636.3.2.3.1.3
+    OidmplsLspPackets                      = 1.3.6.1.4.1.2636.3.2.3.1.4
+    
+    ### OIDS Juniper
+    
+    OidJnxInErrors                       = 1.3.6.1.4.1.2636.3.3.1.1.9
+    OidJnxInFrameErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.10
+    OidJnxInQDrops                       = 1.3.6.1.4.1.2636.3.3.1.1.11
+    OidJnxInRunts                        = 1.3.6.1.4.1.2636.3.3.1.1.12
+    OidJnxInGiants                       = 1.3.6.1.4.1.2636.3.3.1.1.13
+    OidJnxInDiscards                     = 1.3.6.1.4.1.2636.3.3.1.1.14
+    OidJnxInHslCrcErrors                 = 1.3.6.1.4.1.2636.3.3.1.1.15
+    OidJnxInHslFifoOverFlows             = 1.3.6.1.4.1.2636.3.3.1.1.16
+    OidJnxInL3Incompletes                = 1.3.6.1.4.1.2636.3.3.1.1.17
+    OidJnxInL2ChanErrors                 = 1.3.6.1.4.1.2636.3.3.1.1.18
+    OidJnxInL2MismatchTimeouts           = 1.3.6.1.4.1.2636.3.3.1.1.19
+    OidJnxInInvalidVCs                   = 1.3.6.1.4.1.2636.3.3.1.1.20
+    OidJnxInFifoErrors                   = 1.3.6.1.4.1.2636.3.3.1.1.21
+    OidJnxBucketDrops                    = 1.3.6.1.4.1.2636.3.3.1.1.22
+    OidJnxSramErrors                     = 1.3.6.1.4.1.2636.3.3.1.1.23
+    OidJnxOutErrors                      = 1.3.6.1.4.1.2636.3.3.1.1.24
+    OidJnxCollisions                     = 1.3.6.1.4.1.2636.3.3.1.1.25
+    OidJnxCarrierTrans                   = 1.3.6.1.4.1.2636.3.3.1.1.26
+    OidJnxOutQDrops                      = 1.3.6.1.4.1.2636.3.3.1.1.27
+    OidJnxOutAgedErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.28
+    OidJnxOutFifoErrors                  = 1.3.6.1.4.1.2636.3.3.1.1.29
+    OidJnxOutHslFifoUnderFlows           = 1.3.6.1.4.1.2636.3.3.1.1.30
+    OidJnxOutHslCrcErrors                = 1.3.6.1.4.1.2636.3.3.1.1.31
+    
+    OidjnxFWCounterPacketCount             = 1.3.6.1.4.1.2636.3.5.2.1.4
+    OidjnxFWCounterByteCount               = 1.3.6.1.4.1.2636.3.5.2.1.5
+    
+    OidjnxAtmIfTxCellCount                 = 1.3.6.1.4.1.2636.3.10.1.1.5
+    OidjnxAtmIfRxCellCount                 = 1.3.6.1.4.1.2636.3.10.1.1.6
+    OidjnxAtmIfTxIdleCellCount             = 1.3.6.1.4.1.2636.3.10.1.1.7
+    OidjnxAtmIfUncorrHCSErrs               = 1.3.6.1.4.1.2636.3.10.1.1.8
+    OidjnxAtmIfCorrHCSErrs                 = 1.3.6.1.4.1.2636.3.10.1.1.9
+    OidjnxAtmIfTxCellFIFOOverRuns          = 1.3.6.1.4.1.2636.3.10.1.1.10
+    OidjnxAtmIfRxCellFIFOOverRuns          = 1.3.6.1.4.1.2636.3.10.1.1.11
+    OidjnxAtmIfRxCellFIFOUnderRuns         = 1.3.6.1.4.1.2636.3.10.1.1.12
+    OidjnxAtmIfInInvalidVCCells            = 1.3.6.1.4.1.2636.3.10.1.1.13
+    OidjnxAtmIfInNoBufferOAMCells          = 1.3.6.1.4.1.2636.3.10.1.1.14
+    OidjnxAtmIfInNoBufDropPkts             = 1.3.6.1.4.1.2636.3.10.1.1.15
+    OidjnxAtmIfOutVCQueueDrops             = 1.3.6.1.4.1.2636.3.10.1.1.16
+    OidjnxAtmIfInBadCrcs                   = 1.3.6.1.4.1.2636.3.10.1.1.17
+    OidjnxAtmIfInLenErrPkts                = 1.3.6.1.4.1.2636.3.10.1.1.18
+    OidjnxAtmIfInTimeoutPkts               = 1.3.6.1.4.1.2636.3.10.1.1.19
+    
+    OidjnxOperatingTemp                    = 1.3.6.1.4.1.2636.3.1.13.1.7
+    OidjnxOperatingCPU                     = 1.3.6.1.4.1.2636.3.1.13.1.8
+    OidjnxOperatingISR                     = 1.3.6.1.4.1.2636.3.1.13.1.9
+    OidjnxOperatingBuffer                  = 1.3.6.1.4.1.2636.3.1.13.1.11
+    OidjnxOperatingHeap                    = 1.3.6.1.4.1.2636.3.1.13.1.12
 
-### OIDS Juniper
-
-OID	ifJnxInErrors			1.3.6.1.4.1.2636.3.3.1.1.9
-OID	ifJnxInFrameErrors		1.3.6.1.4.1.2636.3.3.1.1.10
-OID	ifJnxInQDrops			1.3.6.1.4.1.2636.3.3.1.1.11
-OID	ifJnxInRunts			1.3.6.1.4.1.2636.3.3.1.1.12
-OID	ifJnxInGiants			1.3.6.1.4.1.2636.3.3.1.1.13
-OID	ifJnxInDiscards			1.3.6.1.4.1.2636.3.3.1.1.14
-OID	ifJnxInHslCrcErrors		1.3.6.1.4.1.2636.3.3.1.1.15
-OID	ifJnxInHslFifoOverFlows		1.3.6.1.4.1.2636.3.3.1.1.16
-OID	ifJnxInL3Incompletes		1.3.6.1.4.1.2636.3.3.1.1.17
-OID	ifJnxInL2ChanErrors		1.3.6.1.4.1.2636.3.3.1.1.18
-OID	ifJnxInL2MismatchTimeouts	1.3.6.1.4.1.2636.3.3.1.1.19
-OID	ifJnxInInvalidVCs		1.3.6.1.4.1.2636.3.3.1.1.20
-OID	ifJnxInFifoErrors		1.3.6.1.4.1.2636.3.3.1.1.21
-OID	ifJnxBucketDrops		1.3.6.1.4.1.2636.3.3.1.1.22
-OID	ifJnxSramErrors			1.3.6.1.4.1.2636.3.3.1.1.23
-OID	ifJnxOutErrors			1.3.6.1.4.1.2636.3.3.1.1.24
-OID	ifJnxCollisions			1.3.6.1.4.1.2636.3.3.1.1.25
-OID	ifJnxCarrierTrans		1.3.6.1.4.1.2636.3.3.1.1.26
-OID	ifJnxOutQDrops			1.3.6.1.4.1.2636.3.3.1.1.27
-OID	ifJnxOutAgedErrors		1.3.6.1.4.1.2636.3.3.1.1.28
-OID	ifJnxOutFifoErrors		1.3.6.1.4.1.2636.3.3.1.1.29
-OID	ifJnxOutHslFifoUnderFlows	1.3.6.1.4.1.2636.3.3.1.1.30
-OID	ifJnxOutHslCrcErrors		1.3.6.1.4.1.2636.3.3.1.1.31
-
-OID	jnxFWCounterPacketCount		1.3.6.1.4.1.2636.3.5.2.1.4
-OID	jnxFWCounterByteCount		1.3.6.1.4.1.2636.3.5.2.1.5
-
-OID	jnxAtmIfTxCellCount		1.3.6.1.4.1.2636.3.10.1.1.5
-OID	jnxAtmIfRxCellCount		1.3.6.1.4.1.2636.3.10.1.1.6
-OID	jnxAtmIfTxIdleCellCount		1.3.6.1.4.1.2636.3.10.1.1.7
-OID	jnxAtmIfUncorrHCSErrs		1.3.6.1.4.1.2636.3.10.1.1.8
-OID	jnxAtmIfCorrHCSErrs		1.3.6.1.4.1.2636.3.10.1.1.9
-OID	jnxAtmIfTxCellFIFOOverRuns	1.3.6.1.4.1.2636.3.10.1.1.10
-OID	jnxAtmIfRxCellFIFOOverRuns	1.3.6.1.4.1.2636.3.10.1.1.11
-OID	jnxAtmIfRxCellFIFOUnderRuns	1.3.6.1.4.1.2636.3.10.1.1.12
-OID	jnxAtmIfInInvalidVCCells	1.3.6.1.4.1.2636.3.10.1.1.13
-OID	jnxAtmIfInNoBufferOAMCells	1.3.6.1.4.1.2636.3.10.1.1.14
-OID	jnxAtmIfInNoBufDropPkts		1.3.6.1.4.1.2636.3.10.1.1.15
-OID	jnxAtmIfOutVCQueueDrops		1.3.6.1.4.1.2636.3.10.1.1.16
-OID	jnxAtmIfInBadCrcs		1.3.6.1.4.1.2636.3.10.1.1.17
-OID	jnxAtmIfInLenErrPkts		1.3.6.1.4.1.2636.3.10.1.1.18
-OID	jnxAtmIfInTimeoutPkts		1.3.6.1.4.1.2636.3.10.1.1.19
-
-OID	jnxOperatingTemp		1.3.6.1.4.1.2636.3.1.13.1.7
-OID	jnxOperatingCPU			1.3.6.1.4.1.2636.3.1.13.1.8
-OID	jnxOperatingISR			1.3.6.1.4.1.2636.3.1.13.1.9
-OID	jnxOperatingBuffer		1.3.6.1.4.1.2636.3.1.13.1.11
-OID	jnxOperatingHeap		1.3.6.1.4.1.2636.3.1.13.1.12
-
-###############################################################################
-#
-# Datasources define the type of data and the period of the data retrieved
-#
-#
-###############################################################################
-
-
-datasource mplsLspOctets
-        ds-source       =       snmp://%snmp%/mplsLspOctets.%inst%
-datasource mplsLspPackets
-        ds-source       =       snmp://%snmp%/mplsLspPackets.%inst%
-
-
-
-datasource	jnxFWCounterPacketCount
-	ds-source		=	snmp://%snmp%/jnxFWCounterPacketCount.%filtername%.%countername%.%fwtype%
-
-datasource	jnxFWCounterByteCount
-	ds-source		=	snmp://%snmp%/jnxFWCounterByteCount.%filtername%.%countername%.%fwtype%
-
-
-dataSource	jnxAtmIfTxCellCount
-	ds-source		=	snmp://%snmp%/jnxAtmIfTxCellCount.%inst%
-
-dataSource	jnxAtmIfRxCellCount
-	ds-source		=	snmp://%snmp%/jnxAtmIfRxCellCount.%inst%
-
-dataSource	jnxAtmIfTxIdleCellCount
-	ds-source		=	snmp://%snmp%/jnxAtmIfTxIdleCellCount.%inst%
-
-dataSource	jnxAtmIfUncorrHCSErrs
-	ds-source		=	snmp://%snmp%/jnxAtmIfUncorrHCSErrs.%inst%
-
-dataSource	jnxAtmIfCorrHCSErrs
-	ds-source		=	snmp://%snmp%/jnxAtmIfCorrHCSErrs.%inst%
-
-dataSource	jnxAtmIfTxCellFIFOOverRuns
-	ds-source		=	snmp://%snmp%/jnxAtmIfTxCellFIFOOverRuns.%inst%
-
-dataSource	jnxAtmIfRxCellFIFOOverRuns
-	ds-source		=	snmp://%snmp%/jnxAtmIfRxCellFIFOOverRuns.%inst%
-
-dataSource	jnxAtmIfRxCellFIFOUnderRuns
-	ds-source		=	snmp://%snmp%/jnxAtmIfRxCellFIFOUnderRuns.%inst%
-
-dataSource	jnxAtmIfInInvalidVCCells
-	ds-source		=	snmp://%snmp%/jnxAtmIfInInvalidVCCells.%inst%
-
-dataSource	jnxAtmIfInNoBufferOAMCells
-	ds-source		=	snmp://%snmp%/jnxAtmIfInNoBufferOAMCells.%inst%
-
-dataSource	jnxAtmIfInNoBufDropPkts
-	ds-source		=	snmp://%snmp%/jnxAtmIfInNoBufDropPkts.%inst%
-
-dataSource	jnxAtmIfOutVCQueueDrops
-	ds-source		=	snmp://%snmp%/jnxAtmIfOutVCQueueDrops.%inst%
-
-dataSource	jnxAtmIfInBadCrcs
-	ds-source		=	snmp://%snmp%/jnxAtmIfInBadCrcs.%inst%
-
-dataSource	jnxAtmIfInLenErrPkts
-	ds-source		=	snmp://%snmp%/jnxAtmIfInLenErrPkts.%inst%
-
-dataSource	jnxAtmIfInTimeoutPkts
-	ds-source		=	snmp://%snmp%/jnxAtmIfInTimeoutPkts.%inst%
-
-
-dataSource	jnxOperatingTemp
-	ds-source		=	 snmp://%snmp%/jnxOperatingTemp.%rest%
-	rrd-ds-type		=	GAUGE
-
-dataSource	jnxOperatingCPU
-	ds-source		=	 snmp://%snmp%/jnxOperatingCPU.%rest%
-	rrd-ds-type		=	GAUGE
-
-dataSource	jnxOperatingISR
-	ds-source		=	 snmp://%snmp%/jnxOperatingISR.%rest%
-	rrd-ds-type		=	GAUGE
-
-dataSource	jnxOperatingBuffer
-	ds-source		=	 snmp://%snmp%/jnxOperatingBuffer.%rest%
-	rrd-ds-type		=	GAUGE
-
-dataSource	jnxOperatingHeap
-	ds-source		=	 snmp://%snmp%/jnxOperatingHeap.%rest%
-	rrd-ds-type		=	GAUGE
+     ### Datasources
+     
+    [[mplsLspOctets]]
+        ds-source       =       $OidmplsLspOctets.%(instance)s
+    [[mplsLspPackets]]
+        ds-source       =       $OidmplsLspPackets.%(instance)s
+    
+    
+    
+    [[jnxFWCounterPacketCount]]
+        ds-source		=   $OidjnxFWCounterPacketCount.%(instance)s
+        # instance is formed of: %filtername%.%countername%.%fwtype%
+    
+    [[jnxFWCounterByteCount]]
+        ds-source		=   $OidjnxFWCounterByteCount.%(instance)s
+        # instance is formed of: %filtername%.%countername%.%fwtype%
+    
+    [[jnxAtmIfTxCellCount]]
+        ds-source		=   $OidjnxAtmIfTxCellCount.%(instance)s
+    
+    [[jnxAtmIfRxCellCount]]
+        ds-source		=   $OidjnxAtmIfRxCellCount.%(instance)s
+    
+    [[jnxAtmIfTxIdleCellCount]]
+        ds-source		=   $OidjnxAtmIfTxIdleCellCount.%(instance)s
+    
+    [[jnxAtmIfUncorrHCSErrs]]
+        ds-source		=   $OidjnxAtmIfUncorrHCSErrs.%(instance)s
+    
+    [[jnxAtmIfCorrHCSErrs]]
+        ds-source		=   $OidjnxAtmIfCorrHCSErrs.%(instance)s
+    
+    [[jnxAtmIfTxCellFIFOOverRuns]]
+        ds-source		=   $OidjnxAtmIfTxCellFIFOOverRuns.%(instance)s
+    
+    [[jnxAtmIfRxCellFIFOOverRuns]]
+        ds-source		=   $OidjnxAtmIfRxCellFIFOOverRuns.%(instance)s
+    
+    [[jnxAtmIfRxCellFIFOUnderRuns]]
+        ds-source		=   $OidjnxAtmIfRxCellFIFOUnderRuns.%(instance)s
+    
+    [[jnxAtmIfInInvalidVCCells]]
+        ds-source		=   $OidjnxAtmIfInInvalidVCCells.%(instance)s
+    
+    [[jnxAtmIfInNoBufferOAMCells]]
+        ds-source		=   $OidjnxAtmIfInNoBufferOAMCells.%(instance)s
+    
+    [[jnxAtmIfInNoBufDropPkts]]
+        ds-source		=   $OidjnxAtmIfInNoBufDropPkts.%(instance)s
+    
+    [[jnxAtmIfOutVCQueueDrops]]
+        ds-source		=   $OidjnxAtmIfOutVCQueueDrops.%(instance)s
+    
+    [[jnxAtmIfInBadCrcs]]
+        ds-source		=   $OidjnxAtmIfInBadCrcs.%(instance)s
+    
+    [[jnxAtmIfInLenErrPkts]]
+        ds-source		=   $OidjnxAtmIfInLenErrPkts.%(instance)s
+    
+    [[jnxAtmIfInTimeoutPkts]]
+        ds-source		=   $OidjnxAtmIfInTimeoutPkts.%(instance)s
+    
+    
+    [[jnxOperatingTemp]]
+        ds-source		=   $OidjnxOperatingTemp.%(instance)s
+        ds-type		=   GAUGE
+    
+    [[jnxOperatingCPU]]
+        ds-source		=   $OidjnxOperatingCPU.%(instance)s
+        ds-type		=   GAUGE
+    
+    [[jnxOperatingISR]]
+        ds-source		=    $OidjnxOperatingISR.%(instance)s
+        ds-type		=   GAUGE
+    
+    [[jnxOperatingBuffer]]
+        ds-source		=   $OidjnxOperatingBuffer.%(instance)s
+        ds-type		=   GAUGE
+    
+    [[jnxOperatingHeap]]
+        ds-source		=   $OidjnxOperatingHeap.%(instance)s
+        ds-type		=   GAUGE
 
 ###############################################################################
 #
-# targetType's are the device definitions that will tell cricket what to retrieve
-# from the device, and how should should be displayed. Each target that is defined
-# in a target file should be associated with a targetType, so that cricket knows
-# how to treat the target.
+# DSTEMPLATE are definitions that will tell the collection engine what to retrieve
+# from the device, and how they should be displayed. Each service that is defined
+# in a Shinken configuration file should be associated with a DSTEMPLATE.
 #
-# Empty target statements can be used for some targets that you don't want to pull
-# data from. Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory).
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-#
+# DSTEMPLATE is optional in the target definition as you may not want to pull
+# data for it. Examples are Chassis's of devices for which the OIDs
+# haven't been detailed yet(temperature, cpu, memory). 
 #
 ###############################################################################
 
-
-
-targetType  juniper-mpls-tunnel
+[DSTEMPLATE]
+[[juniper-mpls-tunnel]]
     ds          =       "mplsLspOctets, mplsLspPackets"
-    view        =       "All: mplsLspOctets mplsLspPackets"
+    graph        =       "All: mplsLspOctets mplsLspPackets"
 
-targetType	juniper-firewall-counter
-	ds	=	"jnxFWCounterPacketCount, jnxFWCounterByteCount"
-	view	=	"Octets: jnxFWCounterByteCount,
-			Packets: jnxFWCounterPacketCount"
+[[juniper-firewall-counter]]
+    ds	=	"jnxFWCounterPacketCount, jnxFWCounterByteCount"
+    graph        = 	"""Octets: jnxFWCounterByteCount,
+    Packets: jnxFWCounterPacketCount"""
 
-targetType	juniper-firewall-policer
-	ds	=	"jnxFWCounterPacketCount"
-	view	=	"Packets: jnxFWCounterPacketCount"
+[[juniper-firewall-policer]]
+    ds	=	"jnxFWCounterPacketCount"
+    graph	=	"Packets: jnxFWCounterPacketCount"
 
 
-targetType	juniper-standard-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifHCInUcastPkts ifHCOutUcastPkts,
-				Errors: ifInErrors ifOutErrors"
+[[juniper-standard-interface-hc]]
+    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+    ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"""
+    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+    UcastPackets: ifHCInUcastPkts ifHCOutUcastPkts,
+    Errors: ifInErrors ifOutErrors"""
 
-targetType	juniper-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-				ifHCInMulticastPkts, ifHCOutMulticastPkts,
-				ifHCInBroadcastPkts, ifHCOutBroadcastPkts"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
-				Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
-				Errors: ifInErrors ifOutErrors"
+[[juniper-interface-hc]]
+    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+    ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+    ifHCInMulticastPkts, ifHCOutMulticastPkts,
+    ifHCInBroadcastPkts, ifHCOutBroadcastPkts"""
+    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+    UcastPackets: ifInUcastPackets ifOutUcastPackets,
+    Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
+    Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
+    Errors: ifInErrors ifOutErrors"""
 
-targetType	juniper-sub-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets,
-				ifInErrors, ifOutErrors,
-				ifHCInUcastPkts, ifHCOutUcastPkts"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-			Packets: ifHCInUcastPkts ifHCOutUcastPkts,
-			Errors: ifInErrors ifOutErrors"
+[[juniper-sub-interface-hc]]
+    ds          = 	"""ifHCInOctets, ifHCOutOctets,
+    ifInErrors, ifOutErrors,
+    ifHCInUcastPkts, ifHCOutUcastPkts"""
+    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+    Packets: ifHCInUcastPkts ifHCOutUcastPkts,
+    Errors: ifInErrors ifOutErrors"""
 
-targetType	juniper-atm-interface-hc
-	ds		=	"ifHCInOctets, ifHCOutOctets, ifInErrors,
-				ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-				ifHCInMulticastPkts, ifHCOutMulticastPkts,
-				ifHCInBroadcastPkts, ifHCOutBroadcastPkts,
-				jnxAtmIfTxCellCount, jnxAtmIfRxCellCount, jnxAtmIfTxIdleCellCount,
-				jnxAtmIfUncorrHCSErrs, jnxAtmIfCorrHCSErrs,
-				jnxAtmIfTxCellFIFOOverRuns, jnxAtmIfRxCellFIFOOverRuns, jnxAtmIfRxCellFIFOUnderRuns,
-				jnxAtmIfInInvalidVCCells, jnxAtmIfInNoBufferOAMCells,
-				jnxAtmIfInNoBufDropPkts, jnxAtmIfOutVCQueueDrops,
-				jnxAtmIfInBadCrcs, jnxAtmIfInLenErrPkts, jnxAtmIfInTimeoutPkts"
-	view	=	"Octets: ifHCInOctets ifHCOutOctets,
-				UcastPackets: ifInUcastPackets ifOutUcastPackets,
-				Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
-				Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
-				Errors: ifInErrors ifOutErrors,
-				ATMCells: jnxAtmIfTxCellCount jnxAtmIfRxCellCount jnxAtmIfTxIdleCellCount,
-				ATMHCSErrs: jnxAtmIfUncorrHCSErrs jnxAtmIfCorrHCSErrs,
-				ATMFIFO: jnxAtmIfTxCellFIFOOverRuns jnxAtmIfRxCellFIFOOverRuns jnxAtmIfRxCellFIFOUnderRuns,
-				ATMOutDrops: jnxAtmIfOutVCQueueDrops
-				ATMInErr: jnxAtmIfInNoBufferOAMCells jnxAtmIfInNoBufDropPkts jnxAtmIfInInvalidVCCells jnxAtmIfInBadCrcs jnxAtmIfInLenErrPkts jnxAtmIfInTimeoutPkts"
+[[juniper-atm-interface-hc]]
+    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+    ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+    ifHCInMulticastPkts, ifHCOutMulticastPkts,
+    ifHCInBroadcastPkts, ifHCOutBroadcastPkts,
+    jnxAtmIfTxCellCount, jnxAtmIfRxCellCount, jnxAtmIfTxIdleCellCount,
+    jnxAtmIfUncorrHCSErrs, jnxAtmIfCorrHCSErrs,
+    jnxAtmIfTxCellFIFOOverRuns, jnxAtmIfRxCellFIFOOverRuns, jnxAtmIfRxCellFIFOUnderRuns,
+    jnxAtmIfInInvalidVCCells, jnxAtmIfInNoBufferOAMCells,
+    jnxAtmIfInNoBufDropPkts, jnxAtmIfOutVCQueueDrops,
+    jnxAtmIfInBadCrcs, jnxAtmIfInLenErrPkts, jnxAtmIfInTimeoutPkts"""
+    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+    UcastPackets: ifInUcastPackets ifOutUcastPackets,
+    Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
+    Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
+    Errors: ifInErrors ifOutErrors,
+    ATMCells: jnxAtmIfTxCellCount jnxAtmIfRxCellCount jnxAtmIfTxIdleCellCount,
+    ATMHCSErrs: jnxAtmIfUncorrHCSErrs jnxAtmIfCorrHCSErrs,
+    ATMFIFO: jnxAtmIfTxCellFIFOOverRuns jnxAtmIfRxCellFIFOOverRuns jnxAtmIfRxCellFIFOUnderRuns,
+    ATMOutDrops: jnxAtmIfOutVCQueueDrops
+    ATMInErr: jnxAtmIfInNoBufferOAMCells jnxAtmIfInNoBufDropPkts jnxAtmIfInInvalidVCCells jnxAtmIfInBadCrcs jnxAtmIfInLenErrPkts jnxAtmIfInTimeoutPkts"""
 
-targetType	juniper-generic
+[[juniper-generic]]
 # Empty target used to store user provided information.
 
-targetType	juniper-chassis-backplane
-	ds		=	"jnxOperatingTemp"
-	view		=	"Temp: jnxOperatingTemp"
+[[juniper-chassis-backplane]]
+    ds		=	"jnxOperatingTemp"
+    graph		=	"Temp: jnxOperatingTemp"
 
-targetType	juniper-chassis-powersupply
-	ds		=	"jnxOperatingTemp"
-	view		=	"Temp: jnxOperatingTemp"
+[[juniper-chassis-powersupply]]
+    ds		=	"jnxOperatingTemp"
+    graph		=	"Temp: jnxOperatingTemp"
 
-targetType	juniper-chassis-ssb
-	ds		=	"jnxOperatingTemp"
-	view		=	"Temp: jnxOperatingTemp"
+[[juniper-chassis-ssb]]
+    ds		=	"jnxOperatingTemp"
+    graph		=	"Temp: jnxOperatingTemp"
 
-targetType	juniper-chassis-fpc
-	ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer, jnxOperatingHeap"
-	view		=	"Temp: jnxOperatingTemp,
-				 CPU: jnxOperatingCPU jnxOperatingISR,
-				 Mem: jnxOperatingBuffer jnxOperatingHeap"
+[[juniper-chassis-fpc]]
+    ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer, jnxOperatingHeap"
+    graph        = 	"""Temp: jnxOperatingTemp,
+    CPU: jnxOperatingCPU jnxOperatingISR,
+    Mem: jnxOperatingBuffer jnxOperatingHeap"""
 
-targetType	juniper-chassis-pic
-	ds		=	"jnxOperatingTemp"
-	view		=	"Temp: jnxOperatingTemp"
+[[juniper-chassis-pic]]
+    ds		=	"jnxOperatingTemp"
+    graph		=	"Temp: jnxOperatingTemp"
 
-targetType	juniper-chassis-re
-	ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer"
-	view		=	"Temp: jnxOperatingTemp,
-				 CPU: jnxOperatingCPU jnxOperatingISR,
-				 Mem: jnxOperatingBuffer"
-
-###############################################################################
-#
-## monitorType definitions
-#
-# The short definition: These are monitor threshold templates that can be
-# associated with targets in the config-tree. Each monitorType is reference using
-# the monitor-type key and the value is the monitorType.
-#
-## These are the device definitions that will tell cricket what to monitor
-# from the device, and how should should acted on. Each target that is defined
-# in a target file can be associated with a monitorType, so that cricket knows
-# how to treat threshold monitoring for the target.
-#
-# Empty monitorType statements can be used for some targets that you don't want to monitor.
-# Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory).
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-#
-###############################################################################
-           
-#monitorType chassis
-#    monitor-thresholds =
-#        "cpu5min:value:n:75:META:router-cpu:dark-red:SPAN:3,
-#         cpu5min:value:n:1:META:router-cpu:yellow:SPAN:3"
+[[juniper-chassis-re]]
+    ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer"
+    graph        = 	"""Temp: jnxOperatingTemp,
+    CPU: jnxOperatingCPU jnxOperatingISR,
+    Mem: jnxOperatingBuffer"""
 
 ###############################################################################
 #
+## TRIGGER definitions
 #
-## map definitions
-# This dict is used to control the instance mapping code.
-# See the docs for more information about the map dictionary.
+# The trigger dictionnary defines expressions to be applied on retrieved values.
+# They are referenced using the trigger variable in the Shinken configuration.
+# Note the use of underscore for the Shinken configuration
+# and - for the trigger-name in the Defaults file.
 #
+# Triggers that do not resolve correctly or contain errors will return
+# unknown status and log an error message in the plugin output.
+#
+# For examples see: genConfig.triggers
+#
+###############################################################################
+
+#[TRIGGER]
+    #[[trigger_name1]]
+    #    warning =  datasource.function(), <constant>, <operator>
+    #    critical = datasource.function(), datasource.function(), <operator>
+    #    critical = datasource.function(), <constant>, <operator>, <constant>, <operator>
+    
+    #[TRIGGERGROUP]
+    #   trigger_group_name1 = trigger_name1, trigger_name2
+
+
+###############################################################################
+#
+# MAP definitions dynamically find the SNMP instance
+#
+# REGULAR EXPRESSION MATCHES ARE NOT SUPPORTED AT THIS TIME
+# They are documented in case they are implemented later on.
+# The instance must fully match as passed in the check arguments
 #
 ###############################################################################
 
@@ -315,7 +309,7 @@ targetType	juniper-chassis-re
 
 ###############################################################################
 #
-# "graph" statements define how the data should be displayed in the graphic.
+# """graph" statements define how the data should be displayed in the graphic.
 # Most of the variables defined are directly mapped to the rrdtool graph tool
 # that is used to generate the graphics.
 #
@@ -323,145 +317,146 @@ targetType	juniper-chassis-re
 ###############################################################################
 
 
-graph	jnxFWCounterPacketCount
-	draw-as	=	AREA
-	y-axis	=	"pps"
-	units	=	"pps"
-	legend	=	"Number of packets being counted"
+[GRAPH]
+[[jnxFWCounterPacketCount]]
+    draw-as	=	AREA
+    y-axis	=	"pps"
+    units	=	"pps"
+    legend	=	"Number of packets being counted"
 
-graph	jnxFWCounterByteCount
-	draw-as	=	AREA
-	y-axis	=	"bps"
-	units	=	"bps"
-	legend	=	"Number of bits (bytes * 8) being counted"
-	scale	=	8,*
-	bytes	=	0
+[[jnxFWCounterByteCount]]
+    draw-as	=	AREA
+    y-axis	=	"bps"
+    units	=	"bps"
+    legend	=	"Number of bits (bytes * 8) being counted"
+    scale	=	8,*
+    bytes	=	0
 
 
-graph	jnxAtmIfTxCellCount
-	draw-as	=	LINE2
-	y-axis	=	"cell/sec"
-	units	=	"cell/sec"
-	legend	=	"Number of ATM cells transmitted by the interface"
+[[jnxAtmIfTxCellCount]]
+    draw-as	=	LINE2
+    y-axis	=	"cell/sec"
+    units	=	"cell/sec"
+    legend	=	"Number of ATM cells transmitted by the interface"
 
-graph	jnxAtmIfRxCellCount
-	draw-as	=	LINE2
-	y-axis	=	"cell/sec"
-	units	=	"cell/sec"
-	legend	=	"Number of ATM cells received by the interface"
+[[jnxAtmIfRxCellCount]]
+    draw-as	=	LINE2
+    y-axis	=	"cell/sec"
+    units	=	"cell/sec"
+    legend	=	"Number of ATM cells received by the interface"
 
-graph	jnxAtmIfTxIdleCellCount
-	draw-as	=	LINE2
-	y-axis	=	"cell/sec"
-	units	=	"cell/sec"
-	legend	=	"Number of idle cells sent by the port"
+[[jnxAtmIfTxIdleCellCount]]
+    draw-as	=	LINE2
+    y-axis	=	"cell/sec"
+    units	=	"cell/sec"
+    legend	=	"Number of idle cells sent by the port"
 
-graph	jnxAtmIfUncorrHCSErrs
-	draw-as	=	LINE2
-	y-axis	=	"err/sec"
-	units	=	"err/sec"
-	legend	=	"Number of uncorrectable cell Header Check Sequence (HCS) Errors that occurred"
+[[jnxAtmIfUncorrHCSErrs]]
+    draw-as	=	LINE2
+    y-axis	=	"err/sec"
+    units	=	"err/sec"
+    legend	=	"Number of uncorrectable cell Header Check Sequence (HCS) Errors that occurred"
 
-graph	jnxAtmIfCorrHCSErrs
-	draw-as	=	LINE2
-	y-axis	=	"err/sec"
-	units	=	"err/sec"
-	legend	=	"Number of correctable cell Header Check Sequence (HCS) Errors that occurred"
+[[jnxAtmIfCorrHCSErrs]]
+    draw-as	=	LINE2
+    y-axis	=	"err/sec"
+    units	=	"err/sec"
+    legend	=	"Number of correctable cell Header Check Sequence (HCS) Errors that occurred"
 
-graph	jnxAtmIfTxCellFIFOOverRuns
-	draw-as	=	LINE2
-	y-axis	=	"overrun/sec"
-	units	=	"overrun/sec"
-	legend	=	"Number of overruns in the Transmit FIFO"
+[[jnxAtmIfTxCellFIFOOverRuns]]
+    draw-as	=	LINE2
+    y-axis	=	"overrun/sec"
+    units	=	"overrun/sec"
+    legend	=	"Number of overruns in the Transmit FIFO"
 
-graph	jnxAtmIfRxCellFIFOOverRuns
-	draw-as	=	LINE2
-	y-axis	=	"overrun/sec"
-	units	=	"overrun/sec"
-	legend	=	"Number of overruns in the Receive FIFO"
+[[jnxAtmIfRxCellFIFOOverRuns]]
+    draw-as	=	LINE2
+    y-axis	=	"overrun/sec"
+    units	=	"overrun/sec"
+    legend	=	"Number of overruns in the Receive FIFO"
 
-graph	jnxAtmIfRxCellFIFOUnderRuns
-	draw-as	=	LINE2
-	y-axis	=	"underruns/sec"
-	units	=	"underruns/sec"
-	legend	=	"Number of underruns in the receive FIFO"
+[[jnxAtmIfRxCellFIFOUnderRuns]]
+    draw-as	=	LINE2
+    y-axis	=	"underruns/sec"
+    units	=	"underruns/sec"
+    legend	=	"Number of underruns in the receive FIFO"
 
-graph	jnxAtmIfInInvalidVCCells
-	draw-as	=	LINE2
-	y-axis	=	"cell/sec"
-	units	=	"cell/sec"
-	legend	=	"Number of Cells that arrived for non existent VC"
+[[jnxAtmIfInInvalidVCCells]]
+    draw-as	=	LINE2
+    y-axis	=	"cell/sec"
+    units	=	"cell/sec"
+    legend	=	"Number of Cells that arrived for non existent VC"
 
-graph	jnxAtmIfInNoBufferOAMCells
-	draw-as	=	LINE2
-	y-axis	=	"cell/sec"
-	units	=	"cell/sec"
-	legend	=	"Number of received OAM cells or raw cells dropped because no buffers were available to handle them"
+[[jnxAtmIfInNoBufferOAMCells]]
+    draw-as	=	LINE2
+    y-axis	=	"cell/sec"
+    units	=	"cell/sec"
+    legend	=	"Number of received OAM cells or raw cells dropped because no buffers were available to handle them"
 
-graph	jnxAtmIfInNoBufDropPkts
-	draw-as	=	LINE2
-	y-axis	=	"pps"
-	units	=	"pps"
-	legend	=	"Number of AAL5 packets dropped because there was no enough buffer to handle them"
+[[jnxAtmIfInNoBufDropPkts]]
+    draw-as	=	LINE2
+    y-axis	=	"pps"
+    units	=	"pps"
+    legend	=	"Number of AAL5 packets dropped because there was no enough buffer to handle them"
 
-graph	jnxAtmIfOutVCQueueDrops
-	draw-as	=	LINE2
-	y-axis	=	"pps"
-	units	=	"pps"
-	legend	=	"Number of packets dropped because of queue limits on each VC"
+[[jnxAtmIfOutVCQueueDrops]]
+    draw-as	=	LINE2
+    y-axis	=	"pps"
+    units	=	"pps"
+    legend	=	"Number of packets dropped because of queue limits on each VC"
 
-graph	jnxAtmIfInBadCrcs
-	draw-as	=	LINE2
-	y-axis	=	"err/sec"
-	units	=	"err/sec"
-	legend	=	"Total number of incoming CRC errors"
+[[jnxAtmIfInBadCrcs]]
+    draw-as	=	LINE2
+    y-axis	=	"err/sec"
+    units	=	"err/sec"
+    legend	=	"Total number of incoming CRC errors"
 
-graph	jnxAtmIfInLenErrPkts
-	draw-as	=	LINE2
-	y-axis	=	"pps"
-	units	=	"pps"
-	legend	=	"Number of AAL5 packets dropped because their length was incorrect"
+[[jnxAtmIfInLenErrPkts]]
+    draw-as	=	LINE2
+    y-axis	=	"pps"
+    units	=	"pps"
+    legend	=	"Number of AAL5 packets dropped because their length was incorrect"
 
-graph	jnxAtmIfInTimeoutPkts
-	draw-as	=	LINE2
-	y-axis	=	"pps"
-	units	=	"pps"
-	legend	=	"Number of AAL5 packets dropped because of reassembly timeout"
+[[jnxAtmIfInTimeoutPkts]]
+    draw-as	=	LINE2
+    y-axis	=	"pps"
+    units	=	"pps"
+    legend	=	"Number of AAL5 packets dropped because of reassembly timeout"
 
-graph	jnxOperatingTemp
-	draw-as	=	AREA
-	y-axis	=	"°C"
-	units	=	"°C"
-	legend	=	"Temperature"
+[[jnxOperatingTemp]]
+    draw-as	=	AREA
+    y-axis	=	"°C"
+    units	=	"°C"
+    legend	=	"Temperature"
 
-graph	jnxOperatingCPU
-	draw-as	=	LINE2
-	y-min	=	0
-	y-max	=	100
-	y-axis	=	"%"
-	units	=	"%"
-	legend	=	"CPU utilization"
+[[jnxOperatingCPU]]
+    draw-as	=	LINE2
+    y-min	=	0
+    y-max	=	100
+    y-axis	=	"%"
+    units	=	"%"
+    legend	=	"CPU utilization"
 
-graph	jnxOperatingISR
-	draw-as	=	LINE2
-	y-min	=	0
-	y-max	=	100
-	y-axis	=	"%"
-	units	=	"%"
-	legend	=	"CPU utilization spending in ISR"
+[[jnxOperatingISR]]
+    draw-as	=	LINE2
+    y-min	=	0
+    y-max	=	100
+    y-axis	=	"%"
+    units	=	"%"
+    legend	=	"CPU utilization spending in ISR"
 
-graph	jnxOperatingBuffer
-	draw-as	=	AREA
-	y-min	=	0
-	y-max	=	100
-	y-axis	=	"%"
-	units	=	"%"
-	legend	=	"Buffer pool utilization"
+[[jnxOperatingBuffer]]
+    draw-as	=	AREA
+    y-min	=	0
+    y-max	=	100
+    y-axis	=	"%"
+    units	=	"%"
+    legend	=	"Buffer pool utilization"
 
-graph	jnxOperatingHeap
-	draw-as	=	LINE2
-	y-min	=	0
-	y-max	=	100
-	y-axis	=	"%"
-	units	=	"%"
-	legend	=	"Heap utilization"
+[[jnxOperatingHeap]]
+    draw-as	=	LINE2
+    y-min	=	0
+    y-max	=	100
+    y-axis	=	"%"
+    units	=	"%"
+    legend	=	"Heap utilization"

@@ -127,8 +127,8 @@ sub discover {
     $opts->{vendor_soft_ver} =  ""; # get('sysVersion');
     #$opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
-    $opts->{ttype} = 'Sensatronics EM1';
-    $opts->{chassisname} = 'Chassis-Generic';
+    $opts->{chassisttype} = 'Sensatronics EM1';
+    $opts->{chassisname} = 'chassis.generic';
 
     # Default feature promotions for Sensatronics
     # SNMP v2c not supported by this device 
@@ -167,11 +167,12 @@ sub custom_targets {
     $file->writetarget('service {', '',
         'service_description' => $targetname,
         'host_name'       => $opts->{devicename},
-        '_order'          => $opts->{order},
+        '_display_order'          => $opts->{order},
         'display_name'   => $targetname,
         'notes'   => $ldesc,
         #'short-desc'  => $sdesc,
-        'use' => 'sensatronics-em1',
+        '_dstemplate' => 'sensatronics-em1',
+        'use'                 => $opts->{dtemplate},
     );
 
     $opts->{order} -= 1;

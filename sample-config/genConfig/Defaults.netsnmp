@@ -1,222 +1,251 @@
-# For use with Net-SNMP targets
-
-Target    --default--
-    device     = ""
-    storage    = ""
-    blksize    = ""
-
-# OIDs
-
-OID	hrSystemNumUsers		1.3.6.1.2.1.25.1.5.0
-OID	hrSystemProcesses		1.3.6.1.2.1.25.1.6.0
-OID	hrStorageName			1.3.6.1.2.1.25.2.3.1.3
-OID	hrStorageSize			1.3.6.1.2.1.25.2.3.1.5
-OID	hrStorageUsed			1.3.6.1.2.1.25.2.3.1.6
-
-OID	ucd_load1min        		1.3.6.1.4.1.2021.10.1.3.1
-OID	ucd_load5min        		1.3.6.1.4.1.2021.10.1.3.2
-OID	ucd_load15min       		1.3.6.1.4.1.2021.10.1.3.3
-
-# Memory stats
-OID	ucd_memswapAvail    		1.3.6.1.4.1.2021.4.4.0
-OID	ucd_memrealAvail    		1.3.6.1.4.1.2021.4.6.0
-OID	ucd_memtotalAvail   		1.3.6.1.4.1.2021.4.11.0
-
-# Disk stats 
-OID	ucd_diskfree        		1.3.6.1.4.1.2021.9.1.7
-OID	ucd_diskused        		1.3.6.1.4.1.2021.9.1.8
-OID	ucd_diskpused       		1.3.6.1.4.1.2021.9.1.9
-
-# CPU Stats
-OID	ucd_cpuUser         		1.3.6.1.4.1.2021.11.9.0
-OID	ucd_cpuSystem       		1.3.6.1.4.1.2021.11.10.0
-OID	ucd_cpuIdle         		1.3.6.1.4.1.2021.11.11.0
-OID	ucd_rawCpuUser      		1.3.6.1.4.1.2021.11.50.0
-OID	ucd_rawCpuNice      		1.3.6.1.4.1.2021.11.51.0
-OID	ucd_rawCpuSystem    		1.3.6.1.4.1.2021.11.52.0
-OID	ucd_rawCpuIdle      		1.3.6.1.4.1.2021.11.53.0
-
-# Disk I/O
-OID	ucd_diskIODevice		1.3.6.1.4.1.2021.13.15.1.1.2
-OID	ucd_diskIONRead    		1.3.6.1.4.1.2021.13.15.1.1.3
-OID	ucd_diskIONWrite    		1.3.6.1.4.1.2021.13.15.1.1.4
-OID	ucd_diskIOReads     		1.3.6.1.4.1.2021.13.15.1.1.5
-OID	ucd_diskIOWrites    		1.3.6.1.4.1.2021.13.15.1.1.6
-
-
+# Generic network device sub-tree defaults
+# Use with genDevConfig and Shinken SnmpBooster module
+#
+# This file is indetented using 4 space.
+#
 ###############################################################################
 #
-# Datasources define the type of data and the period of the data retrieved
+# Setup the default variables that apply to all services that are defined
+# within this part of the configuration file hierarchy.
 #
+# All variables can be overriden by a template loaded later in the process.
+#
+# Datasources define the type of data, the period, scaling and limits
 #
 ###############################################################################
 
-
-### Data sources for use with Net-SNMP targets.
-
-datasource hrSystemNumUsers
-    ds-source    = snmp://%snmp%/hrSystemNumUsers
-    rrd-ds-type  = GAUGE
-
-datasource hrSystemProcesses
-    ds-source    = snmp://%snmp%/hrSystemProcesses
-    rrd-ds-type  = GAUGE
-
-datasource hrStorageSize
-    ds-source    = snmp://%snmp%/hrStorageSize.%inst%
-    rrd-ds-type  = GAUGE
-
-datasource hrStorageUsed
-    ds-source    = snmp://%snmp%/hrStorageUsed.%inst%
-    rrd-ds-type  = GAUGE
-
-datasource ucd_load1min
-    ds-source    = snmp://%snmp%/ucd_load1min
-    rrd-ds-type  = GAUGE
-
-datasource ucd_load5min
-    ds-source    = snmp://%snmp%/ucd_load5min
-    rrd-ds-type  = GAUGE
-
-datasource ucd_load15min
-    ds-source    = snmp://%snmp%/ucd_load15min
-    rrd-ds-type  = GAUGE
-
-datasource ucd_memswapAvail
-    ds-source    = snmp://%snmp%/ucd_memswapAvail
-    rrd-ds-type  = GAUGE
-
-datasource ucd_memrealAvail
-    ds-source    = snmp://%snmp%/ucd_memrealAvail
-    rrd-ds-type  = GAUGE
-
-datasource ucd_memtotalAvail
-    ds-source    = snmp://%snmp%/ucd_memtotalAvail
-    rrd-ds-type  = GAUGE
-
-datasource ucd_diskfree
-    ds-source    = snmp://%snmp%/ucd_diskfree.%inst%
-    rrd-ds-type  = GAUGE
-
-datasource ucd_diskused
-    ds-source    = snmp://%snmp%/ucd_diskused.%inst%
-    rrd-ds-type  = GAUGE
-
-datasource ucd_diskpused
-    ds-source    = snmp://%snmp%/ucd_diskpused.%inst%
-    rrd-ds-type  = GAUGE
-
-datasource ucd_cpuUser
-    ds-source    = snmp://%snmp%/ucd_cpuUser
-    rrd-ds-type  = GAUGE
-
-datasource ucd_cpuSystem
-    ds-source    = snmp://%snmp%/ucd_cpuSystem
-    rrd-ds-type  = GAUGE
-
-datasource ucd_cpuIdle
-    ds-source    = snmp://%snmp%/ucd_cpuIdle
-    rrd-ds-type  = GAUGE
-
-datasource ucd_rawCpuUser
-    ds-source    = snmp://%snmp%/ucd_rawCpuUser
-    rrd-ds-type  = DERIVE
-
-datasource ucd_rawCpuNice
-    ds-source    = snmp://%snmp%/ucd_rawCpuNice
-    rrd-ds-type  = DERIVE
-
-datasource ucd_rawCpuSystem
-    ds-source    = snmp://%snmp%/ucd_rawCpuSystem
-    rrd-ds-type  = DERIVE
-
-datasource ucd_rawCpuIdle
-    ds-source    = snmp://%snmp%/ucd_rawCpuIdle
-    rrd-ds-type  = DERIVE
-
-datasource ucd_diskIONRead
-    ds-source    = snmp://%snmp%/ucd_diskIONRead.%inst%
-    rrd-ds-type  = DERIVE
-
-datasource ucd_diskIONWrite
-    ds-source    = snmp://%snmp%/ucd_diskIONWrite.%inst%
-    rrd-ds-type  = DERIVE
-
-datasource ucd_diskIOReads
-    ds-source    = snmp://%snmp%/ucd_diskIOReads.%inst%
-    rrd-ds-type  = DERIVE
-
-datasource ucd_diskIOWrites
-    ds-source    = snmp://%snmp%/ucd_diskIOWrites.%inst%
-    rrd-ds-type  = DERIVE
-
-###############################################################################
+### For use with Net-SNMP targets
 #
-# targetType's are the device definitions that will tell cricket what to 
-# retrieve from the device, and how should should be displayed. Each target 
-# that is defined in a target file should be associated with a targetType, 
-# so that cricket knows how to treat the target.
+# Service inst_map_key variables necessary for dynamic
+# mapping calls: device, storage and blksize
 #
-# Empty target statements can be used for some targets that you don't want 
-# to pull data from. Examples are Chassis's of devices for which the OIDs 
-# haven't been detailed yet(temperature, cpu, memory). 
+# define service {
+#      ...
+#       _inst   map(map-name,inst_map_key)
+#       ...
+# }
 #
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-# 
-###############################################################################
+# device     = ""
+# storage    = ""
+# blksize    = ""
 
-### Target types for Net-SNMP targets
 
-targetType    hr_System
-    ds    = "hrSystemProcesses, hrSystemNumUsers"
-    view  = "Processes: hrSystemProcesses, Users: hrSystemNumUsers"
-
-targetType    hr_Storage
-    ds    = "hrStorageUsed, hrStorageSize"
-    view  = "Storage: hrStorageUsed hrStorageSize"
-
-targetType   generic-box-netsnmp
-    ds    = "ucd_rawCpuUser, ucd_rawCpuNice, ucd_rawCpuSystem,
-             ucd_rawCpuIdle, ucd_memrealAvail, ucd_memswapAvail,
-             ucd_memtotalAvail, ucd_load1min, ucd_load5min, ucd_load15min"
-    view  = "cpu: ucd_rawCpuUser ucd_rawCpuNice ucd_rawCpuSystem,
-             Memory: ucd_memrealAvail ucd_memswapAvail ucd_memtotalAvail,
-             Load: ucd_load1min ucd_load5min ucd_load15min"
-
-targetType   generic-box-netsnmp-nonice
-    ds    = "ucd_rawCpuUser, ucd_rawCpuSystem,
-             ucd_rawCpuIdle, ucd_memrealAvail, ucd_memswapAvail,
-             ucd_memtotalAvail, ucd_load1min, ucd_load5min, ucd_load15min"
-    view  = "cpu: ucd_rawCpuUser ucd_rawCpuSystem,
-             Memory: ucd_memrealAvail ucd_memswapAvail ucd_memtotalAvail,
-             Load: ucd_load1min ucd_load5min ucd_load15min"
-
-targetType    ucd_Storage
-    ds    = "ucd_diskfree, ucd_diskused, ucd_diskpused"
-    view  = "Storage: ucd_diskfree ucd_diskused,
-             Percent Used: ucd_diskpused"
-
-targetType    ucd_diskIO
-    ds    =    "ucd_diskIOReads, ucd_diskIOWrites"
-    view  =    "diskIO: ucd_diskIOReads ucd_diskIOWrites"
-
-targetType    ucd_diskIO_bsdi
-    ds    =    "ucd_diskIOReads"
-    view  =    "diskIO: ucd_diskIOReads"
+[OID]
+    OidhrSystemNumUsers                    = .1.3.6.1.2.1.25.1.5.0
+    OidhrSystemProcesses                   = .1.3.6.1.2.1.25.1.6.0
+    OidhrStorageName                       = .1.3.6.1.2.1.25.2.3.1.3
+    OidhrStorageSize                       = .1.3.6.1.2.1.25.2.3.1.5
+    OidhrStorageUsed                       = .1.3.6.1.2.1.25.2.3.1.6
+    
+    Oiducd_load1min                        = .1.3.6.1.4.1.2021.10.1.3.1
+    Oiducd_load5min                        = .1.3.6.1.4.1.2021.10.1.3.2
+    Oiducd_load15min                       = .1.3.6.1.4.1.2021.10.1.3.3
+    
+    # Memory stats
+    Oiducd_memswapAvail                    = .1.3.6.1.4.1.2021.4.4.0
+    Oiducd_memrealAvail                    = .1.3.6.1.4.1.2021.4.6.0
+    Oiducd_memtotalAvail                   = .1.3.6.1.4.1.2021.4.11.0
+    
+    # Disk stats 
+    Oiducd_diskfree                        = .1.3.6.1.4.1.2021.9.1.7
+    Oiducd_diskused                        = .1.3.6.1.4.1.2021.9.1.8
+    Oiducd_diskpused                       = .1.3.6.1.4.1.2021.9.1.9
+    
+    # CPU Stats
+    Oiducd_cpuUser                         = .1.3.6.1.4.1.2021.11.9.0
+    Oiducd_cpuSystem                       = .1.3.6.1.4.1.2021.11.10.0
+    Oiducd_cpuIdle                         = .1.3.6.1.4.1.2021.11.11.0
+    Oiducd_rawCpuUser                      = .1.3.6.1.4.1.2021.11.50.0
+    Oiducd_rawCpuNice                      = .1.3.6.1.4.1.2021.11.51.0
+    Oiducd_rawCpuSystem                    = .1.3.6.1.4.1.2021.11.52.0
+    Oiducd_rawCpuIdle                      = .1.3.6.1.4.1.2021.11.53.0
+    
+    # Disk I/O
+    Oiducd_diskIODevice                    = .1.3.6.1.4.1.2021.13.15.1.1.2
+    Oiducd_diskIONRead                     = .1.3.6.1.4.1.2021.13.15.1.1.3
+    Oiducd_diskIONWrite                    = .1.3.6.1.4.1.2021.13.15.1.1.4
+    Oiducd_diskIOReads                     = .1.3.6.1.4.1.2021.13.15.1.1.5
+    Oiducd_diskIOWrites                    = .1.3.6.1.4.1.2021.13.15.1.1.6
+    
+    
+    ###############################################################################
+    #
+    # Datasources define the type of data and the period of the data retrieved
+    #
+    #
+    ###############################################################################
+    
+    
+    ### Data sources for use with Net-SNMP targets.
+    
+    [DATASOURCE]
+    [[hrSystemNumUsers]]
+	ds-source    = $OidhrSystemNumUsers
+	ds-type  = GAUGE
+    
+    [[hrSystemProcesses]]
+	ds-source    = $OidhrSystemProcesses
+	ds-type  = GAUGE
+    
+    [[hrStorageSize]]
+	ds-source    = $OidhrStorageSize.%(instance)s
+	ds-type  = GAUGE
+    
+    [[hrStorageUsed]]
+	ds-source    = $OidhrStorageUsed.%(instance)s
+	ds-type  = GAUGE
+    
+    [[ucd_load1min]]
+	ds-source    = $Oiducd_load1min
+	ds-type  = GAUGE
+    
+    [[ucd_load5min]]
+	ds-source    = $Oiducd_load5min
+	ds-type  = GAUGE
+    
+    [[ucd_load15min]]
+	ds-source    = $Oiducd_load15min
+	ds-type  = GAUGE
+    
+    [[ucd_memswapAvail]]
+	ds-source    = $Oiducd_memswapAvail
+	ds-type  = GAUGE
+    
+    [[ucd_memrealAvail]]
+	ds-source    = $Oiducd_memrealAvail
+	ds-type  = GAUGE
+    
+    [[ucd_memtotalAvail]]
+	ds-source    = $Oiducd_memtotalAvail
+	ds-type  = GAUGE
+    
+    [[ucd_diskfree]]
+	ds-source    = $Oiducd_diskfree.%(instance)s
+	ds-type  = GAUGE
+    
+    [[ucd_diskused]]
+	ds-source    = $Oiducd_diskused.%(instance)s
+	ds-type  = GAUGE
+    
+    [[ucd_diskpused]]
+	ds-source    = $Oiducd_diskpused.%(instance)s
+	ds-type  = GAUGE
+    
+    [[ucd_cpuUser]]
+	ds-source    = $Oiducd_cpuUser
+	ds-type  = GAUGE
+    
+    [[ucd_cpuSystem]]
+	ds-source    = $Oiducd_cpuSystem
+	ds-type  = GAUGE
+    
+    [[ucd_cpuIdle]]
+	ds-source    = $Oiducd_cpuIdle
+	ds-type  = GAUGE
+    
+    [[ucd_rawCpuUser]]
+	ds-source    = $Oiducd_rawCpuUser
+	ds-type  = DERIVE
+    
+    [[ucd_rawCpuNice]]
+	ds-source    = $Oiducd_rawCpuNice
+	ds-type  = DERIVE
+    
+    [[ucd_rawCpuSystem]]
+	ds-source    = $Oiducd_rawCpuSystem
+	ds-type  = DERIVE
+    
+    [[ucd_rawCpuIdle]]
+	ds-source    = $Oiducd_rawCpuIdle
+	ds-type  = DERIVE
+    
+    [[ucd_diskIONRead]]
+	ds-source    = $Oiducd_diskIONRead.%(instance)s
+	ds-type  = DERIVE
+    
+    [[ucd_diskIONWrite]]
+	ds-source    = $Oiducd_diskIONWrite.%(instance)s
+	ds-type  = DERIVE
+    
+    [[ucd_diskIOReads]]
+	ds-source    = $Oiducd_diskIOReads.%(instance)s
+	ds-type  = DERIVE
+    
+    [[ucd_diskIOWrites]]
+	ds-source    = $Oiducd_diskIOWrites.%(instance)s
+	ds-type  = DERIVE
+    
+    ###############################################################################
+    #
+    # targetType's are the device definitions that will tell cricket what to 
+    # retrieve from the device, and how should should be displayed. Each target 
+    # that is defined in a target file should be associated with a targetType, 
+    # so that cricket knows how to treat the target.
+    #
+    # Empty target statements can be used for some targets that you don't want 
+    # to pull data from. Examples are Chassis's of devices for which the OIDs 
+    # haven't been detailed yet(temperature, cpu, memory). 
+    #
+    # See cricket.sourceforge.net for documentation on the definitions found in
+    #  this file
+    # 
+    ###############################################################################
+    
+    ### Target types for Net-SNMP targets
+    
+    [DSTEMPLATE]
+    [[hr_System]]
+	ds    = "hrSystemProcesses, hrSystemNumUsers"
+	graph  = "Processes: hrSystemProcesses, Users: hrSystemNumUsers"
+    
+    [[hr_Storage]]
+	ds    = "hrStorageUsed, hrStorageSize"
+	graph  = "Storage: hrStorageUsed hrStorageSize"
+    
+    [[generic-box-netsnmp]]
+	ds          = 	"""ucd_rawCpuUser, ucd_rawCpuNice, ucd_rawCpuSystem,
+	ucd_rawCpuIdle, ucd_memrealAvail, ucd_memswapAvail,
+	ucd_memtotalAvail, ucd_load1min, ucd_load5min, ucd_load15min"""
+	graph        = 	"""cpu: ucd_rawCpuUser ucd_rawCpuNice ucd_rawCpuSystem,
+	Memory: ucd_memrealAvail ucd_memswapAvail ucd_memtotalAvail,
+	Load: ucd_load1min ucd_load5min ucd_load15min"""
+    
+    [[generic-box-netsnmp-nonice]]
+	ds          = 	"""ucd_rawCpuUser, ucd_rawCpuSystem,
+	ucd_rawCpuIdle, ucd_memrealAvail, ucd_memswapAvail,
+	ucd_memtotalAvail, ucd_load1min, ucd_load5min, ucd_load15min"""
+	graph        = 	"""cpu: ucd_rawCpuUser ucd_rawCpuSystem,
+	Memory: ucd_memrealAvail ucd_memswapAvail ucd_memtotalAvail,
+	Load: ucd_load1min ucd_load5min ucd_load15min"""
+    
+    [[ucd_Storage]]
+	ds    = "ucd_diskfree, ucd_diskused, ucd_diskpused"
+	graph        = 	"""Storage: ucd_diskfree ucd_diskused,
+	Percent Used: ucd_diskpused"""
+    
+    [[ucd_diskIO]]
+	ds    =    "ucd_diskIOReads, ucd_diskIOWrites"
+	graph  =    "diskIO: ucd_diskIOReads ucd_diskIOWrites"
+    
+    [[ucd_diskIO_bsdi]]
+	ds    =    "ucd_diskIOReads"
+	graph  =    "diskIO: ucd_diskIOReads"
 
 ###############################################################################
 # map definitions 
 ###############################################################################
 
-map hr-storage-name
-    base-oid    =   hrStorageName
-    match       =   %storage%
-
-
-map ucd-diskio-device
-    base-oid    =   ucd_diskIODevice
-    match       =   %device%
+[MAP]
+    [[hr-storage-name]]
+	base-oid    =   .1.3.6.1.2.1.25.2.3.1.3
+    #    base-oid    =   hrStorageName
+    #    match       =   %storage%
+    
+    
+    [[ucd-diskio-device]]
+	base-oid    =   .1.3.6.1.4.1.2021.13.15.1.1.2
+    #    base-oid    =   ucd_diskIODevice
+    #   match       =   %device%
 
 
 ###############################################################################
@@ -231,38 +260,39 @@ map ucd-diskio-device
 
 ### Graphs for Net-SNMP targets
 
-graph    ucd_memswapAvail
+[GRAPH]
+[[ucd_memswapAvail]]
     legend    = "Available swap space"
     scale     = 1024,*
     bytes     = true
     units     = "bytes"
     rrd-graph-args = --logarithmic
 
-graph    ucd_memrealAvail
+[[ucd_memrealAvail]]
     legend    = "Available RAM"
     scale     = 1024,*
     bytes     = true
     units     = "bytes"
 
-graph    ucd_memtotalAvail
+[[ucd_memtotalAvail]]
     legend    = "Available Memory"
     scale     = 1024,*
     bytes     = true
     units     = "bytes"
 
-graph    ucd_load1min
+[[ucd_load1min]]
     legend    = "1 Min Load Av"
     si-units  = false
 
-graph    ucd_load5min
+[[ucd_load5min]]
     legend    = "5 Min Load Av"
     si-units  = false
 
-graph    ucd_load15min
+[[ucd_load15min]]
     legend    = "15 Min Load Av"
     si-units  = false
 
-graph    hrSystemNumUsers
+[[hrSystemNumUsers]]
     color     = dark-green
     draw-as   = AREA
     y-axis    = "Users"
@@ -270,7 +300,7 @@ graph    hrSystemNumUsers
     legend    = "# of Users"
     precision = integer
 
-graph    hrSystemProcesses
+[[hrSystemProcesses]]
     color     = dark-green
     draw-as   = AREA
     y-axis    = "Processes"
@@ -278,7 +308,7 @@ graph    hrSystemProcesses
     legend    = "# of system Processes"
     precision = integer
 
-graph    hrStorageUsed
+[[hrStorageUsed]]
     draw-as   = LINE2
     y-axis    = "Bytes"
     units     = "Bytes"
@@ -292,7 +322,7 @@ graph    hrStorageUsed
     width-hint     = undef
     rrd-graph-args = --logarithmic
 
-graph    hrStorageSize
+[[hrStorageSize]]
     draw-as   = LINE2
     y-axis    = "Bytes"
     units     = "Bytes"
@@ -306,7 +336,7 @@ graph    hrStorageSize
     width-hint     = undef
     rrd-graph-args = --logarithmic
 
-graph    ucd_diskfree
+[[ucd_diskfree]]
     color     = dark-green
     draw-as   = AREA
     y-axis    = "Bytes"
@@ -316,7 +346,7 @@ graph    ucd_diskfree
     y-min     = 0
     scale     = 1024,*
 
-graph    ucd_diskused
+[[ucd_diskused]]
     color     = red
     draw-as   = AREA
     y-axis    = "Bytes"
@@ -326,44 +356,44 @@ graph    ucd_diskused
     y-min     = 0
     scale     = 1024,*
 
-graph    ucd_diskpused
+[[ucd_diskpused]]
     color     = blue
     draw-as   = AREA
     y-axis    = "%"
     units     = "%"
     legend    = "Percent of space used"
 
-graph    ucd_cpuUser
+[[ucd_cpuUser]]
     draw-as   = AREA
     y-min     = 0
     y-max     = 100
 
-graph    ucd_cpuSystem
+[[ucd_cpuSystem]]
     draw-as   = STACK
     y-min     = 0
     y-max     = 100
 
-graph    ucd_cpuIdle
+[[ucd_cpuIdle]]
     draw-as   = STACK
     y-min     = 0
     y-max     = 100
 
-graph    ucd_rawCpuUser
+[[ucd_rawCpuUser]]
     draw-as   = AREA
     y-min      = 0
     y-max      = 100
 
-graph    ucd_rawCpuNice
+[[ucd_rawCpuNice]]
     draw-as    = STACK
     y-min      = 0
     y-max      = 100
 
-graph    ucd_rawCpuSystem
+[[ucd_rawCpuSystem]]
     draw-as    = STACK
     y-min      = 0
     y-max      = 100
 
-graph    ucd_rawCpuIdle
+[[ucd_rawCpuIdle]]
     draw-as    = STACK
     y-min      = 0
     y-max      = 100

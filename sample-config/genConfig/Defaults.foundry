@@ -1,339 +1,352 @@
+# Generic network device sub-tree defaults - for use with genDevConfig and Shinken
 #
-# Foundry network device sub-tree defaults - for use with genDevConfig
+# This file is indetented using 4 space.
 #
+###############################################################################
+#
+# For additional information on the features and use of genDevConfig consult
+# http://www.acktomic.com/ or see the help provided on the
+# command-line in your distribution of genDevConfig.
+#
+#
+###############################################################################
 #
 #    Copyright (C) 2005 Francois Mikus
 #
 
-### Foundry
+### Foundry switches and load balancers
 
-OID     foundryL4SLBTotalConnections    1.3.6.1.4.1.1991.1.1.4.1.4
-OID     foundryL4SLBUnsuccessfulConnections 1.3.6.1.4.1.1991.1.1.4.1.25
+[OID]
+foundryL4SLBTotalConnections        = 1.3.6.1.4.1.1991.1.1.4.1.4
+foundryL4SLBUnsuccessfulConnections  = 1.3.6.1.4.1.1991.1.1.4.1.25
 
  
-OID     snaggblcpuutil5minavg			1.3.6.1.4.1.1991.1.1.2.1.53.0
+snaggblcpuutil5minavg               = 1.3.6.1.4.1.1991.1.1.2.1.53.0
 
-OID     snl4realserverportstatuscurrentconnection	1.3.6.1.4.1.1991.1.1.4.24.1.1.7
-OID     snl4realserverportstatuspeakconnection	1.3.6.1.4.1.1991.1.1.4.24.1.1.13
-OID     snl4realserverportstatusrxbytes		1.3.6.1.4.1.1991.1.1.4.24.1.1.11
-OID     snl4realserverportstatusrxpkts		1.3.6.1.4.1.1991.1.1.4.24.1.1.9
-OID     snl4realserverportstatustotalconnection	1.3.6.1.4.1.1991.1.1.4.24.1.1.8
-OID     snl4realserverportstatustxbytes		1.3.6.1.4.1.1991.1.1.4.24.1.1.12
-OID     snl4realserverportstatustxpkts		1.3.6.1.4.1.1991.1.1.4.24.1.1.10
+snl4realserverportstatuscurrentconnection       = 1.3.6.1.4.1.1991.1.1.4.24.1.1.7
+snl4realserverportstatuspeakconnection    = 1.3.6.1.4.1.1991.1.1.4.24.1.1.13
+snl4realserverportstatusrxbytes     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.11
+snl4realserverportstatusrxpkts      = 1.3.6.1.4.1.1991.1.1.4.24.1.1.9
+snl4realserverportstatustotalconnection     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.8
+snl4realserverportstatustxbytes     = 1.3.6.1.4.1.1991.1.1.4.24.1.1.12
+snl4realserverportstatustxpkts      = 1.3.6.1.4.1.1991.1.1.4.24.1.1.10
 
-OID     snl4realserverstatisticcurconnections		1.3.6.1.4.1.1991.1.1.4.23.1.1.5
-OID     snl4realserverstatisticreceivepkts		1.3.6.1.4.1.1991.1.1.4.23.1.1.3
-OID     snl4realserverstatistictotalconnections		1.3.6.1.4.1.1991.1.1.4.23.1.1.6
-OID     snl4realserverstatistictransmitpkts		1.3.6.1.4.1.1991.1.1.4.23.1.1.4
+snl4realserverstatisticcurconnections   = 1.3.6.1.4.1.1991.1.1.4.23.1.1.5
+snl4realserverstatisticreceivepkts  = 1.3.6.1.4.1.1991.1.1.4.23.1.1.3
+snl4realserverstatistictotalconnections     = 1.3.6.1.4.1.1991.1.1.4.23.1.1.6
+snl4realserverstatistictransmitpkts  = 1.3.6.1.4.1.1991.1.1.4.23.1.1.4
 
-OID     snl4virtualserverportstatisticcurrentconnection	1.3.6.1.4.1.1991.1.1.4.26.1.1.4
-OID     snl4virtualserverportstatistictotalconnection	1.3.6.1.4.1.1991.1.1.4.26.1.1.5
-OID     snl4virtualserverstatisticreceivepkts		1.3.6.1.4.1.1991.1.1.4.25.1.1.3
-OID     snl4virtualserverstatistictotalconnections	1.3.6.1.4.1.1991.1.1.4.25.1.1.5
-OID     snl4virtualserverstatistictransmitpkts		1.3.6.1.4.1.1991.1.1.4.25.1.1.4
+snl4virtualserverportstatisticcurrentconnection             = 1.3.6.1.4.1.1991.1.1.4.26.1.1.4
+snl4virtualserverportstatistictotalconnection           = 1.3.6.1.4.1.1991.1.1.4.26.1.1.5
+snl4virtualserverstatisticreceivepkts   = 1.3.6.1.4.1.1991.1.1.4.25.1.1.3
+snl4virtualserverstatistictotalconnections        = 1.3.6.1.4.1.1991.1.1.4.25.1.1.5
+snl4virtualserverstatistictransmitpkts    = 1.3.6.1.4.1.1991.1.1.4.25.1.1.4
 
 
 
-datasource dsFoundryL4SLBTotalConnections
-        ds-source = snmp://%snmp%/foundryL4SLBTotalConnections.0
-        rdd-ds-type = COUNTER
+[DATASOURCE]
+[[dsFoundryL4SLBTotalConnections]]
+    ds-source = foundryL4SLBTotalConnections.0
+    ds-type = COUNTER
 
-datasource dsFoundryL4SLBUnsuccessfulConnections
-        ds-source = snmp://%snmp%/foundryL4SLBUnsuccessfulConnections.0
-        rdd-ds-type = COUNTER
+[[dsFoundryL4SLBUnsuccessfulConnections]]
+    ds-source = foundryL4SLBUnsuccessfulConnections.0
+    ds-type = COUNTER
 
-datasource	snl4realserverportstatisticstate
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatisticState.%auto-target-name%
+[[snl4realserverportstatisticstate]]
+    ds-source	= snL4RealServerPortStatisticState.%auto-target-name%
 
-datasource	snl4realserverportstatuscurrentconnection
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusCurrentConnection.%auto-target-name%
+[[snl4realserverportstatuscurrentconnection]]
+    ds-source	= snL4RealServerPortStatusCurrentConnection.%auto-target-name%
 
-datasource	snl4realserverportstatusfailtime
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusFailTime.%auto-target-name%
+[[snl4realserverportstatusfailtime]]
+    ds-source	= snL4RealServerPortStatusFailTime.%auto-target-name%
 
-datasource	snl4realserverportstatuspeakconnection
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusPeakConnection.%auto-target-name%
+[[snl4realserverportstatuspeakconnection]]
+    ds-source	= snL4RealServerPortStatusPeakConnection.%auto-target-name%
 
-datasource	snl4realserverportstatusrxbytes
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusRxBytes.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverportstatusrxbytes]]
+    ds-source	= snL4RealServerPortStatusRxBytes.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverportstatusrxpkts
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusRxPkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverportstatusrxpkts]]
+    ds-source	= snL4RealServerPortStatusRxPkts.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverportstatustotalconnection
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusTotalConnection.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverportstatustotalconnection]]
+    ds-source	= snL4RealServerPortStatusTotalConnection.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverportstatustxbytes
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusTxBytes.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverportstatustxbytes]]
+    ds-source	= snL4RealServerPortStatusTxBytes.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverportstatustxpkts
-	ds-source	= snmp://%snmp%/snL4RealServerPortStatusTxPkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverportstatustxpkts]]
+    ds-source	= snL4RealServerPortStatusTxPkts.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverstatisticcurconnections
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticCurConnections.%auto-target-name%
+[[snl4realserverstatisticcurconnections]]
+    ds-source	= snL4RealServerStatisticCurConnections.%auto-target-name%
 
-datasource	snl4realserverstatisticfailtime
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticFailTime.%auto-target-name%
+[[snl4realserverstatisticfailtime]]
+    ds-source	= snL4RealServerStatisticFailTime.%auto-target-name%
 
-datasource	snl4realserverstatisticpeakconnections
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticPeakConnections.%auto-target-name%
+[[snl4realserverstatisticpeakconnections]]
+    ds-source	= snL4RealServerStatisticPeakConnections.%auto-target-name%
 
-datasource	snl4realserverstatisticreceivepkts
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticReceivePkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverstatisticreceivepkts]]
+    ds-source	= snL4RealServerStatisticReceivePkts.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverstatistictotalconnections
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticTotalConnections.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverstatistictotalconnections]]
+    ds-source	= snL4RealServerStatisticTotalConnections.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4realserverstatistictransmitpkts
-	ds-source	= snmp://%snmp%/snL4RealServerStatisticTransmitPkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4realserverstatistictransmitpkts]]
+    ds-source	= snL4RealServerStatisticTransmitPkts.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4virtualserverportstatisticcurrentconnection
-	ds-source	= snmp://%snmp%/snL4VirtualServerPortStatisticCurrentConnection.%auto-target-name%
+[[snl4virtualserverportstatisticcurrentconnection]]
+    ds-source	= snL4VirtualServerPortStatisticCurrentConnection.%auto-target-name%
 
-datasource	snl4virtualserverportstatisticpeakconnection
-	ds-source	= snmp://%snmp%/snL4VirtualServerPortStatisticPeakConnection.%auto-target-name%
+[[snl4virtualserverportstatisticpeakconnection]]
+    ds-source	= snL4VirtualServerPortStatisticPeakConnection.%auto-target-name%
 
-datasource	snl4virtualserverportstatistictotalconnection
-	ds-source	= snmp://%snmp%/snL4VirtualServerPortStatisticTotalConnection.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4virtualserverportstatistictotalconnection]]
+    ds-source	= snL4VirtualServerPortStatisticTotalConnection.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4virtualserverstatisticreceivepkts
-	ds-source	= snmp://%snmp%/snL4VirtualServerStatisticReceivePkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4virtualserverstatisticreceivepkts]]
+    ds-source	= snL4VirtualServerStatisticReceivePkts.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4virtualserverstatistictotalconnections
-	ds-source	= snmp://%snmp%/snL4VirtualServerStatisticTotalConnections.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4virtualserverstatistictotalconnections]]
+    ds-source	= snL4VirtualServerStatisticTotalConnections.%auto-target-name%
+    ds-type	= COUNTER
 
-datasource	snl4virtualserverstatistictransmitpkts
-	ds-source	= snmp://%snmp%/snL4VirtualServerStatisticTransmitPkts.%auto-target-name%
-	rrd-ds-type	= COUNTER
+[[snl4virtualserverstatistictransmitpkts]]
+    ds-source	= snL4VirtualServerStatisticTransmitPkts.%auto-target-name%
+    ds-type	= COUNTER
 
-graph	snaggblcpuutil1minavg
-	color	= dark-green
-	draw-as	= LINE2
-	legend	= "CPU Utilization Average"
-	si-units	= false
-	units	= "%"
-	y-axis	= "Percent"
-	y-max	= 100
-	y-min	= 0
+[GRAPH]
+[[snaggblcpuutil1minavg]]
+    color	= dark-green
+    draw-as	= LINE2
+    legend	= "CPU Utilization Average"
+    si-units	= false
+    units	= "%"
+    y-axis	= "Percent"
+    y-max	= 100
+    y-min	= 0
 
-graph	snl4realserverportstatuscurrentconnection
-	color	= blue
-	draw-as	= LINE2
-	legend	= "Current connection on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4realserverportstatuscurrentconnection]]
+    color	= blue
+    draw-as	= LINE2
+    legend	= "Current connection on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4realserverportstatusfailtime
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "RealServer tcp/udp port Failtime"
-	si-units	= false
-	units	= "Sec"
-	y-axis	= "Seconds"
-	y-min	= 0
+[[snl4realserverportstatusfailtime]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "RealServer tcp/udp port Failtime"
+    si-units	= false
+    units	= "Sec"
+    y-axis	= "Seconds"
+    y-min	= 0
 
-graph	snl4realserverportstatuspeakconnection
-	color	= red
-	draw-as	= LINE2
-	legend	= "Peak connection on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connections"
-	y-min	= 0
+[[snl4realserverportstatuspeakconnection]]
+    color	= red
+    draw-as	= LINE2
+    legend	= "Peak connection on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connections"
+    y-min	= 0
 
-graph	snl4realserverportstatusrxbytes
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Bytes received on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Bytes"
-	y-axis	= "Bytes"
-	y-max	= 100000000
-	y-min	= 0
+[[snl4realserverportstatusrxbytes]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Bytes received on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Bytes"
+    y-axis	= "Bytes"
+    y-max	= 100000000
+    y-min	= 0
 
-graph	snl4realserverportstatusrxpkts
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Packets received on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4realserverportstatusrxpkts]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Packets received on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph	snl4realserverportstatustotalconnection
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Total connection on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4realserverportstatustotalconnection]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Total connection on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4realserverportstatustxbytes
-	color	= blue
-	legend	= "Bytes transmit on the tcp/udp port of the RealServer"
-	units	= "Bytes"
-	y-axis	= "Bytes"
-	y-max	= 100000000
-	y-min	= 0
+[[snl4realserverportstatustxbytes]]
+    color	= blue
+    legend	= "Bytes transmit on the tcp/udp port of the RealServer"
+    units	= "Bytes"
+    y-axis	= "Bytes"
+    y-max	= 100000000
+    y-min	= 0
 
-graph	snl4realserverportstatustxpkts
-	color	= blue
-	legend	= "Packets transmit on the tcp/udp port of the RealServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4realserverportstatustxpkts]]
+    color	= blue
+    legend	= "Packets transmit on the tcp/udp port of the RealServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph	snl4realserverstatisticcurconnections
-	color	= blue
-	draw-as	= LINE2
-	legend	= "Current connection on the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4realserverstatisticcurconnections]]
+    color	= blue
+    draw-as	= LINE2
+    legend	= "Current connection on the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4realserverstatisticfailtime
-	color	= orange
-	draw-as	= AREA
-	legend	= "RealServer Failtime"
-	si-units	= false
-	units	= "Sec"
-	y-axis	= "Seconds"
-	y-max	= 1000
-	y-min	= 0
+[[snl4realserverstatisticfailtime]]
+    color	= orange
+    draw-as	= AREA
+    legend	= "RealServer Failtime"
+    si-units	= false
+    units	= "Sec"
+    y-axis	= "Seconds"
+    y-max	= 1000
+    y-min	= 0
 
-graph	snl4realserverstatisticpeakconnections
-	color	= red
-	draw-as	= LINE2
-	legend	= "Peak connection on the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4realserverstatisticpeakconnections]]
+    color	= red
+    draw-as	= LINE2
+    legend	= "Peak connection on the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4realserverstatisticreceivepkts
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Packets received by the RealServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4realserverstatisticreceivepkts]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Packets received by the RealServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph	snl4realserverstatistictotalconnections
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Total connection on the RealServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4realserverstatistictotalconnections]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Total connection on the RealServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4realserverstatistictransmitpkts
-	color	= blue
-	legend	= "Packets transmit by the RealServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4realserverstatistictransmitpkts]]
+    color	= blue
+    legend	= "Packets transmit by the RealServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph	snl4virtualserverportstatisticcurrentconnection
-	color	= blue
-	draw-as	= LINE2
-	legend	= "Current connection on the tcp/udp port of the VirtualServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4virtualserverportstatisticcurrentconnection]]
+    color	= blue
+    draw-as	= LINE2
+    legend	= "Current connection on the tcp/udp port of the VirtualServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4virtualserverportstatisticpeakconnection
-	color	= red
-	draw-as	= LINE2
-	legend	= "Peak connection on the tcp/udp port of the VirtualServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4virtualserverportstatisticpeakconnection]]
+    color	= red
+    draw-as	= LINE2
+    legend	= "Peak connection on the tcp/udp port of the VirtualServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4virtualserverportstatistictotalconnection
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Total connection on the tcp/udp port of the VirtualServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4virtualserverportstatistictotalconnection]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Total connection on the tcp/udp port of the VirtualServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4virtualserverstatisticreceivepkts
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Packets received by the VirtualServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4virtualserverstatisticreceivepkts]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Packets received by the VirtualServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph	snl4virtualserverstatistictotalconnections
-	color	= dark-green
-	draw-as	= AREA
-	legend	= "Total connection for the VirtualServer"
-	si-units	= false
-	units	= "Co"
-	y-axis	= "Connection"
-	y-min	= 0
+[[snl4virtualserverstatistictotalconnections]]
+    color	= dark-green
+    draw-as	= AREA
+    legend	= "Total connection for the VirtualServer"
+    si-units	= false
+    units	= "Co"
+    y-axis	= "Connection"
+    y-min	= 0
 
-graph	snl4virtualserverstatistictransmitpkts
-	color	= blue
-	legend	= "Packets transmit by the VirtualServer"
-	si-units	= false
-	units	= "Pkts"
-	y-axis	= "Packets"
-	y-min	= 0
+[[snl4virtualserverstatistictransmitpkts]]
+    color	= blue
+    legend	= "Packets transmit by the VirtualServer"
+    si-units	= false
+    units	= "Pkts"
+    y-axis	= "Packets"
+    y-min	= 0
 
-graph   dsFoundryL4SLBTotalConnections
-        legend = "Total Connections"
+[[dsFoundryL4SLBTotalConnections]]
+    legend = "Total Connections"
 
-graph   dsFoundryL4SLBUnsuccessfulConnections
-        legend = "UnsuccessfulConnections"
+[[dsFoundryL4SLBUnsuccessfulConnections]]
+    legend = "UnsuccessfulConnections"
 
-targettype	Chassis-Foundry-Generic
-	ds	= "snAgGblCpuUtil1MinAvg"
-	view	= "CPU Utilization: snAgGblCpuUtil1MinAvg"
+    targettype	Chassis-Foundry-Generic
+    ds	= "snAgGblCpuUtil1MinAvg"
+    view	= "CPU Utilization: snAgGblCpuUtil1MinAvg"
 
-targettype	foundry-real-server
-	ds	= "snL4RealServerStatisticReceivePkts, snL4RealServerStatisticTransmitPkts, snL4RealServerStatisticCurConnections, snL4RealServerStatisticTotalConnections, snL4RealServerStatisticFailTime, snL4RealServerStatisticPeakConnections"
-	view	= "Packets: snL4RealServerStatisticReceivePkts snL4RealServerStatisticTransmitPkts,Connections: snL4RealServerStatisticCurConnections snL4RealServerStatisticTotalConnections snL4RealServerStatisticPeakConnections,Fail_Time: snL4RealServerStatisticFailTime,"
+    targettype	foundry-real-server
+    ds	= "snL4RealServerStatisticReceivePkts, snL4RealServerStatisticTransmitPkts, snL4RealServerStatisticCurConnections, snL4RealServerStatisticTotalConnections, snL4RealServerStatisticFailTime, snL4RealServerStatisticPeakConnections"
+    view        = 	"""Packets: snL4RealServerStatisticReceivePkts snL4RealServerStatisticTransmitPkts,Connections: snL4RealServerStatisticCurConnections snL4RealServerStatisticTotalConnections snL4RealServerStatisticPeakConnections,Fail_Time: snL4RealServerStatisticFailTime,"
 
-targettype	foundry-real-server-port
-	ds	= "snL4RealServerPortStatusFailTime, snL4RealServerPortStatusCurrentConnection, snL4RealServerPortStatusTotalConnection, snL4RealServerPortStatusPeakConnection, snL4RealServerPortStatusRxPkts, snL4RealServerPortStatusTxPkts, snL4RealServerPortStatusRxBytes, snL4RealServerPortStatusTxBytes"
-	view	= "Packets: snL4RealServerPortStatusRxPkts snL4RealServerPortStatusTxPkts,Connections: snL4RealServerPortStatusCurrentConnection snL4RealServerPortStatusTotalConnection snL4RealServerPortStatusPeakConnection,Bytes: snL4RealServerPortStatusRxBytes snL4RealServerPortStatusTxBytes,Fail_Time: snL4RealServerPortStatusFailTime"
+    targettype	foundry-real-server-port
+    ds	= "snL4RealServerPortStatusFailTime, snL4RealServerPortStatusCurrentConnection, snL4RealServerPortStatusTotalConnection, snL4RealServerPortStatusPeakConnection, snL4RealServerPortStatusRxPkts, snL4RealServerPortStatusTxPkts, snL4RealServerPortStatusRxBytes, snL4RealServerPortStatusTxBytes"
+    view	= "Packets: snL4RealServerPortStatusRxPkts snL4RealServerPortStatusTxPkts,Connections: snL4RealServerPortStatusCurrentConnection snL4RealServerPortStatusTotalConnection snL4RealServerPortStatusPeakConnection,Bytes: snL4RealServerPortStatusRxBytes snL4RealServerPortStatusTxBytes,Fail_Time: snL4RealServerPortStatusFailTime"
 
-targettype	foundry-virtual-server
-	ds	= "snL4VirtualServerStatisticReceivePkts, snL4VirtualServerStatisticTransmitPkts, snL4VirtualServerStatisticTotalConnections"
-	view	= "Packets: snL4VirtualServerStatisticReceivePkts snL4VirtualServerStatisticTransmitPkts,Connections: snL4VirtualServerStatisticTotalConnections,"
+    targettype	foundry-virtual-server
+    ds	= "snL4VirtualServerStatisticReceivePkts, snL4VirtualServerStatisticTransmitPkts, snL4VirtualServerStatisticTotalConnections"
+    view        = 	"""Packets: snL4VirtualServerStatisticReceivePkts snL4VirtualServerStatisticTransmitPkts,Connections: snL4VirtualServerStatisticTotalConnections,"
 
-targettype	foundry-virtual-server-port
-	ds	= "snL4VirtualServerPortStatisticCurrentConnection, snL4VirtualServerPortStatisticTotalConnection, snL4VirtualServerPortStatisticPeakConnection"
-	view	= "Connections: snL4VirtualServerPortStatisticTotalConnection snL4VirtualServerPortStatisticCurrentConnection snL4VirtualServerPortStatisticPeakConnection,"
+    targettype	foundry-virtual-server-port
+    ds	= "snL4VirtualServerPortStatisticCurrentConnection, snL4VirtualServerPortStatisticTotalConnection, snL4VirtualServerPortStatisticPeakConnection"
+    view        = 	"""Connections: snL4VirtualServerPortStatisticTotalConnection snL4VirtualServerPortStatisticCurrentConnection snL4VirtualServerPortStatisticPeakConnection,"
 
-targetType      foundryL4SLB
-        ds = "dsFoundryL4SLBTotalConnections, dsFoundryL4SLBUnsuccessfulConnections"
-        view = "Connections: dsFoundryL4SLBTotalConnections dsFoundryL4SLBUnsuccessfulConnections"
+[DSTEMPLATE]
+[[foundryL4SLB]]
+    ds = "dsFoundryL4SLBTotalConnections, dsFoundryL4SLBUnsuccessfulConnections"
+    view = "Connections: dsFoundryL4SLBTotalConnections dsFoundryL4SLBUnsuccessfulConnections"
 
 
 

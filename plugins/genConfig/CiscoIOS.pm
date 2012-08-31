@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.13;
+my $VERSION = 1.14;
 
 ### End package init
 
@@ -269,93 +269,75 @@ sub discover {
 
     if  ($opts->{model} eq 'C3500XL' || $opts->{model} eq 'C2900XL') {
         $opts->{chassisttype} = 'Catalyst-XL-Switch';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "C3550") {
         $opts->{chassisttype} = 'Catalyst-3550-Switch';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "C2950") {
         $opts->{chassisttype} = 'Catalyst-2950-Switch';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "1900") {
         $opts->{chassisttype} = 'Catalyst-1900-Switch';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} eq "7500") {
         $opts->{chassisttype} = 'Cisco-7500-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "7200") {
         $opts->{chassisttype} = 'Cisco-7200-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "7000") {
         $opts->{chassisttype} = 'Cisco-7000-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /4500/) {
         $opts->{chassisttype} = 'Cisco-4500-Router';
-        $opts->{chassisname} = 'Chassis'; 
+    } elsif ($opts->{model} =~ /3[789]00/) {
+        $opts->{chassisttype} = 'Cisco-3800-Router';
+	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /3600/) {
         $opts->{chassisttype} = 'Cisco-3600-Router';
-        $opts->{chassisname} = 'Chassis';
-   } elsif ($opts->{model} =~ /2800/) {
-        $opts->{chassisttype} = 'Cisco-2800-Router';
-        $opts->{chassisname} = 'Chassis';
+   } elsif ($opts->{model} =~ /2[789]00/) {
+        $opts->{chassisttype} = 'Cisco-2900-Router';
+	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "C1200") {
         $opts->{chassisttype} = 'Cisco-1200-AP';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} =~ /2600/) {
         $opts->{chassisttype} = 'Cisco-2600-Router';
-        $opts->{chassisname} = 'Chassis';
+    } elsif ($opts->{model} =~ /1[89]00/) {
+        $opts->{chassisttype} = 'Cisco-1800-Router';
     } elsif ($opts->{model} =~ /1700/) {
         $opts->{chassisttype} = 'Cisco-1700-Router';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} =~ /1600/) {
         $opts->{chassisttype} = 'Cisco-1600-Router';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} =~ /3000/) {
         $opts->{chassisttype} = 'Cisco-Terminal';
-        $opts->{chassisname} = 'Chassis-Terminal';
+        $opts->{chassisname} = 'chassis.TerminalSvr';
         $opts->{collect} = 0;
-    } elsif ($opts->{model} =~ /80./) {
+    } elsif ($opts->{model} =~ /8[06789]./) {
         $opts->{chassisttype} = 'Cisco-800-Router';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} =~ /2500/) {
         $opts->{chassisttype} = 'Cisco-2500-Router';
-        $opts->{chassisname} = 'Chassis';
     } elsif ($opts->{model} =~ /c6sup2_rp/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /WS-X5530/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /MSFC2/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /LS1010/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /C5RSM/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq 'GS') {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /RSP/) {
         $opts->{chassisttype} = 'Cisco-7500-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{ciscobox}) {   # Default Cisco config
         $opts->{chassisttype} = 'Cisco-Generic-Router';
-        $opts->{chassisname} = 'Chassis';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     }
 
@@ -500,7 +482,7 @@ sub custom_targets {
             $slotnum = $2;
             my ($cpudescr) = $cpudescrs{$physindex{$cpu}};
             my ($cpumodel) = $cpumodels{$physindex{$cpu}};
-            my($target) = "cpu_" . $cpuname;
+            my($target) = "vip_cpu_" . $cpuname;
             $target =~ s/[\/\s:,\.]/\_/g;
             my $ldesc = $opts->{devicename} if ($opts->{devicename});
             $ldesc .= "<BR>" . $cpuname;
@@ -516,8 +498,8 @@ sub custom_targets {
                     'notes'               => $ldesc,
                     'display_name'        => $sdesc,
                     '_inst'               => 0,
-                    '_order'              => $opts->{order},
-                    'use'                 => "cisco-vip-cpu",
+                    '_display_order'              => $opts->{order},
+                    '_dstemplate'                 => "cisco-vip-cpu",
             );
 
             $opts->{order} -= 1;
@@ -586,13 +568,13 @@ sub custom_targets {
                     $file->writetarget("service {", '',
 			'host_name'           => $opts->{devicename},
                         'service_description'   => $targetname,
-                        '_interface-name' => $targetdesc,
+                        '_interface_name' => $targetdesc,
                         'notes'          => $ldesc,
                         'display_name'   => $targetname,
-                        'use'            => $qostype,
+                        '_dstemplate'            => $qostype,
                         '_inst'          => $instance,
                         '_hide'          => 'true',
-                        '_order'          => $opts->{order},
+                        '_display_order'          => $opts->{order},
                     );
                     $opts->{order} -= 1;
     
@@ -628,9 +610,9 @@ sub custom_targets {
                 '_interface-name'=> $targetdesc,
                 'notes' => $ldesc,
                 'display_name'    => $targetname,
-                'use'   => $qostype,
+                '_dstemplate'   => $qostype,
                 '_mtargets'  => "$servicepolicy{$key}", # FIXME to convert to reference a pnp or graphite mtarget equivalent
-                            'order'         => $opts->{order},
+                '_display_order'         => $opts->{order},
             );
                     $opts->{order} -= 1;
         }
@@ -667,11 +649,11 @@ if ($opts->{ciscobox} && keys(%cisco_car)) {
 
         push(@config,
 	    'host_name'           => $opts->{devicename},
-            'service_description' =>  $ifname,
-            '_order'              =>  $opts->{order},
+            'service_description' =>  "ifcar." . $ifname,
+            '_display_order'              =>  $opts->{order},
             'notes'               =>  $ldesc . " " . $rest,
             'display_name'        =>  $ifdescr{$ifindex},
-            'use'                 =>  'rate-limit'
+            '_dstemplate'                 =>  'rate-limit'
         );
         $file->writetarget("service {", '', @config);
 
@@ -708,11 +690,12 @@ if ($opts->{rtragents} && %rttMonCtrlOperState) {
 	    'host_name'           => $opts->{devicename},
             'service_description'        => $targetname,
             '_inst'        => $key,
-            '_order'       => $opts->{order},
+            '_display_order'       => $opts->{order},
             'display_name' => $targetname,
             'notes'        => $ldesc,
 	    #'short-desc'   => $sdesc,
-            'use'          => $protocol
+            '_dstemplate'          => $protocol,
+	    'use'                 => $opts->{dtemplate},
         );
         $opts->{order} -= 1;
     }
@@ -790,7 +773,7 @@ sub custom_interfaces {
             push(@config,
 			'_peerid' => $peerid,
                         'notes' => 'Dial Peer Stats',
-                        'use'    => 'dial-peer');
+                        '_dstemplate'    => 'dial-peer');
             $customfile = $opts->{dpfile}; # Select the file to store configs
             $customsdesc .= $PeerCfgOrigAddr{$peerid.'.'.$index}; 
             $customldesc = "Call Address: $PeerCfgOrigAddr{$peerid.'.'.$index}";
@@ -831,14 +814,14 @@ sub custom_interfaces {
 
             push(@config,      '_dlci'           => $dlci,
                                'notes       '    => "$opts->{devicename} $dspname",
-                               'use'             => 'frame-interface');
+                               '_dstemplate'             => 'frame-interface');
 
             $match = 1;
 
         } else {
 
             push(@config, 
-		    'use' => 'sub-interface' . $hc);
+		    '_dstemplate' => 'sub-interface' . $hc);
             $match = 1;
         }
         $opts->{nomtucheck} = 1;
@@ -854,7 +837,7 @@ sub custom_interfaces {
         my ($nu) = $opts->{nustats} ? '-nu' : '';
 
         push(@config, 
-		    'use' => 'cisco-interface' . $nu . $hc,);
+		    '_dstemplate' => 'cisco-interface' . $nu . $hc,);
         $match = 1;
     }
 

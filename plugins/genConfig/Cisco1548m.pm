@@ -116,16 +116,18 @@ sub custom_targets {
     }
 
     my $desc = 'SNMP packets';
-    my $targetname = 'snmp_stats';
+    my $targetname = 'if.snmp_stats';
     
     $opts->{'file'}->writetarget('service {', '',
 	                         'host_name'           => $opts->{devicename},
 				 'service_description' => $targetname,
-				 '_order'         => $opts->{order},
+				 '_display_order'         => $opts->{order},
 				 '_inst'          => (keys %snmpinpkts)[0],
 				 'display_name'   => $targetname,
 				 'notes'          => $desc,
-				 'use'            => 'snmpstats');
+				 '_dstemplate'            => 'snmpstats',
+				 'use'                 => $opts->{dtemplate},
+				 );
     
     $opts->{order} -= 1;
 

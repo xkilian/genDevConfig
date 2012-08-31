@@ -216,16 +216,17 @@ sub custom_targets {
         }
 
         my $ldesc = 'Layer2 engine statistics - total switched packets';
-        my $targetname = 'layer2engine';
+        my $targetname = 'chassis.layer2engine';
     
         $file->writetarget('service {', '',
 			   'host_name'           => $opts->{devicename},
 			   'service_description' =>      $targetname,
-			       '_order'          =>      $opts->{order},
+			       '_display_order'          =>      $opts->{order},
 			       '_inst'           =>      (keys %l2stats)[0],
 			       'display_name'    =>      $targetname,
 			       'notes'           =>      $ldesc,
-			       'use'             =>      'switch-layer2'
+			       '_dstemplate'             =>      'switch-layer2',
+			       'use'                 => $opts->{dtemplate},
 	);
     
         $opts->{order} -= 1;
@@ -237,16 +238,17 @@ sub custom_targets {
         my ($ldesc, $sdesc);
         $ldesc = "Switch cpu statistics";
         $sdesc = "Switch cpu statistics";
-        my ($targetname) = 'switch-cpu';
+        my ($targetname) = 'chassis.switch-cpu';
 
         $file->writetarget('service {', '',
 	    'host_name'           => $opts->{devicename},				    
 	    'service_description' => $targetname,
             '_inst'               => 'map(cpu-stats)',
-            '_order'              => $opts->{order},
+            '_display_order'              => $opts->{order},
             'display_name'        => $targetname,
             'notes'               => $ldesc,
-            'use'                 => 'switch-cpu',
+            '_dstemplate'                 => 'switch-cpu',
+	    'use'                 => $opts->{dtemplate},
         );
 
         $opts->{order} -= 1;
@@ -258,16 +260,17 @@ sub custom_targets {
         my ($ldesc, $sdesc);
         $ldesc = "Switch memory statistics";
         $sdesc = "Switch memory statistics";
-        my ($targetname) = 'switch-mem';
+        my ($targetname) = 'chassis.switch-mem';
 
         $file->writetarget('service {', '',
 	    'host_name'           => $opts->{devicename},
 	    'service_description' => $targetname,
             '_inst'               => 'map(mem-stats)',
-            '_order'              => $opts->{order},
+            '_display_order'              => $opts->{order},
             'display_name'        => $targetname,
             'notes'               => $ldesc,
-            'use'                 => 'switch-mem',
+            '_dstemplate'                 => 'switch-mem',
+	    'use'                 => $opts->{dtemplate},
         );
 
         $opts->{order} -= 1;
@@ -318,7 +321,7 @@ sub custom_interfaces {
 
     ### Collect extra info from Cisco Catalyst MIB
 
-    push(@config, 'use' => 'standard-interface' . $hc);
+    push(@config, '_dstemplate' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

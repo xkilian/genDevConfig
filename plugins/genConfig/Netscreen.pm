@@ -124,7 +124,7 @@ sub discover {
 
     if ($opts->{model} eq "Netscreen") {
         $opts->{chassisttype} = 'Netscreen-Firewall';
-        $opts->{chassisname} = 'Chassis-Netscreen';
+        $opts->{chassisname} = 'chassis.Netscreen';
     }
 
     # Default feature promotions
@@ -158,17 +158,18 @@ sub custom_targets {
         my ($ldesc, $sdesc);
         $ldesc = "Number of active and failed sessions for the entire firewall";
         $sdesc = "Number of active and failed sessions for the entire firewall";
-        my ($targetname) = 'netscreen_sessions_statistics';
+        my ($targetname) = 'chassis.sessions_statistics';
 
         $file->writetarget('service {', '',
             'service_desciption' => $targetname,
             'host_name'          => $opts->{devicename},
             '_inst'              => '0',
-            '_order'             => $opts->{order},
+            '_display_order'             => $opts->{order},
 
             'display_name' => $targetname,
             'notes'      => $ldesc,
-            'use'    => 'Netscreen-sessions',
+            '_dstemplate'    => 'Netscreen-sessions',
+            'use'                 => $opts->{dtemplate},
         );
         $opts->{order} -= 1;
 
@@ -178,15 +179,16 @@ sub custom_targets {
 
             $ldesc = "Current number of attacks for ifindex $ifindex ";
             $sdesc = "Current number of attacks for ifindex $ifindex";
-            $targetname = "netscreen_attack_statistics_if_$ifindex";
+            $targetname = "ids_attack_statistics_if_$ifindex";
 
             $file->writetarget('service {', '',
          	'host_name'           => $opts->{devicename},
                 '_inst'             => $ifindex,
-                '_order'            => $opts->{order},
+                '_display_order'            => $opts->{order},
                 'service_description'   => $targetname,
                 'notes'        => $ldesc,
-                'use'      => 'Netscreen-attacks',
+                '_dstemplate'      => 'Netscreen-attacks',
+                'use'                 => $opts->{dtemplate},
             );
 
             $opts->{order} -= 1;
@@ -227,7 +229,7 @@ sub custom_interfaces {
     ### DEVICE CUSTOM INTERFACE CONFIG SECTION
     ###
 
-    push(@config, 'use' => 'standard-interface' . $hc);
+    push(@config, '_dstemplate' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

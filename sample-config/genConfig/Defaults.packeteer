@@ -1,24 +1,32 @@
-# Generic network device sub-tree defaults - for use with genDevConfig
+# Generic network device sub-tree defaults - for use with genDevConfig and Shinken
 #
+# This file is indetented using 4 space.
 #
-# This file is formated with a tab width of 4.
-#
-###############################################################################
-# If you're using this version of genDevConfig with Cricket 1.02 or earlier
-# you will need SNMP_Session 0.77 or later, or a new version of Net_SNMP.
 ###############################################################################
 #
 # For additional information on the features and use of genDevConfig consult
-# http://www.acktomic.com/cricket/cricket.htm or see the help provided on the
+# http://www.acktomic.com/ or see the help provided on the
 # command-line in your distribution of genDevConfig.
+#
+#
+###############################################################################
+
+
+###############################################################################
+#
+# Setup the default variables that apply to all services that are defined
+# within this part of the configuration tree hierarchy.
+#
+# All variables can be overriden by a template loaded later in the process.
 #
 #
 ###############################################################################
 
 # Packeteer Traffic Shaping Class statistics
 
-OID     classByteCount          1.3.6.1.4.1.2334.2.1.4.2.1.5
-OID     classPkts               1.3.6.1.4.1.2334.2.1.4.2.1.7
+[OID]
+classByteCount                      = 1.3.6.1.4.1.2334.2.1.4.2.1.5
+classPkts                           = 1.3.6.1.4.1.2334.2.1.4.2.1.7
 
 ###############################################################################
 #
@@ -29,11 +37,12 @@ OID     classPkts               1.3.6.1.4.1.2334.2.1.4.2.1.7
 
 ### Data sources for Packeteer
 
-dataSource classByteCount
-        ds-source               =       snmp://%snmp%/classByteCount.%inst%
+[DATASOURCE]
+[[classByteCount]]
+    ds-source               =       classByteCount.%inst%
 
-dataSource classPkts
-        ds-source               =       snmp://%snmp%/classPkts.%inst%
+[[classPkts]]
+    ds-source               =       classPkts.%inst%
 
 
 ###############################################################################
@@ -54,9 +63,10 @@ dataSource classPkts
 ###############################################################################
 
 
-targetType  packeteer-class
-        ds      =       "classByteCount,classPkts"
-        view    =       "Octets: classByteCount"
+[DSTEMPLATE]
+[[packeteer-class]]
+    ds      =       "classByteCount,classPkts"
+    view    =       "Octets: classByteCount"
 
 ###############################################################################
 #
@@ -101,7 +111,7 @@ targetType  packeteer-class
 
 ###############################################################################
 #
-# "graph" statements define how the data should be displayed in the graphic.
+# """graph" statements define how the data should be displayed in the graphic.
 # Most of the variables defined are directly mapped to the rrdtool graph tool
 # that is used to generate the graphics.
 #

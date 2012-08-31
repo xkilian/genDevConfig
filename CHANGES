@@ -1,6 +1,10 @@
 
 ===============================================================================
-Historical section for previous versions of genDevConfig/genRtrConfig 2.x
+genDevConfig change log
+
+Notes on the historical section trainling the new releases
+
+Historical section for previous versions of genDevConfig/genRtrConfig, 2.x.
 
 The historical format which included a combined changelog/credit/features
 has been split up to use the standard CREDITS, CHANGES format and the detailed
@@ -10,6 +14,27 @@ changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
 ===============================================================================
 
 Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
+
+30/08/2012
+
+# Version 3_0_1
+#
+# Script is now dedicated to sending Shinken compatible formatted output.
+#
+# - Outputs Nagios variable formatted configuration files based on device name
+#   All plugins and main script updated to output new configuration syntax.
+# - Removed monitorType processing 
+# - Introduce TRIGGER dictionnary, are refered to by TRIGGERGROUP templates.
+#   TRIGGERGROUP are referenced by the Shinken services.
+# - Introduce DSTEMPLATE, which reference DS templates from the Shinken
+#   SNMP poller. Replaces targetTypes
+# - Modified Defaults files to INI format for use with Shinken SNMP poller.
+#   INI format is based on Python configObj library.
+# - Modified NortelPassport plugin to actually do something useful. Good
+#   for ERS-1600, ERS-8xxx, ES-470, ERS-4xxx
+# - Introduce new options -ctemplate, -htemplate to apply templates
+#   to a host or chassis.
+# - TRIGGER templates with simpler and more powerful syntax
 
 09/01/2012
 
@@ -32,7 +57,7 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Updated base directories to expect installation in $genDevConfig
 #   instead of $Cricket
 # - Moved code for 3.x series to github instead of sourceforge: xkilian/genDevConfig
-# - Converted date format in this file for versions prior to 1.5 to : Gregorian Little Endian
+# - Converted date format in the current file for versions prior to 1.5 to : Gregorian Little Endian
 #   starting with Day.
 
 23/05/2007

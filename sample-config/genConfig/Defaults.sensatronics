@@ -1,125 +1,103 @@
-# Generic network device sub-tree defaults - for use with genDevConfig
+# Generic network device sub-tree defaults
+# Use with genDevConfig and Shinken SnmpBooster module
 #
-#
-# This file is formated with a tab width of 4.
-#
-###############################################################################
-# If you're using this version of genRtrConfig with Cricket 1.02 or earlier
-# you will need SNMP_Session 0.77 or later, or a new version of Net_SNMP.
-###############################################################################
-#
-# For additional information on the features and use of genDevConfig consult
-# http://www.acktomic.com/cricket/cricket.htm or see the help provided on the
-# command-line in your distribution of genDevConfig.
-#
+# This file is indetented using 4 space.
 #
 ###############################################################################
-
-
-###############################################################################
 #
-# Setup the default variables that apply to all targets that are defined
-# within this part of the config-tree hierarchy.
+# Setup the default variables that apply to all services that are defined
+# within this part of the configuration file hierarchy.
 #
-# All variables can be overriden by redefinition higher in the config-tree.
+# All variables can be overriden by a template loaded later in the process.
 #
+# Datasources define the type of data, the period, scaling and limits
 #
 ###############################################################################
 
 ### Sensatronics OIDs
 
-OID em1 1.3.6.1.4.1.16174.1.1.3.3
-
-###############################################################################
-#
-# Datasources define the type of data and the period of the data retrieved
-#
-#
-###############################################################################
-
-###############################################################################
-###
-### Datasource for sensatronics
-###
-###############################################################################
-
-datasource em1group1temp
-        ds-source = snmp://%snmp%/em1.1.3.0
-datasource em1group1humidity
-        ds-source = snmp://%snmp%/em1.1.6.0
-# if you use wetness probes -
-#datasource em1group1wetness
-#        ds-source = snmp://%snmp%/em1group1.9.0
-datasource em1group2temp
-        ds-source = snmp://%snmp%/em1.2.3.0
-datasource em1group2humidity
-        ds-source = snmp://%snmp%/em1.2.6.0
-datasource em1group3temp
-        ds-source = snmp://%snmp%/em1.3.3.0
-datasource em1group3humidity
-        ds-source = snmp://%snmp%/em1.3.6.0
-datasource em1group4temp
-        ds-source = snmp://%snmp%/em1.4.3.0
-datasource em1group4humidity
-        ds-source = snmp://%snmp%/em1.4.6.0
+[DATASOURCE]
+    Oidem1                        = 1.3.6.1.4.1.16174.1.1.3.3
+    
+    ###############################################################################
+    #
+    # Datasources define the type of data and the period of the data retrieved
+    #
+    #
+    ###############################################################################
+    
+    
+    [[em1group1temp]]
+        ds-source = $Oidem1.1.3.0
+    [[em1group1humidity]]
+        ds-source = $Oidem1.1.6.0
+    # if you use wetness probes -
+    #datasource em1group1wetness
+    #        ds-source = $Oidem1.1.9.0
+    [[em1group2temp]]
+        ds-source = $Oidem1.2.3.0
+    [[em1group2humidity]]
+        ds-source = $Oidem1.2.6.0
+    [[em1group3temp]]
+        ds-source = $Oidem1.3.3.0
+    [[em1group3humidity]]
+        ds-source = $Oidem1.3.6.0
+    [[em1group4temp]]
+        ds-source = $Oidem1.4.3.0
+    [[em1group4humidity]]
+        ds-source = $Oidem1.4.6.0
 
 
 ###############################################################################
 #
-# targetType's are the device definitions that will tell cricket what to retrieve
-# from the device, and how should should be displayed. Each target that is defined
-# in a target file should be associated with a targetType, so that cricket knows
-# how to treat the target.
+# DSTEMPLATE are definitions that will tell the collection engine what to retrieve
+# from the device, and how they should be displayed. Each service that is defined
+# in a Shinken configuration file should be associated with a DSTEMPLATE.
 #
-# Empty target statements can be used for some targets that you don't want to pull
-# data from. Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory). 
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
-# 
+# DSTEMPLATE is optional in the target definition as you may not want to pull
+# data for it. Examples are Chassis's of devices for which the OIDs
+# haven't been detailed yet(temperature, cpu, memory). 
 #
 ###############################################################################
 
 
-#this example is only using three probes
-#change the view = line to fit what you have
-TargetType sensatronics-em1
-        ds = "em1group1temp, em1group1humidity, em1group2temp, em1group2humidity, em1group3temp, em1group3humidity, em1group4temp, em1group4humidity"
-        view = "Temperature 1: em1group1temp,
-        Temperature 3: em1group3temp,
-        Temperature 4: em1group4temp,
-        Temperature Combined: em1group1temp em1group3temp em1group4temp,
-        Humidity 3: em1group3humidity"
+[DSTEMPLATE]
+    #this example is only using three probes
+    #change the graph = line to fit what you have
+    [[sensatronics-em1]]
+        ds          =       "em1group1temp, em1group1humidity, em1group2temp, em1group2humidity, em1group3temp, em1group3humidity, em1group4temp, em1group4humidity"
+        graph        = 	"""Temperature 1: em1group1temp,
+                            Temperature 3: em1group3temp,
+                            Temperature 4: em1group4temp,
+                            Temperature Combined: em1group1temp em1group3temp em1group4temp,
+                            Humidity 3: em1group3humidity"""
 
 ###############################################################################
 #
-## monitorType definitions
+## TRIGGER definitions
 #
-# The short definition: These are monitor threshold templates that can be
-# associated with targets in the config-tree. Each monitorType is reference using
-# the monitor-type key and the value is the monitorType.
+# The trigger dictionnary defines expressions to be applied on retrieved values.
+# They are referenced using the trigger variable in the Shinken configuration.
+# Note the use of underscore for the Shinken configuration
+# and - for the trigger-name in the Defaults file.
 #
-## These are the device definitions that will tell cricket what to monitor
-# from the device, and how should should acted on. Each target that is defined
-# in a target file can be associated with a monitorType, so that cricket knows
-# how to treat threshold monitoring for the target.
+# Triggers that do not resolve correctly or contain errors will return
+# unknown status and log an error message in the plugin output.
 #
-# Empty monitorType statements can be used for some targets that you don't want to monitor.
-# Examples are Chassis's of devices for which the OIDs haven't been detailed
-# yet(temperature, cpu, memory).
-#
-# See cricket.sourceforge.net for documentation on the definitions found in
-#  this file
+# For examples see: genConfig.triggers
 #
 ###############################################################################
 
+#[TRIGGER]
+    #[[trigger_name1]]
+    #    warning =  datasource.function(), <constant>, <operator>
+    #    critical = datasource.function(), datasource.function(), <operator>
+    #    critical = datasource.function(), <constant>, <operator>, <constant>, <operator>
+    
+    #[TRIGGERGROUP]
+    #   trigger_group_name1 = trigger_name1, trigger_name2
 
-#monitorType chassis
-#    monitor-thresholds =
-#        "cpu5min:value:n:75:META:router-cpu:dark-red:SPAN:3,
-#         cpu5min:value:n:1:META:router-cpu:yellow:SPAN:3
-#        "
+# None defined
 
 ###############################################################################
 #
@@ -143,35 +121,36 @@ TargetType sensatronics-em1
 ###############################################################################
 
 
-graph em1group1temp
-    units       =   "F"
-    legend = "Temperature 1"
-
-graph em1group2temp
-    units       =   "F"
-    legend = "Temperature 2"
-
-graph em1group3temp
+[GRAPH]
+    [[em1group1temp]]
+        units       =   "F"
+        legend = "Temperature 1"
+    
+    [[em1group2temp]]
+        units       =   "F"
+        legend = "Temperature 2"
+    
+    [[em1group3temp]]
         legend = "Temperature 3"
-    units       =   "F"
-
-graph em1group4temp
-    legend = "Temperature 4"
-    units       =   "F"
-
-graph em1group1humidity
+        units       =   "F"
+    
+    [[em1group4temp]]
+        legend = "Temperature 4"
+        units       =   "F"
+    
+    [[em1group1humidity]]
         legend = "Humidity 1"
         units = "%"
-
-graph em1group2humidity
+    
+    [[em1group2humidity]]
         legend = "Humidity 2"
         units = "%"
-
-graph em1group3humidity
+    
+    [[em1group3humidity]]
         legend = "Humidity 3"
         units = "%"
-
-graph em1group4humidity
+    
+    [[em1group4humidity]]
         legend = "Humidity 4"
         units = "%"
 

@@ -187,10 +187,11 @@ sub custom_targets {
             'host_name'           => $opts->{devicename},
             'service_description' => $targetname,
             '_inst'             => '0',
-            '_order'            => $opts->{order},
+            '_display_order'            => $opts->{order},
             'display_name'      => $targetname,
             'notes'             => $ldesc,
-            'use'               => 'Cisco-pix-stats',
+            '_dstemplate'               => 'Cisco-pix-stats',
+            'use'                 => $opts->{dtemplate},
         );
 
        $opts->{order} -= 1;

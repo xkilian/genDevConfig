@@ -143,7 +143,7 @@ sub discover {
     $opts->{model} = 'packeteer'; # Informational for plugin not included in cricket config
     $opts->{class} = 'packeteer'; # Informational for Chassis target useful for Rancid integration
     $opts->{chassisttype} = 'Generic-Device'; # targetType of Chassis target
-    $opts->{chassisname} = 'Chassis-Packeteer'; # name of Chassis target
+    $opts->{chassisname} = 'chassis.Packeteer'; # name of Chassis target
 
     # Example of additional info to add to sysDescr
     #$opts->{vendor_soft_ver} = get('versionOID');
@@ -250,11 +250,12 @@ sub custom_targets {
                   'service_description' => $target,
                   'host_name' => $opts->{devicename},
                   'display_name' => $classFullName{$index},
-                  'use'  => 'packeteer-class',
+                  '_dstemplate'  => 'packeteer-class',
                   # 'short-desc'     => $sdesc,
                   'notes'      => $ldesc,
-                  '_order'          => $opts->{order},
-                  '_inst'           => $index
+                  '_display_order'          => $opts->{order},
+                  '_inst'           => $index,
+		  'use'                 => $opts->{dtemplate},
                   );
 
         $opts->{order} -= 1;
@@ -312,7 +313,7 @@ sub custom_interfaces {
     #
     #if ($iftype{$index} == 32 &&  $ifdescr{$index} =~ /\.\d+$/) {
 
-    #     push(@config, 'use' => 'packeteer-sub-interface' . $hc);
+    #     push(@config, '_dstemplate' => 'packeteer-sub-interface' . $hc);
     #     # Override runtime data for the mtu of this interface
     #     $ifmtu{$index} = 1 if (!defined($ifmtu{$index}) || $ifmtu{$index} == 0);
     #     # tell the main script that you the plugin did process this interface
@@ -321,7 +322,7 @@ sub custom_interfaces {
     #} elsif ($opts->{packeteerint}) {
     #     # Check if NU Cast packet statistics are requested
     #     my ($nu) = $opts->{nustats} ? '-nu' : '';
-    #     push(@config, 'use' => 'packeteer-interface'. $nu . $hc);
+    #     push(@config, '_dstemplate' => 'packeteer-interface'. $nu . $hc);
     #     $match = 1;
     #}
 

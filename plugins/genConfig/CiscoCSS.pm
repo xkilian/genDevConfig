@@ -345,9 +345,8 @@ sub discover {
     #$opts->{vendor_soft_ver} = get('xxxx');
 
     $opts->{chassisttype} = 'CiscoCSS';
-    $opts->{chassisname} = 'CiscoCSS';
+    $opts->{chassisname} = 'chassis.CiscoCSS';
     $opts->{sysDescr} .= "<BR>" . $opts->{apVer} . "<BR>" . $opts->{sysLocation};
-    $opts->{ttype} = 'CiscoCSS';
 
     # Default feature promotions
     $opts->{usev2c} = 1      if ($opts->{req_usev2c});
@@ -429,9 +428,10 @@ sub custom_targets {
       $own_file->writetarget('service {', '',
 	'host_name'           => $opts->{devicename},
 	'service_description' => $c_own->{Name},
-        '_order'	      => $opts->{order},
+        '_display_order'	      => $opts->{order},
         '_inst' 	      => 'qw('.$c_own->{oid}.')',
-        'use'               => 'CiscoCSS-Owner'.$opts->{apVer},
+        '_dstemplate'               => 'CiscoCSS-Owner'.$opts->{apVer},
+	'use'                 => $opts->{dtemplate},
       );
       $opts->{order}--;
 
@@ -468,10 +468,11 @@ sub custom_targets {
 	    'host_name'           => $opts->{devicename},
 	    'service_description' => 'Content-Totals',	       
             '_inst' 	          => 'qw('.$c_cnt->{oid}.')',
-            'use'                 => 'CiscoCSS-Content'.$opts->{apVer},
+            '_dstemplate'                 => 'CiscoCSS-Content'.$opts->{apVer},
             'display_name'        => $sdesc,
             'notes'               => $ldesc,
-            '_order'	          => $opts->{order},
+            '_display_order'	          => $opts->{order},
+	    'use'                 => $opts->{dtemplate},
             );
         $opts->{order}--;
 
@@ -481,10 +482,11 @@ sub custom_targets {
 	    'host_name'           => $opts->{devicename},
 	    'service_description' => 'Service-Comparison',
             '_mtargets'           => join(';',@svcs),
-            'use'                 => 'CiscoCSS-ContentService'.$opts->{apVer},
+            '_dstemplate'                 => 'CiscoCSS-ContentService'.$opts->{apVer},
             'display_name'        => 'Comparison of load over all configured Services',
             'notes'               => 'Comparison of load over all configured Services',
-            '_order'	          => $opts->{order},
+            '_display_order'	          => $opts->{order},
+	    'use'                 => $opts->{dtemplate},
         );
         $opts->{order}--;
 
@@ -506,10 +508,11 @@ sub custom_targets {
 	        'host_name'           => $opts->{devicename},
 		'service_description'     => $c_svc->{Name},
                '_inst'         => 'qw('.$inst.')',
-               'use'  => 'CiscoCSS-ContentService'.$opts->{apVer},
+               '_dstemplate'  => 'CiscoCSS-ContentService'.$opts->{apVer},
                'display_name'   => $sdesc,
                'notes'    => $sdesc,
-               '_order'	      => $opts->{order},
+               '_display_order'	      => $opts->{order},
+	       'use'                 => $opts->{dtemplate},
                );
            $opts->{order}--;
         }
@@ -518,11 +521,12 @@ sub custom_targets {
     $own_file->writetarget('service {', '',
 	'host_name'           => $opts->{devicename},
 	'service_description'  => $c_own->{Name}.'-ContentSummary',
-        '_order'               => $opts->{order},
+        '_display_order'               => $opts->{order},
         'display_name'         => "Content Summary - Comparison of all services under owner $c_own->{Name}",
         'notes'                => "Comparison of all services under owner $c_own->{Name}",
-        'use'                  => 'CiscoCSS-Content'.$opts->{apVer},
+        '_dstemplate'                  => 'CiscoCSS-Content'.$opts->{apVer},
         '_targets'	       => join('; ', @sum_cnts),
+	'use'                 => $opts->{dtemplate},
     );
 
     }
@@ -548,11 +552,12 @@ sub custom_targets {
 	$svc_file->writetarget("service {", '',
 	    'host_name'           => $opts->{devicename},
 	    'service_description'   => $c_svc->{Name},
-	    '_order'	    => $opts->{order},
+	    '_display_order'	    => $opts->{order},
 	    '_inst' 	    => 'qw('.$c_svc->{oid}.')',
 	    'display_name'  => $sdesc,
 	    'notes'         => $sdesc,
-	    'use'           => 'CiscoCSS-Service'.$opts->{apVer},
+	    '_dstemplate'           => 'CiscoCSS-Service'.$opts->{apVer},
+	    'use'                 => $opts->{dtemplate},
         );
 
       $opts->{order}--;
@@ -602,7 +607,7 @@ sub custom_interfaces {
     # Apply logic for filtering --gigonly interfaces
     next if ($opts->{gigonly} && int($ifspeed{$index}) != 1000000000 );
 
-    push(@config, 'use' => 'standard-interface' . $hc);
+    push(@config, '_dstemplate' => 'standard-interface' . $hc);
     $match = 1;
 
     ###

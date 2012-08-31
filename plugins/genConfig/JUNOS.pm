@@ -181,7 +181,7 @@ sub discover {
 	}
 
 	$opts->{chassisttype} = 'juniper-generic';
-	$opts->{chassisname} = 'chassis-juniper';
+	$opts->{chassisname} = 'chassis.juniper';
 	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
 
 	# Default feature promotions for JUNOS Devices
@@ -264,7 +264,7 @@ sub custom_targets {
 				next;
 			}
 
-			$target = "chassis_" . $key;
+			$target = "fru_" . $key;
 
 			$sdesc = "$jnx_box{$key}";
 			$sdesc .= " ($opermem{$key} MB)" if ($opermem{$key});
@@ -280,13 +280,13 @@ sub custom_targets {
 			push(@config,
 			        'host_name'     =>      $opts->{devicename},
 			        'service_description' => $target,
-				'_order'	=>	$opts->{order},
-				'_display_name'	=>	"%devicename% chassis",
+				'_display_order'	=>	$opts->{order},
+				'_display_name'	=>	$opts->{devicename} . "chassis",
 				#'short-desc'	=>	$sdesc,
 				'notes'	        =>	$ldesc,
 				'_inst'		=>	0,
 				'_rest'		=>	$key,
-				'use'	        =>	'juniper-chassis-' . $ttype,
+				'_dstemplate'	        =>	'juniper-chassis-' . $ttype,
 			);
 			$file->writetarget('service {', '', @config);
 
@@ -337,16 +337,17 @@ sub custom_targets {
 
 			push(@config,
 			     	'service_description' => $target,
-			     	'host_name'       => $opts->{devicename},
-				'_order'		=>	$opts->{order},
+			     	'host_name'     => 	$opts->{devicename},
+				'_display_order'	=>	$opts->{order},
 				'display_name'	=>	$opts->{devicename} . " $filter  $counter",
 				#'short-desc'	=>	$sdesc,
-				'notes'	=>	$ldesc,
+				'notes'		=>	$ldesc,
 				'_inst'		=>	0,
 				'_filtername'	=>	$filterdec,
 				'_countername'	=>	$counterdec,
 				'_fwtype'	=>	$jnx_fwtypes{$key},
-				'use'	        =>	'juniper-firewall-' . $ttype,
+				'_dstemplate'	        =>	'juniper-firewall-' . $ttype,
+				'use'                 => $opts->{dtemplate},
 			);
 			$file->writetarget('service {', '', @config);
 
@@ -368,10 +369,11 @@ sub custom_targets {
 			     	'host_name'        => $opts->{devicename},
 				'_tunnel-name'     =>	$junipermplslspname{$key},
 				'_inst'            =>	"\"(\'$key\')\"",
-				'_order'           =>	$opts->{order},
+				'_display_order'           =>	$opts->{order},
 				'notes'            =>	'%tunnel-name%',
 				'display_name'     =>	'%tunnel-name%',
-				'use'              =>	'juniper-mpls-tunnel'
+				'_dstemplate'              =>	'juniper-mpls-tunnel',
+				'use'                 => $opts->{dtemplate},
 			);
 			$file->writetarget('service {', '', @config);
 		}
@@ -420,31 +422,31 @@ sub custom_interfaces {
 
 	if ($iftype{$index} == 32 &&  $ifdescr{$index} =~ /\.\d+$/) {
 
-		push(@config, 'use' => 'juniper-sub-interface' . $hc);
+		push(@config, '_dstemplate' => 'juniper-sub-interface' . $hc);
 		$match = 1;
 
 		$ifmtu{$index} = 1 if (!defined($ifmtu{$index}) || $ifmtu{$index} == 0);
 
 	} elsif ($iftype{$index} == 6 &&  $ifdescr{$index} =~ /^fxp\d/) {
 
-		push(@config, 'use' => 'juniper-standard-interface-hc');
+		push(@config, '_dstemplate' => 'juniper-standard-interface-hc');
 		$match = 1;
 
 	} elsif ($iftype{$index} == 37) {
 
-		push(@config, 'use' => 'juniper-atm-interface-hc');
+		push(@config, '_dstemplate' => 'juniper-atm-interface-hc');
 		$match = 1;
 
 	}  elsif ($iftype{$index} == 135) {
 
 		### VLANs
 
-		push(@config, 'use' => 'juniper-sub-interface-hc');
+		push(@config, '_dstemplate' => 'juniper-sub-interface-hc');
 		$match = 1;
 
 	}  elsif ($opts->{juniperint}) {
 
-		push(@config, 'use' => 'juniper-interface-hc');
+		push(@config, '_dstemplate' => 'juniper-interface-hc');
 		$match = 1;
 	}
 

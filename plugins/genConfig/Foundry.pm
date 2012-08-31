@@ -157,7 +157,7 @@ sub discover {
     $opts->{usev2c} = 1		if ($opts->{req_usev2c});
     $opts->{model} = 'Foundry-Generic';
     $opts->{chassisttype} = 'Chassis-Foundry-Generic';
-    $opts->{chassisname} = 'Chassis-Foundry';
+    $opts->{chassisname} = 'chassis.Foundry';
     $opts->{vendor_soft_ver}  = get('snAgBuildVer');
     $opts->{model} = 'Foundry-Generic';
     
@@ -210,8 +210,9 @@ sub custom_targets {
                         'service_description' => $targetname,
                         'display_name'        => $targetname,
                         'notes'               => "Total L4SLB conn statistics for $opts->{devicename}",
-                        'use'                 => 'foundryL4SLB',
-                        '_order'              => $opts->{order},
+                        '_dstemplate'                 => 'foundryL4SLB',
+                        '_display_order'              => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
         $opts->{order} -= 1;
     }
@@ -236,8 +237,9 @@ sub custom_targets {
                         'service_description' => $targetname,
                         'display_name'        => $servername,
                         'notes'               => "Real Server $servername ($serverip)",
-                        'use'                 => 'foundry-real-server',
-                        '_order'              => $opts->{order},
+                        '_dstemplate'                 => 'foundry-real-server',
+                        '_display_order'              => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
         $opts->{order} -= 1;
         $reals{$servername} = $serverip;
@@ -255,8 +257,9 @@ sub custom_targets {
                         'service_description' => $targetname,
                         'display_name'        => $servername,
                         'notes'               => "Virtual Server $servername ($serverip)",
-                        'use'                 => 'foundry-virtual-server',
-                        '_order'              => $opts->{order},
+                        '_dstemplate'                 => 'foundry-virtual-server',
+                        '_display_order'              => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
         $opts->{order} -= 1;
     $virtuals{$servername} = $serverip;
@@ -275,8 +278,9 @@ sub custom_targets {
                         'service_description' => $targetname,
                         'display_name'        => $servername,
                         'notes'               => "Real Server $servername ($serverip) Port $serverport1",
-                        'use'                 => 'foundry-real-server-port',
-                        '_order'              => $opts->{order},
+                        '_dstemplate'                 => 'foundry-real-server-port',
+                        '_display_order'              => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
     $opts->{order} -= 1;
   }
@@ -294,8 +298,9 @@ sub custom_targets {
                         'service_description'    => $targetname,
                         'display_name'           => $servername,
                         'notes'                  => "Virtual Server $servername ($serverip) Port $serverport1",
-                        'use'                    => 'foundry-virtual-server-port',
-                        '_order'                 => $opts->{order},
+                        '_dstemplate'                    => 'foundry-virtual-server-port',
+                        '_display_order'                 => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
     $opts->{order} -= 1;
   }

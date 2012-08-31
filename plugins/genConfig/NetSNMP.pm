@@ -230,11 +230,11 @@ sub discover {
 
     if (!keys %rawCpuNice) {
         $opts->{chassisttype} = 'generic-box-netsnmp-nonice';
-        $opts->{chassisname}  = 'Host';
+        $opts->{chassisname}  = 'host';
         $opts->{model}        = '*nix box';
     } else {
         $opts->{chassisttype} = 'generic-box-netsnmp';
-        $opts->{chassisname}  = 'Host';
+        $opts->{chassisname}  = 'host';
         $opts->{model}        = '*nix box';
     }
 
@@ -260,9 +260,10 @@ sub custom_targets {
 			'service_desciption' => "$opts->{devicename}_system",
 			'host_name' => $opts->{devicename},
 			'display_name'   => "$opts->{devicename}_system",
-		        'use'    => 'hr_System',
+		        '_dstemplate'    => 'hr_System',
 		        '_inst'           => '',
-		        '_order'          => $opts->{order}--,
+		        '_display_order'          => $opts->{order}--,
+			'use'                 => $opts->{dtemplate},
 		        );
 
     ### Gen UCD Disk IO targets...
@@ -296,10 +297,11 @@ sub do_diskio {
 
     my $dsply = $multilev ? "%device%" : "disk %device%";
 	
-    my @defargs = ('use'  => "ucd_diskio",
+    my @defargs = ('_dstemplate'  => "ucd_diskio",
 		   'host_name' => $opts->{devicename},
 		   'display_name' => $dsply,
 		   '_inst'         => "map(ucd-diskio-device)",
+		   'use'                 => $opts->{dtemplate},
 		   );
 
     ### If the user requested a hierarchical setup, then create it and 
@@ -337,7 +339,8 @@ sub do_diskio {
 			'service_description' => $target,
 			'_device' => $diskIODevice{$d},
 			'notes' => "DiskIOdevice " . $diskIODevice{$d} . " : $target",
-			'_order'  => $opts->{order}--
+			'_display_order'  => $opts->{order}--,
+			'use'                 => $opts->{dtemplate},
 			);
     }
 
@@ -363,12 +366,13 @@ sub do_hrstorage {
     my %sUnits = gettable('hrStorageAllocationUnits');
     my %sSize  = gettable('hrStorageSize');
 
-    my @defargs = ('use'           => "hr_Storage",
+    my @defargs = ('_dstemplate'           => "hr_Storage",
 		   'host_name'     => $opts->{devicename},
 		   'display_name'  => "\$_storage\$",
 		   '_inst'         => "map(hr-storage-name)",
 		   '_min-size'     => "\$_blksize\$",
 		   '_units'        => "\$_blksize\$,*",
+		   'use'                 => $opts->{dtemplate},
 		   );
 
     my $multilev = $opts->{req_modular};
@@ -417,7 +421,8 @@ sub do_hrstorage {
 			   '_max-size'  => ($sSize{$f} * $sUnits{$f}) * 1.05,
 			   '_storage'   => $sName{$f},
 			   '_blksize'   => $sUnits{$f},
-			   '_order'     => $opts->{order}--,
+			   '_display_order'     => $opts->{order}--,
+			   'use'                 => $opts->{dtemplate},
 			   );
     }
 
