@@ -15,7 +15,7 @@ changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
 
 Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 
-30/08/2012
+31/08/2012
 
 # Version 3_0_1
 #
@@ -35,6 +35,13 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Introduce new options -ctemplate, -htemplate to apply templates
 #   to a host or chassis.
 # - TRIGGER templates with simpler and more powerful syntax
+#
+# TODO FOR RELEASE
+#
+# Move other generic tests to external module
+# Convert map(x) to map(rule,x) for all plugins
+# Permit regex-mappings and direct mappings. All others are unsupported.
+# Remove incompatible maps and other features.
 
 09/01/2012
 
