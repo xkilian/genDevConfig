@@ -50,16 +50,17 @@ use Getopt::Long;
 use Pod::Usage;
 use Socket;
 use Net::hostent;
+use Net::Ping;
 
 #
 # Load modules originally from the Cricket project version 1.05.
 
 use Common::Log;
-use genConfig::snmpUtils;   ### SNMP processing
 
 #
 # Load internal modules.
 
+use genConfig::snmpUtils;   ### SNMP processing
 use genConfig::File;        ### File methods and subdir.
 use genConfig::SNMP;        ### SNMP get and gettable.
 use genConfig::Utils;       ### Misc
@@ -184,15 +185,17 @@ my %opts = (
     'groupname'         => '',
     'rtragents'         => 1,
     'coreint'           => 0,
-    'nustats'                => 0,
- #   'accessint'         => 0, Replace with monitoring classes
+    'nustats'           => 0,
     'gigonly'           => 0,
-    'monitors'          => 0,
-    'montemplate'       => '',
+    'triggers'          => 0,
+    'triggertemplateclass'       => '',
     'refinfo'           => {},
+    'pingparents'        => 1,  # ping parents if defined by default
+    'parents'            => '', # parent dependancies
+    'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
     'htemplates'         => '', # host templates added to discovered templates
-    'itemplates'         => '', # interface templates added to discovered templates
+    #'itemplates'         => '', # interface templates added to discovered templates
     'nodns'             => 0,
     'vpntunnels'        => 0,
     'wirelessAssociations' => 0,
@@ -203,10 +206,10 @@ my %opts = (
     'class'                => '',
     'chassisinst'          => '',
     ### Target name for the chassis target in the shinken config
-    'chassisname'          => 'Chassis',
+    'chassisname'          => 'chassis',
     ### Unique target type that matches a template in the shinken config
     'chassisttype'         => '',
-    'order'                => '999', # Base order for all graphical display
+    'order'                => 999, # Base order for all graphical display
     'plugindir'            => 'plugins/genConfig', # Alternate plugin directory
     'pluginflags'          => {},
     'outputdir'            => '', # Absolute path from system /
@@ -331,15 +334,16 @@ GetOptions(
   "nounused"              => \&deprecatedoption,
   "vlans"                 => \$opts{req_vlans},
   "modular|mod"           => \$opts{req_modular},
-  "monitors|m"            => \$opts{monitors},
+  "triggers|m"            => \$opts{triggers},
   "nodns|n"               => \$opts{nodns},
   "showunused"            => sub {$opts{nounused} = 0;},
   "nospeedcheck"          => \$opts{force_nospeedcheck},
   "nomtucheck"            => \$opts{force_nomtucheck},
   "outputdir|o=s"         => \&setOutputDir,
+  "parents=s"             => \&parentlist,
   "ports|p=s"             => \&portlist,
   "ctemplates=s"           => \&template,
-  "itemplates=s"           => \&template,
+#  "itemplates=s"           => \&template,
   "htemplates=s"           => \&template,
   "info|i=s"              => \&info,
   "ip=s"                  => \$opts{ip},
@@ -370,7 +374,7 @@ Common::Log::setLevel($opts{logLevel});
 
 {
   no warnings qw|once|; # Silence -w.
-  $Common::global::monitors = $opts{monitors};
+  $Common::global::triggers = $opts{triggers};
   $Common::global::outputdir_ct = $opts{outputdir_ct};
 }
 
@@ -451,25 +455,25 @@ my @plugins = genConfig::pluginUtils::find_plugin($Common::global::gInstallRoot,
 if (!@plugins) {
     Info (" No plugin found for $opts{sysDescr} using builtin functions.");
 } elsif (@plugins > 1) {
-    Info ("Multiple plugins found. ");
+    Info (" Multiple plugins found. ");
     my $forcedplugin;
     if (grep { $opts{forcedplugin} =~ m/$_->plugin_name()/gi } @plugins ) {
         foreach my $plugin (@plugins) {
 	    if ($opts{forcedplugin} =~ m/$plugin->plugin_name()/gi) {
 	        $forcedplugin = $plugin;
-		Info ("Forced plugin for $opts{sysDescr} using $plugin->plugin_name().");
+		Info (" Forced plugin for $opts{sysDescr} using $plugin->plugin_name().");
             }
 	}
         @plugins = ($forcedplugin) if ($forcedplugin);
     } else {
-        Warn ("No plugins forced on multiple matched plugins. ",
+        Warn (" No plugins forced on multiple matched plugins. ",
 	"Defaulting to using all matched plugins.");
         foreach my $plugin (@plugins) {
-		Info ("Using multiple plugins: " . $plugin->plugin_name());
+		Info (" Using multiple plugins: " . $plugin->plugin_name());
         }
     }
 } else {
-    Info ("Found a plugin for $opts{sysDescr}");
+    Info (" Found a plugin for $opts{sysDescr}");
 }
 
 foreach my $plugin (@plugins) {
@@ -570,14 +574,14 @@ if ($opts{chassisstats}) {
         # Skip this logical loop.
     } elsif ($opts{model} =~ /Altiga/) {
         $opts{chassisttype} = 'Cisco-vpn3000';
-        $opts{chassisname} = 'Chassis-Altiga';
+        $opts{chassisname} = 'chassis.Altiga';
     } elsif ($opts{model} =~ /Aironet-AP/) {
         $opts{chassisttype} = 'Cisco-Aironet';
-        $opts{chassisname} = 'Chassis-Generic';
+        $opts{chassisname} = 'chassis.generic';
         $opts{chassiscollect} = 0;
     } else {
         $opts{chassisttype} = 'Generic-Device';
-        $opts{chassisname} = 'Chassis-Generic';
+        $opts{chassisname} = 'chassis.generic';
         $opts{chassiscollect} = 0;
         $opts{usev2c} = 1 if ($opts{req_usev2c});
     }
@@ -659,7 +663,7 @@ if ($opts{usev2c}) {
     snmp_def($opts{ip}, $opts{community}, '2c');
     %ifHCInOctets    = gettable('ifHCInOctets');
     %ifHighSpeed     = gettable('ifHighSpeed');
-    # Reset to default snmp v1
+    # Reset to SNMP acquisition to snmp v1 before continuing
     snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
 }
 
@@ -705,7 +709,7 @@ $file->write(<<EOD);
 
 EOD
 
-### Set up the defaults.
+### Set up the Host definition
 
 ### These  are used in the context of user defined variables
 ### added from the command-line directly to the --defaults-- section
@@ -719,23 +723,22 @@ my (@options);
 #    }
 #}
 my $displayname = $opts{devicename};
-$displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} eq $opts{ip});
+$displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
+my $dstemplates = 'default-snmp-host-template';
+$dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
-        'host_name'       => $opts{devicename},
-	'display_name'    => $displayname, ,
-	'alias'           => $opts{alias},
-        'address'         => $opts{ip},
-	'_ip'             => $opts{ip},
-        '_sys_location'   => $opts{sysLocation},
-	'parents'         => '', # FIXME
-	'hostgroups'      => '', # FIXME
-	'notes'           => '',
-        '_inst'           => 'map(interface-name)', # FIXME This goes into a service template and overridden in services
-        'use'    => 'default-snmp-template' . ', ' . $opts{htemplates}, # FIXME make sure template is named correctly
-        @options,
-        );
-
+    'host_name'         => $opts{devicename},
+	'display_name'      => $displayname,
+    'alias'             => $opts{alias},
+    'address'           => $opts{ip},
+    '_sys_location'     => $opts{sysLocation},
+    'parents'           => $opts{parents},
+    'hostgroups'        => '', # FIXME
+    'notes'             => '',
+    'use'               => $dstemplates,
+    @options,
+    );
 
 ### Write the configuration for the chassis
 
@@ -771,19 +774,23 @@ if ($opts{chassisstats}) {
     push (@options, '_class', $opts{class}) if ($opts{class});
 #    push (@options, '_monitor-type', $opts{chassisname} ) if ($opts{chassisname} ne 'Chassis-Generic');
 
-    # Write the data to the file
+    # Apply chassis dstemplates from the plugins and runtime argument ctemplate
+    my $templates = $opts{dtemplate};
+    $templates = $opts{ctemplates} . "," . $opts{dtemplate} if ($opts{ctemplates} ne "");
 
+    # Write the data to the file
     $file->writetarget("service {", '',
 	'service_description' => $opts{chassisname},
 	'display_name'  => $sdesc,
         'host_name'     => $opts{devicename},     
         '_inst'         => $inst,
-        '_order'        => $opts{order},
-	'notes'         => $ldesc,
-        'use'           => $opts{chassisttype} . ', ' . $opts{ctemplates}, # FIXME generic templates, more sophisticated templates based on monitor-types.
+        '_display_order'        => $opts{order},
+        'notes'         => $ldesc,
+        '_dstemplate'   => $opts{chassisttype},
+        'use'           => $templates,
         @options,
         );
-
+    
     $opts{order} -= 1;
 }
 
@@ -801,21 +808,22 @@ if ($ipForwDatagrams && $ipForwDatagrams != 0) {
     my ($ldesc, $sdesc);
     $ldesc = "Switch fabric statistics - Packets per Second";
     $sdesc = "Switch fabric statistics - Packets per Second";
-    my ($servicename) = 'device-traffic';
+    my ($servicename) = 'chassis.device-traffic';
 
     $file->writetarget("service {", '',
         'service_description'  => $servicename,
         'display_name'     => $sdesc,
-	'host_name'        =>$opts{devicename},	       
-        '_inst'            => '',
-        '_order'           => $opts{order},
-        'display_name'     => $sdesc,
+        'host_name'        => $opts{devicename},	       
+        '_display_order'           => $opts{order},
         'notes'            => $ldesc,
-        'use'              => 'Device-Traffic',
+        '_dstemplate'      => 'Device-Traffic',
+        'use'              => $opts{dtemplate},
     );
 
     $opts{order} -= 1;
 }
+
+Debug (" Plugin list: @plugins");
 
 foreach my $plugin (@plugins) {
     my %data = (
@@ -855,11 +863,12 @@ if ($opts{vpntunnels}) {
     $file->writetarget("service {", '',
         'service_description'  => $servicename,
         'display_name'    => $sdesc,
-	'host_name'       =>$opts{devicename},	
+	    'host_name'       => $opts{devicename},	
         '_inst'           => '0',
-        '_order'          => $opts{order},
-        'notes'   => $ldesc,
-        'use' => 'Cisco-vpn-tunnels'
+        '_display_order'          => $opts{order},
+        'notes'           => $ldesc,
+        '_dstemplate'     => 'Cisco-vpn-tunnels',
+        'use'              => $opts{dtemplate},
     );
 
     $opts{order} -= 1;
@@ -879,9 +888,9 @@ if ($opts{wirelessAssociations}) {
 	'display_name'    => $sdesc,
 	'host_name'       =>$opts{devicename},
 	'_inst'           => '0',
-        '_order'          =>      $opts{order},
+        '_display_order'          =>      $opts{order},
         'notes'           => $ldesc,
-        'use'             => 'Cisco-Aironet-Associations',
+        '_dstemplate'             => 'Cisco-Aironet-Associations',
     );
 
     $opts{order} -= 1;
@@ -902,12 +911,12 @@ if ( %dsx1TotalIndex ) {
   
         $file->writetarget("service {", '',
          'service_description'  => $ifacedescr,
-	 'display_name'         => $ifacedescr,
-	 'host_name'            => $opts{devicename},
+	     'display_name'         => $ifacedescr,
+	     'host_name'            => $opts{devicename},
          '_inst'                => $key,
-         '_order'               => $opts{order},
+         '_display_order'               => $opts{order},
          'notes'                => $ldesc,
-         'use'                  => 'dsx-controller'
+         '_dstemplate'                  => 'dsx-controller'
          );
         $opts{order} -= 1;
     }
@@ -1036,7 +1045,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my @config = ();
     my $hc = '';
     my $class = ''; # Used for classifying devices, out of the box for rancid
-    my $mtclass = ''; # Used for adding options to threshold monitors
+    my $mtclass = ''; # Used for adding options to triggers
     my $match = 0;
     my $wmatch = 0;
     my $customsdesc = '';
@@ -1050,11 +1059,11 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     # See if extended statistics are supported
     if ($dot3statsindex{$index} && $opts{req_extendedint}) {
-        Debug(" extended:\$index = $index");
-	Debug(" extended:\$dot3statsindex{$index} = $dot3statsindex{$index}");
-	$opts{extendedint} = 1;
+        Debug(" Extended if statistics for : \$index = $index");
+        Debug(" Extended if statistics for : \$dot3statsindex{$index} = $dot3statsindex{$index}");
+        $opts{extendedint} = 1;
     } else {
-        Debug(" extended:\$index = $index not supported.");
+        Debug(" Extended if statistics for :\$index = $index are not supported or requested.");
         $opts{extendedint} = 0;
     }
 
@@ -1064,10 +1073,10 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     if ($opts{modular}) {
 
         ### Debugging information
-        Debug(" modular:\$index = $index");
-        Debug(" modular:\$ifdescr{$index} = $ifdescr{$index}");
-        Debug(" modular:\$slotPortList{$ifdescr{$index}} = $slotPortList{$ifdescr{$index}}") if exists $slotPortList{$ifdescr{$index}};
-        Debug(" modular:\$slotList{$slotPortList{$ifdescr{$index}}} = $slotList{$slotPortList{$ifdescr{$index}}}") if exists $slotPortList{$ifdescr{$index}};
+        Debug(" Modular:\$index = $index");
+        Debug(" Modular:\$ifdescr{$index} = $ifdescr{$index}");
+        Debug(" Modular:\$slotPortList{$ifdescr{$index}} = $slotPortList{$ifdescr{$index}}") if exists $slotPortList{$ifdescr{$index}};
+        Debug(" Modular:\$slotList{$slotPortList{$ifdescr{$index}}} = $slotList{$slotPortList{$ifdescr{$index}}}") if exists $slotPortList{$ifdescr{$index}};
 	### End Debugging information
 
         my $_file = $slotList{$slotPortList{$ifdescr{$index}}} if exists $slotPortList{$ifdescr{$index}};
@@ -1096,7 +1105,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     Debug (" Conditions met for HC counters applying -hc\n") if ($hc eq '-hc');
 
 
-    push(@config, 'snmp-version' => '2c') if ($hc eq '-hc');
+    push(@config, '_snmp_version' => '2c') if ($hc eq '-hc');
 
     # Set the interface classification type
     # For each type that is defined a matching targetType must be defined
@@ -1107,14 +1116,18 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     # If monitoring templates classes are requested, activate the class modifier for
     # that will be appended to the monitor-type value
-    if ($opts{montemplate}) {
-        $mtclass = $opts{montemplate};
+    if ($opts{triggertemplateclass}) {
+        $mtclass = $opts{triggertemplateclass};
     }
-    ### Get the target name and interface speed.
+
+    ### Set the target name and replace all spaces and commas with underscores
 
     my($target) = $ifdescr{$index};
     $target =~ s/[\/\s:]/\_/g;
     $target =~ s/\,/_/g;
+    
+    ### Set the interface speed format
+    
     my $b = ($opts{units} eq "bytes") ? 8 : 1;
     
     ###
@@ -1146,14 +1159,14 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
         ### If it is an ATM aal5 interface, only collect in & out stats
 
-        push(@config, 'use' => 'sub-interface' . $hc);
+        push(@config, '_dstemplate' => 'sub-interface' . $hc);
         $match = 1;
 
     }  elsif ($iftype{$index} == 53 ) {      # Ethernet ISL sub-interface
 
         ### If it is a sub-interface, only collect in & out stats
 
-        push(@config, 'use' => 'sub-interface' . $hc);
+        push(@config, '_dstemplate' => 'sub-interface' . $hc);
         $match = 1;
 
     }  elsif (($iftype{$index} == 135)  &&
@@ -1161,7 +1174,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
         ### If it is a sub-interface, only collect in & out stats
 
-        push(@config, 'use' => 'sub-interface' . $hc);
+        push(@config, '_dstemplate' => 'sub-interface' . $hc);
         $match = 1;
 
     }  elsif (@plugins) {
@@ -1226,9 +1239,9 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 	
 
         if($opts{extendedint}) {
-	     push(@config, 'use' => 'extended-interface' . $nu . $hc);
+	     push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
 	} else {
-             push(@config, 'use' => 'standard-interface' . $nu . $hc);
+             push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
 	}
     }
 
@@ -1254,29 +1267,30 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     ### Build the interface target description strings and add them in the config.
 
     $name = (defined $iphost{$index}) ? $iphost{$index} : '';
+    $sdesc .= "$target ";
     $ldesc = ((defined $intdescr{$index}) ? $intdescr{$index} : '');
-    $ldesc .= "<BR>$name" if ($name);
-    $ldesc .= "<BR>" . ((defined $ipaddr{$index}) ? $ipaddr{$index} : '');
-    $ldesc .= "<BR>$speed_str $ifType_d{$iftype{$index}}";
-    $ldesc .= "<BR>DLCI = $dlci" if (defined $dlci);
+    $ldesc .= "$name" if ($name);
+    $ldesc .= "" . ((defined $ipaddr{$index}) ? $ipaddr{$index} : '');
+    $ldesc .= "$speed_str $ifType_d{$iftype{$index}}";
+    $ldesc .= "DLCI = $dlci" if (defined $dlci);
     $ldesc .= $customldesc if ($customldesc);
 
     if (defined $intdescr{$index}) {
-        $sdesc .= "<BR>Description: $intdescr{$index}";
+        $sdesc .= "Description: $intdescr{$index}";
     } elsif ($ipaddr{$index}) {
-        $sdesc .= "<BR>IP: $ipaddr{$index}";
+        $sdesc .= "IP: $ipaddr{$index}";
     } else {
-        $sdesc .= "<BR>Description: None defined";
+        $sdesc .= "Description: None defined";
     }
     $sdesc .= $customsdesc if ($customsdesc);
-    $sdesc .= "<BR>$speed_str $ifType_d{$iftype{$index}}";
+    $sdesc .= "$speed_str $ifType_d{$iftype{$index}}";
 
     push (@config,
 	'display_name' => $sdesc) if $unique{$ifdescr{$index}};
     
     push(@config,
         'notes'        => $ldesc,
-        '_order'       => $order,
+        '_display_order'       => $order,
      );
 
     ### Decreasing order of indexes
@@ -1294,8 +1308,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my $maxoctets = defined($max) ? int($max/8) : undef;
     if ($opts{show_max} == 1 && defined($max)) {
 	push(@config,
-        '_rrd_max'             => $max,
-        '_rrd_max_octets'      => $maxoctets,
+        '_ds_max'             => $max,
+        '_ds_max_octets'      => $maxoctets,
 	);
     }
 
@@ -1305,17 +1319,17 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my $header = "### Interface $index: $ifType_d{$iftype{$index}} ($iftype{$index})";
 
     ### See if we need to comment this interface out for various reasons...
-    Debug (" $header ");
-    Debug (" desc: $intdescr{$index} ") if defined $intdescr{$index};
+    Debug ("$header ");
+    Debug (" Interface desc: $intdescr{$index} ") if defined $intdescr{$index};
 
     if (!$opts{collectall} && !$collect{$index}) {
         $header .= "\n### - Commented out by an administrator.\n";
         $c="# ";
-        Debug (" Admin Commented Out");
-    } elsif ($ifoperstatus{$index} == 3 || $ifadminstatus{$index} != 1) {
+        Debug (" Skipping the interface due commandline collect filter.");
+    } elsif ($ifoperstatus{$index} != 1 || $ifadminstatus{$index} != 1) {
         $header .= "\n### - Administratively down or in test mode.\n";
         $c="# ";
-        Debug (" Ifdown");
+        Debug (" Skipping the interface due to down oper or admin state");
     } elsif (!$opts{voip} && ($iftype{$index} == 103 || $iftype{$index} == 104)) {
         $header .= "\n### - Use '--voip' to enable stats.\n";
         $c="# ";
@@ -1331,7 +1345,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     } elsif ((!defined($ifmtu{$index}) || $ifmtu{$index} == 0) && !$opts{nomtucheck}) {
         $header .= "\n### - Has an insane MTU.\n";
         $c="# ";
-        Debug (" speed: $speed_str mtu: Insane");
+        Debug (" Speed: $speed_str mtu: Insane");
     } elsif (!$opts{vlans} && ($iftype{$index} == 6 || $iftype{$index} == 53 || $iftype{$index} == 135)  && $ifdescr{$index} =~ /^VLAN/i) {
         $header .= "\n### - No VLAN collection, use --vlans should you want them.\n";
         $c="# ";
@@ -1343,19 +1357,19 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     } elsif (grep(/^$iftype{$index}$/,@DONTCOLLECT) && !override($index)) {
         $header .= "\n### - InterfaceType that is not collected.\n";
         $c="# ";
-        Debug (" speed: $speed_str mtu: $ifmtu{$index} DONTCOLLECT");
+        Debug (" Speed: $speed_str mtu: $ifmtu{$index} DONTCOLLECT");
     } elsif ($opts{namedonly} &&
          (!defined $intdescr{$index} || $intdescr{$index} eq "")) {
         $header .= "\n#### - Has no name and --namedonly specified.\n";
         $c="# ";
-        Debug (" speed: $speed_str mtu: $ifmtu{$index} Unnamed Rejected, & --namedonly");
+        Debug (" Speed: $speed_str mtu: $ifmtu{$index} Unnamed Rejected, & --namedonly");
     } elsif ($ifdescr{$index} =~ /ATM[\d\/]+\.??0\-aal5\slayer/ && $iftype{$index} == '49'
        || $ifdescr{$index} =~ /Virtual-(Access|Template)|ATM[\d\/]+-(interleave)|Bearer Channel/) {
        $header .= "\n#### - Interface either has no valid SNMP counters or is dynamic.\n";
 $c="# ";
         Debug (" Invalid or dynamic interface");
     } elsif ($opts{logLevel} eq 'debug') {
-        Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " speed: $speed_str mtu: $ifmtu{$index} OK");
+        Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " Speed: $speed_str mtu: $ifmtu{$index} OK");
     }
 
     ### Skip all targets that are not used. To show all interfaces
@@ -1371,16 +1385,14 @@ $c="# ";
     $opts{nomtucheck} = 0; 
     $opts{nospeedcheck} = 0; 
 
-    ### Add the monitor thresholds for the interface template
-    ### Temporary hack until, the monitor threshold expansion problem
-    ### is resolved.
+    # Commented out for Nagios migration
+    ### Add the trigger templates for the selected type of interface
     #
     my %tmpconfig = @config;
-
-    # Commented out for Nagios migration
-    #push(@config,
-    #     'monitor-type' => $tmpconfig{'use'} . $mtclass . $hc , 
-    #);
+    my $triggertemplate = getTriggerTemplate($tmpconfig{use}, $mtclass, $hc);
+    push(@config,
+         '_triggergroup' => $triggertemplate,
+    ) if ($triggertemplate ne "");
     
     ### Write the target interface to the configuration file
     
@@ -1400,12 +1412,18 @@ $c="# ";
     }
 
     if (!$wmatch) {
-        Debug "### Target: $target ###";
-        Debug " Commented-out: $c";
+        Debug " ### Interface $index $target ###";
+        if ($c) {
+            Debug (" Commented-out: True, with prefix :" . $c);
+        } else {
+            Debug (" Commented-out: False ");            
+        }
         Debug " Config: @config";
 	unshift(@config,
-		'service_description'  => $target,
-                'host_name'            => $opts{devicename});
+		'service_description'  => "if." . $target,
+        '_inst'      => "map(interface-name,$target)",
+        'host_name'            => $opts{devicename},
+        'use'              => $opts{dtemplate});
 
         # FIXME Why a comment?
 	# $file->write("#\n");
@@ -1517,8 +1535,11 @@ sub portlist2array {
 sub getRoot {
     return ($Common::global::gInstallRoot);
 }
-sub getMonitors {
-    return ($opts{monitors});
+sub getTriggers {
+    return ($opts{triggers});
+}
+sub getTriggerTemplate {
+    return "";
 }
 sub getOutputDir {
     return ($opts{output_dir});
@@ -1534,6 +1555,23 @@ sub portlist {
     %collectable = portlist2array($value);
     $opts{collectall} = 0;
 }
+
+sub parentlist {
+    my($opt,$value) = @_;
+    if (!$opts{pingparents}) {
+        $opts{parents} = $value;
+
+    }
+    else {
+        foreach my $parent (split(/,/,$value)) {
+            my $p = Net::Ping->new();
+            Warn ("Unreachable host, \'$parent\', defined as a parent.") unless $p->ping($parent);
+            $p->close();
+        }
+        $opts{parents} = $value;
+    }
+}
+
 sub template {
     my($opt,$value) = @_;
     if ($opts{$opt} eq '') {
@@ -1677,7 +1715,7 @@ module and place that module's interfaces or ports inside. Note that not
 including this option when processing a modular device will work just fine.
 You just won't get the hierarchical layout of the interfaces.
 
-=item B<-m>, B<--monitors>
+=item B<-m>, B<--triggers>
 
 Enable threshold monitoring on the target.
 Configure templates in config Defaults.
