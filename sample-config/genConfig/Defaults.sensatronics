@@ -28,24 +28,24 @@
     
     
     [[em1group1temp]]
-        ds-source = $Oidem1.1.3.0
+        ds_oid = $Oidem1.1.3.0
     [[em1group1humidity]]
-        ds-source = $Oidem1.1.6.0
+        ds_oid = $Oidem1.1.6.0
     # if you use wetness probes -
     #datasource em1group1wetness
-    #        ds-source = $Oidem1.1.9.0
+    #        ds_oid = $Oidem1.1.9.0
     [[em1group2temp]]
-        ds-source = $Oidem1.2.3.0
+        ds_oid = $Oidem1.2.3.0
     [[em1group2humidity]]
-        ds-source = $Oidem1.2.6.0
+        ds_oid = $Oidem1.2.6.0
     [[em1group3temp]]
-        ds-source = $Oidem1.3.3.0
+        ds_oid = $Oidem1.3.3.0
     [[em1group3humidity]]
-        ds-source = $Oidem1.3.6.0
+        ds_oid = $Oidem1.3.6.0
     [[em1group4temp]]
-        ds-source = $Oidem1.4.3.0
+        ds_oid = $Oidem1.4.3.0
     [[em1group4humidity]]
-        ds-source = $Oidem1.4.6.0
+        ds_oid = $Oidem1.4.6.0
 
 
 ###############################################################################

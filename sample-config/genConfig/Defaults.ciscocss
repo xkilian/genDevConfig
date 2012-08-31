@@ -43,41 +43,41 @@ CiscoCSSapSvcConnectionsCs          = 1.3.6.1.4.1.9.9.368.1.15.2.1.20
 
 [DATASOURCE]
 [[CiscoCSSapOwnHitsCs]]
-    ds-source   = CiscoCSSapOwnHitsCs.%inst%
+    ds_oid   = CiscoCSSapOwnHitsCs.%inst%
 
 [[CiscoCSSapOwnDropsCs]]
-    ds-source   = CiscoCSSapOwnDropsCs.%inst%
+    ds_oid   = CiscoCSSapOwnDropsCs.%inst%
 
 [[CiscoCSSapOwnByteCountCs]]
-    ds-source   = CiscoCSSapOwnByteCount.%inst%
+    ds_oid   = CiscoCSSapOwnByteCount.%inst%
 
 [[CiscoCSSapCntHitsCs]]
-    ds-source   = CiscoCSSapCntHitsCs.%inst%
+    ds_oid   = CiscoCSSapCntHitsCs.%inst%
 
 [[CiscoCSSapCntRedirectsCs]]
-    ds-source   = CiscoCSSapCntRedirectsCs.%inst%
+    ds_oid   = CiscoCSSapCntRedirectsCs.%inst%
 
 [[CiscoCSSapCntDropsCs]]
-    ds-source   = CiscoCSSapCntDropsCs.%inst%
+    ds_oid   = CiscoCSSapCntDropsCs.%inst%
 
 [[CiscoCSSapCntRejNoServicesCs]]
-    ds-source   = CiscoCSSapCntRejNoServicesCs.%inst%
+    ds_oid   = CiscoCSSapCntRejNoServicesCs.%inst%
 
 [[CiscoCSSapCntRejServOverloadCs]]
-    ds-source   = CiscoCSSapCntRejServOverloadCs.%inst%
+    ds_oid   = CiscoCSSapCntRejServOverloadCs.%inst%
 
 [[CiscoCSSapCntByteCountCs]]
-    ds-source   = CiscoCSSapCntByteCountCs.%inst%
+    ds_oid   = CiscoCSSapCntByteCountCs.%inst%
 
 [[CiscoCSSapCntsvcHitsCs]]
-    ds-source   = CiscoCSSapCntsvcHitsCs.%inst%
+    ds_oid   = CiscoCSSapCntsvcHitsCs.%inst%
 
 [[CiscoCSSapCntsvcBytesCs]]
-    ds-source   = CiscoCSSapCntsvcBytesCs.%inst%
+    ds_oid   = CiscoCSSapCntsvcBytesCs.%inst%
 
 [[CiscoCSSapSvcConnectionsCs]]
-    ds-type	=	GAUGE
-    ds-source   = CiscoCSSapSvcConnectionsCs.%inst%
+    ds_type	=	GAUGE
+    ds_oid   = CiscoCSSapSvcConnectionsCs.%inst%
 
 [DSTEMPLATE]
 [[CiscoCSS-ServiceCs]]
@@ -190,41 +190,41 @@ CiscoCSSapSvcConnectionsCs          = 1.3.6.1.4.1.9.9.368.1.15.2.1.20
 
 [DATASOURCE]
 [[CiscoCSSapOwnHitsAp]]
-    ds-source   = CiscoCSSapOwnHitsAp.%inst%
+    ds_oid   = CiscoCSSapOwnHitsAp.%inst%
 
 [[CiscoCSSapOwnDropsAp]]
-    ds-source   = CiscoCSSapOwnDropsAp.%inst%
+    ds_oid   = CiscoCSSapOwnDropsAp.%inst%
 
 [[CiscoCSSapOwnByteCountAp]]
-    ds-source   = CiscoCSSapOwnByteCount.%inst%
+    ds_oid   = CiscoCSSapOwnByteCount.%inst%
 
 [[CiscoCSSapCntHitsAp]]
-    ds-source   = CiscoCSSapCntHitsAp.%inst%
+    ds_oid   = CiscoCSSapCntHitsAp.%inst%
 
 [[CiscoCSSapCntRedirectsAp]]
-    ds-source   = CiscoCSSapCntRedirectsAp.%inst%
+    ds_oid   = CiscoCSSapCntRedirectsAp.%inst%
 
 [[CiscoCSSapCntDropsAp]]
-    ds-source   = CiscoCSSapCntDropsAp.%inst%
+    ds_oid   = CiscoCSSapCntDropsAp.%inst%
 
 [[CiscoCSSapCntRejNoServicesAp]]
-    ds-source   = CiscoCSSapCntRejNoServicesAp.%inst%
+    ds_oid   = CiscoCSSapCntRejNoServicesAp.%inst%
 
 [[CiscoCSSapCntRejServOverloadAp]]
-    ds-source   = CiscoCSSapCntRejServOverloadAp.%inst%
+    ds_oid   = CiscoCSSapCntRejServOverloadAp.%inst%
 
 [[CiscoCSSapCntByteCountAp]]
-    ds-source   = CiscoCSSapCntByteCountAp.%inst%
+    ds_oid   = CiscoCSSapCntByteCountAp.%inst%
 
 [[CiscoCSSapCntsvcHitsAp]]
-    ds-source   = CiscoCSSapCntsvcHitsAp.%inst%
+    ds_oid   = CiscoCSSapCntsvcHitsAp.%inst%
 
 [[CiscoCSSapCntsvcBytesAp]]
-    ds-source   = CiscoCSSapCntsvcBytesAp.%inst%
+    ds_oid   = CiscoCSSapCntsvcBytesAp.%inst%
 
 [[CiscoCSSapSvcConnectionsAp]]
-    ds-type	=	GAUGE
-    ds-source   = CiscoCSSapSvcConnectionsAp.%inst%
+    ds_type	=	GAUGE
+    ds_oid   = CiscoCSSapSvcConnectionsAp.%inst%
 
 [DSGROUP]
 [[CiscoCSS-ContentServiceAp]]

@@ -46,87 +46,87 @@ snl4virtualserverstatistictransmitpkts    = 1.3.6.1.4.1.1991.1.1.4.25.1.1.4
 
 [DATASOURCE]
 [[dsFoundryL4SLBTotalConnections]]
-    ds-source = foundryL4SLBTotalConnections.0
-    ds-type = COUNTER
+    ds_oid = foundryL4SLBTotalConnections.0
+    ds_type = COUNTER
 
 [[dsFoundryL4SLBUnsuccessfulConnections]]
-    ds-source = foundryL4SLBUnsuccessfulConnections.0
-    ds-type = COUNTER
+    ds_oid = foundryL4SLBUnsuccessfulConnections.0
+    ds_type = COUNTER
 
 [[snl4realserverportstatisticstate]]
-    ds-source	= snL4RealServerPortStatisticState.%auto-target-name%
+    ds_oid	= snL4RealServerPortStatisticState.%auto-target-name%
 
 [[snl4realserverportstatuscurrentconnection]]
-    ds-source	= snL4RealServerPortStatusCurrentConnection.%auto-target-name%
+    ds_oid	= snL4RealServerPortStatusCurrentConnection.%auto-target-name%
 
 [[snl4realserverportstatusfailtime]]
-    ds-source	= snL4RealServerPortStatusFailTime.%auto-target-name%
+    ds_oid	= snL4RealServerPortStatusFailTime.%auto-target-name%
 
 [[snl4realserverportstatuspeakconnection]]
-    ds-source	= snL4RealServerPortStatusPeakConnection.%auto-target-name%
+    ds_oid	= snL4RealServerPortStatusPeakConnection.%auto-target-name%
 
 [[snl4realserverportstatusrxbytes]]
-    ds-source	= snL4RealServerPortStatusRxBytes.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerPortStatusRxBytes.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverportstatusrxpkts]]
-    ds-source	= snL4RealServerPortStatusRxPkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerPortStatusRxPkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverportstatustotalconnection]]
-    ds-source	= snL4RealServerPortStatusTotalConnection.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerPortStatusTotalConnection.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverportstatustxbytes]]
-    ds-source	= snL4RealServerPortStatusTxBytes.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerPortStatusTxBytes.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverportstatustxpkts]]
-    ds-source	= snL4RealServerPortStatusTxPkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerPortStatusTxPkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverstatisticcurconnections]]
-    ds-source	= snL4RealServerStatisticCurConnections.%auto-target-name%
+    ds_oid	= snL4RealServerStatisticCurConnections.%auto-target-name%
 
 [[snl4realserverstatisticfailtime]]
-    ds-source	= snL4RealServerStatisticFailTime.%auto-target-name%
+    ds_oid	= snL4RealServerStatisticFailTime.%auto-target-name%
 
 [[snl4realserverstatisticpeakconnections]]
-    ds-source	= snL4RealServerStatisticPeakConnections.%auto-target-name%
+    ds_oid	= snL4RealServerStatisticPeakConnections.%auto-target-name%
 
 [[snl4realserverstatisticreceivepkts]]
-    ds-source	= snL4RealServerStatisticReceivePkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerStatisticReceivePkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverstatistictotalconnections]]
-    ds-source	= snL4RealServerStatisticTotalConnections.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerStatisticTotalConnections.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4realserverstatistictransmitpkts]]
-    ds-source	= snL4RealServerStatisticTransmitPkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4RealServerStatisticTransmitPkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4virtualserverportstatisticcurrentconnection]]
-    ds-source	= snL4VirtualServerPortStatisticCurrentConnection.%auto-target-name%
+    ds_oid	= snL4VirtualServerPortStatisticCurrentConnection.%auto-target-name%
 
 [[snl4virtualserverportstatisticpeakconnection]]
-    ds-source	= snL4VirtualServerPortStatisticPeakConnection.%auto-target-name%
+    ds_oid	= snL4VirtualServerPortStatisticPeakConnection.%auto-target-name%
 
 [[snl4virtualserverportstatistictotalconnection]]
-    ds-source	= snL4VirtualServerPortStatisticTotalConnection.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4VirtualServerPortStatisticTotalConnection.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4virtualserverstatisticreceivepkts]]
-    ds-source	= snL4VirtualServerStatisticReceivePkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4VirtualServerStatisticReceivePkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4virtualserverstatistictotalconnections]]
-    ds-source	= snL4VirtualServerStatisticTotalConnections.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4VirtualServerStatisticTotalConnections.%auto-target-name%
+    ds_type	= COUNTER
 
 [[snl4virtualserverstatistictransmitpkts]]
-    ds-source	= snL4VirtualServerStatisticTransmitPkts.%auto-target-name%
-    ds-type	= COUNTER
+    ds_oid	= snL4VirtualServerStatisticTransmitPkts.%auto-target-name%
+    ds_type	= COUNTER
 
 [GRAPH]
 [[snaggblcpuutil1minavg]]

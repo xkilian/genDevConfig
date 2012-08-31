@@ -54,32 +54,32 @@ nsIdsAttkMonIpSweep                 = 1.3.6.1.4.1.3224.3.2.1.13
 
 [DATASOURCE]
 [[nsResMemLeft]]
-    ds-source   = nsResMemLeft
+    ds_oid   = nsResMemLeft
     ds-type = GAUGE
 
 [[nsResCpuLast5Min]]
-    ds-source   = nsResCpuLast5Min
+    ds_oid   = nsResCpuLast5Min
     ds-type = GAUGE
 
 [[nsResSessAllocate]]
-    ds-source   = nsResSessAllocate.%inst%
+    ds_oid   = nsResSessAllocate.%inst%
     ds-type = GAUGE
 
 [[nsResSessFailed]]
-    ds-source   = nsResSessFailed.%inst%
+    ds_oid   = nsResSessFailed.%inst%
 
 
 [[nsIdsAttkMonIcmpFlood]]
-    ds-source   = nsIdsAttkMonIcmpFlood.%inst%
+    ds_oid   = nsIdsAttkMonIcmpFlood.%inst%
 
 [[nsIdsAttkMonIpSweep]]
-    ds-source   = nsIdsAttkMonIpSweep.%inst%
+    ds_oid   = nsIdsAttkMonIpSweep.%inst%
 
 [[nsIdsAttkMonPortScan]]
-    ds-source   = nsIdsAttkMonPortScan.%inst%
+    ds_oid   = nsIdsAttkMonPortScan.%inst%
 
 [[nsIdsAttkMonSynAttk]]
-    ds-source   = nsIdsAttkMonSynAttk.%inst%
+    ds_oid   = nsIdsAttkMonSynAttk.%inst%
 
 ###############################################################################
 #

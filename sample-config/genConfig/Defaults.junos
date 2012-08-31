@@ -83,85 +83,85 @@
      ### Datasources
      
     [[mplsLspOctets]]
-        ds-source       =       $OidmplsLspOctets.%(instance)s
+        ds_oid       =       $OidmplsLspOctets.%(instance)s
     [[mplsLspPackets]]
-        ds-source       =       $OidmplsLspPackets.%(instance)s
+        ds_oid       =       $OidmplsLspPackets.%(instance)s
     
     
     
     [[jnxFWCounterPacketCount]]
-        ds-source		=   $OidjnxFWCounterPacketCount.%(instance)s
+        ds_oid		=   $OidjnxFWCounterPacketCount.%(instance)s
         # instance is formed of: %filtername%.%countername%.%fwtype%
     
     [[jnxFWCounterByteCount]]
-        ds-source		=   $OidjnxFWCounterByteCount.%(instance)s
+        ds_oid		=   $OidjnxFWCounterByteCount.%(instance)s
         # instance is formed of: %filtername%.%countername%.%fwtype%
     
     [[jnxAtmIfTxCellCount]]
-        ds-source		=   $OidjnxAtmIfTxCellCount.%(instance)s
+        ds_oid		=   $OidjnxAtmIfTxCellCount.%(instance)s
     
     [[jnxAtmIfRxCellCount]]
-        ds-source		=   $OidjnxAtmIfRxCellCount.%(instance)s
+        ds_oid		=   $OidjnxAtmIfRxCellCount.%(instance)s
     
     [[jnxAtmIfTxIdleCellCount]]
-        ds-source		=   $OidjnxAtmIfTxIdleCellCount.%(instance)s
+        ds_oid		=   $OidjnxAtmIfTxIdleCellCount.%(instance)s
     
     [[jnxAtmIfUncorrHCSErrs]]
-        ds-source		=   $OidjnxAtmIfUncorrHCSErrs.%(instance)s
+        ds_oid		=   $OidjnxAtmIfUncorrHCSErrs.%(instance)s
     
     [[jnxAtmIfCorrHCSErrs]]
-        ds-source		=   $OidjnxAtmIfCorrHCSErrs.%(instance)s
+        ds_oid		=   $OidjnxAtmIfCorrHCSErrs.%(instance)s
     
     [[jnxAtmIfTxCellFIFOOverRuns]]
-        ds-source		=   $OidjnxAtmIfTxCellFIFOOverRuns.%(instance)s
+        ds_oid		=   $OidjnxAtmIfTxCellFIFOOverRuns.%(instance)s
     
     [[jnxAtmIfRxCellFIFOOverRuns]]
-        ds-source		=   $OidjnxAtmIfRxCellFIFOOverRuns.%(instance)s
+        ds_oid		=   $OidjnxAtmIfRxCellFIFOOverRuns.%(instance)s
     
     [[jnxAtmIfRxCellFIFOUnderRuns]]
-        ds-source		=   $OidjnxAtmIfRxCellFIFOUnderRuns.%(instance)s
+        ds_oid		=   $OidjnxAtmIfRxCellFIFOUnderRuns.%(instance)s
     
     [[jnxAtmIfInInvalidVCCells]]
-        ds-source		=   $OidjnxAtmIfInInvalidVCCells.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInInvalidVCCells.%(instance)s
     
     [[jnxAtmIfInNoBufferOAMCells]]
-        ds-source		=   $OidjnxAtmIfInNoBufferOAMCells.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInNoBufferOAMCells.%(instance)s
     
     [[jnxAtmIfInNoBufDropPkts]]
-        ds-source		=   $OidjnxAtmIfInNoBufDropPkts.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInNoBufDropPkts.%(instance)s
     
     [[jnxAtmIfOutVCQueueDrops]]
-        ds-source		=   $OidjnxAtmIfOutVCQueueDrops.%(instance)s
+        ds_oid		=   $OidjnxAtmIfOutVCQueueDrops.%(instance)s
     
     [[jnxAtmIfInBadCrcs]]
-        ds-source		=   $OidjnxAtmIfInBadCrcs.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInBadCrcs.%(instance)s
     
     [[jnxAtmIfInLenErrPkts]]
-        ds-source		=   $OidjnxAtmIfInLenErrPkts.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInLenErrPkts.%(instance)s
     
     [[jnxAtmIfInTimeoutPkts]]
-        ds-source		=   $OidjnxAtmIfInTimeoutPkts.%(instance)s
+        ds_oid		=   $OidjnxAtmIfInTimeoutPkts.%(instance)s
     
     
     [[jnxOperatingTemp]]
-        ds-source		=   $OidjnxOperatingTemp.%(instance)s
-        ds-type		=   GAUGE
+        ds_oid		=   $OidjnxOperatingTemp.%(instance)s
+        ds_type		=   GAUGE
     
     [[jnxOperatingCPU]]
-        ds-source		=   $OidjnxOperatingCPU.%(instance)s
-        ds-type		=   GAUGE
+        ds_oid		=   $OidjnxOperatingCPU.%(instance)s
+        ds_type		=   GAUGE
     
     [[jnxOperatingISR]]
-        ds-source		=    $OidjnxOperatingISR.%(instance)s
-        ds-type		=   GAUGE
+        ds_oid		=    $OidjnxOperatingISR.%(instance)s
+        ds_type		=   GAUGE
     
     [[jnxOperatingBuffer]]
-        ds-source		=   $OidjnxOperatingBuffer.%(instance)s
-        ds-type		=   GAUGE
+        ds_oid		=   $OidjnxOperatingBuffer.%(instance)s
+        ds_type		=   GAUGE
     
     [[jnxOperatingHeap]]
-        ds-source		=   $OidjnxOperatingHeap.%(instance)s
-        ds-type		=   GAUGE
+        ds_oid		=   $OidjnxOperatingHeap.%(instance)s
+        ds_type		=   GAUGE
 
 ###############################################################################
 #

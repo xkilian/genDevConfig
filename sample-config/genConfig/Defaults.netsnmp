@@ -80,100 +80,100 @@
     
     [DATASOURCE]
     [[hrSystemNumUsers]]
-	ds-source    = $OidhrSystemNumUsers
-	ds-type  = GAUGE
+	ds_oid    = $OidhrSystemNumUsers
+	ds_type  = GAUGE
     
     [[hrSystemProcesses]]
-	ds-source    = $OidhrSystemProcesses
-	ds-type  = GAUGE
+	ds_oid    = $OidhrSystemProcesses
+	ds_type  = GAUGE
     
     [[hrStorageSize]]
-	ds-source    = $OidhrStorageSize.%(instance)s
-	ds-type  = GAUGE
+	ds_oid    = $OidhrStorageSize.%(instance)s
+	ds_type  = GAUGE
     
     [[hrStorageUsed]]
-	ds-source    = $OidhrStorageUsed.%(instance)s
-	ds-type  = GAUGE
+	ds_oid    = $OidhrStorageUsed.%(instance)s
+	ds_type  = GAUGE
     
     [[ucd_load1min]]
-	ds-source    = $Oiducd_load1min
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_load1min
+	ds_type  = GAUGE
     
     [[ucd_load5min]]
-	ds-source    = $Oiducd_load5min
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_load5min
+	ds_type  = GAUGE
     
     [[ucd_load15min]]
-	ds-source    = $Oiducd_load15min
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_load15min
+	ds_type  = GAUGE
     
     [[ucd_memswapAvail]]
-	ds-source    = $Oiducd_memswapAvail
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_memswapAvail
+	ds_type  = GAUGE
     
     [[ucd_memrealAvail]]
-	ds-source    = $Oiducd_memrealAvail
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_memrealAvail
+	ds_type  = GAUGE
     
     [[ucd_memtotalAvail]]
-	ds-source    = $Oiducd_memtotalAvail
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_memtotalAvail
+	ds_type  = GAUGE
     
     [[ucd_diskfree]]
-	ds-source    = $Oiducd_diskfree.%(instance)s
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_diskfree.%(instance)s
+	ds_type  = GAUGE
     
     [[ucd_diskused]]
-	ds-source    = $Oiducd_diskused.%(instance)s
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_diskused.%(instance)s
+	ds_type  = GAUGE
     
     [[ucd_diskpused]]
-	ds-source    = $Oiducd_diskpused.%(instance)s
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_diskpused.%(instance)s
+	ds_type  = GAUGE
     
     [[ucd_cpuUser]]
-	ds-source    = $Oiducd_cpuUser
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_cpuUser
+	ds_type  = GAUGE
     
     [[ucd_cpuSystem]]
-	ds-source    = $Oiducd_cpuSystem
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_cpuSystem
+	ds_type  = GAUGE
     
     [[ucd_cpuIdle]]
-	ds-source    = $Oiducd_cpuIdle
-	ds-type  = GAUGE
+	ds_oid    = $Oiducd_cpuIdle
+	ds_type  = GAUGE
     
     [[ucd_rawCpuUser]]
-	ds-source    = $Oiducd_rawCpuUser
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_rawCpuUser
+	ds_type  = DERIVE
     
     [[ucd_rawCpuNice]]
-	ds-source    = $Oiducd_rawCpuNice
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_rawCpuNice
+	ds_type  = DERIVE
     
     [[ucd_rawCpuSystem]]
-	ds-source    = $Oiducd_rawCpuSystem
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_rawCpuSystem
+	ds_type  = DERIVE
     
     [[ucd_rawCpuIdle]]
-	ds-source    = $Oiducd_rawCpuIdle
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_rawCpuIdle
+	ds_type  = DERIVE
     
     [[ucd_diskIONRead]]
-	ds-source    = $Oiducd_diskIONRead.%(instance)s
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_diskIONRead.%(instance)s
+	ds_type  = DERIVE
     
     [[ucd_diskIONWrite]]
-	ds-source    = $Oiducd_diskIONWrite.%(instance)s
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_diskIONWrite.%(instance)s
+	ds_type  = DERIVE
     
     [[ucd_diskIOReads]]
-	ds-source    = $Oiducd_diskIOReads.%(instance)s
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_diskIOReads.%(instance)s
+	ds_type  = DERIVE
     
     [[ucd_diskIOWrites]]
-	ds-source    = $Oiducd_diskIOWrites.%(instance)s
-	ds-type  = DERIVE
+	ds_oid    = $Oiducd_diskIOWrites.%(instance)s
+	ds_type  = DERIVE
     
     ###############################################################################
     #
