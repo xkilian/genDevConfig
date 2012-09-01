@@ -695,7 +695,8 @@ my $ipForwDatagrams = get('ipForwDatagrams');
 
 $opts{rdir} = subdir($opts{outputdir} . $opts{devicename}, $opts{lowercase});
 
-$file = $opts{file} = new genConfig::File("$opts{rdir}/devicename");
+#$file = $opts{file} = new genConfig::File("$opts{rdir}/devicename.cfg");
+$file = $opts{file} = new genConfig::File("$opts{rdir}/" . $opts{devicename} . ".cfg");
 
 ### Print the header information
 

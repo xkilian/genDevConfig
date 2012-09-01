@@ -111,7 +111,12 @@
     [[PowerOperState]]
         ds_type	= 	GAUGE
         ds_oid	=	$OidPowerOperState.%(instance)s
-    
+    [[rcChasFanOperStatus]]
+        ds_type	= 	GAUGE
+        ds_oid	=	$OidrcChasFanOperStatus.%(instance)s    
+    [[rcChasPowerSupplyOperStatus]]
+        ds_type	= 	GAUGE
+        ds_oid  =       $OidrcChasPowerSupplyOperStatus.%(instance)s
     [[chassisStatus]]
         ds_type	= 	GAUGE
         ds_oid	=	$OidchassisStatus.%(instance)s
@@ -163,13 +168,13 @@
         ds	=    "sysUpTimeInstance,rcSysBufferUtil,rcSysCpuUtil,rcSysSwitchFabricUtil,ChassisTemperature,memoryTotalBytes,memoryUtilKBytes,memoryFreeBytes"
     
     [[Nortel-ES-470]]
-        ds	=    "sysUpTimeInstance,s5ChasUtilMemoryAvailable,s5ChasUtilMemoryMinAvailable"
+        ds	=    "sysUpTimeInstance,s5ChasUtilMemoryAvailable,s5ChasUtilMemoryMinAvailable, PowerOperState,FanOperState"
 
     [[ERS-Chassis-PS]]
-        ds	=    "PowerOperState"
+        ds	=    "OidrcChasPowerSupplyOperStatus"
 
     [[ERS-Chassis-Fan]]
-        ds	=    "FanOperState"
+        ds	=    "OidrcChasFanOperStatus"
 
 
 
