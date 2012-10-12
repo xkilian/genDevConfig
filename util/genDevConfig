@@ -178,7 +178,7 @@ my %opts = (
     'logLevel'          => 'warn',
     'nodupwarn'         => 0,
     'collectall'        => 1,
-    'chassisstats'      => 1,
+    'chassisstats'      => 1, # Mandatory to create chassis target services
     'nounused'          => 1,
     'lowercase'         => 0,
     'communityrw'       => '',
@@ -361,7 +361,7 @@ GetOptions(
 );
 
 #
-# Exit with brief message if no hostname was given.
+# Exit with a brief message if no hostname was given.
 pod2usage("No hostname given. Use --help for help.\n") unless defined $ARGV[0];
 
 
@@ -667,6 +667,14 @@ if ($opts{usev2c}) {
     snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
 }
 
+if ($opts{chassisstats} && $opts{chassisdependency}) {
+    $opts{chassisdependency} = 1;
+} else {
+    # Make sure dependencies cannot be used if there is no chassis!
+    Warning ("Chassisdependency: Disabled because chassis stats are not enabled") if $opts{chassisdependency};
+    $opts{chassisdependency} = 0;
+}
+
 ### Create vendor specific Port/Slot Mapping variables
 
 # Global Mapping Hash
@@ -755,7 +763,7 @@ if ($opts{chassisstats}) {
     $ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
     $ldesc .= "<BR>sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
     $ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
-    $sdesc = "$opts{model} class chassis";
+    $sdesc = "$opts{chassisname} - $opts{model}";
 
     $inst = $opts{chassisinst} if ($opts{chassisinst});
 
@@ -781,7 +789,7 @@ if ($opts{chassisstats}) {
 
     # Write the data to the file
     $file->writetarget("service {", '',
-	'service_description' => $opts{chassisname},
+	'service_description' => "chassis",
 	'display_name'  => $sdesc,
         'host_name'     => $opts{devicename},     
         '_inst'         => $inst,
@@ -1749,7 +1757,7 @@ Don not check for insane MTU, use it for interactive discovery.
 
 =item B<--nospeedcheck>
 
-Don not check for insane speed, use it for interactive discovery.
+Do not check for insane speed, use it for interactive discovery.
 
 =item B<-o>, B<--outputdir=<path>>
 

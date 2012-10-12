@@ -123,14 +123,18 @@ sub writetarget {
     my $f = $self->{'file'};
     print $f "${comment}define $name\n";
 
-    # Replace monitor-types with actual monitor-thresholds
-    # applyMonitoringThresholds($name,\%value);
+    # Apply triggergroups based on dstemplate name or user input
+    # applyMonitoringThresholds(\%value);
     my @keyorder = ('host_name', 'service_description', 'display_name');
 
     # Apply the mandatory configuration items in the correct order
     foreach my $k (@keyorder) {
         next unless exists($value{$k});
-	$self->writepair($k, $value{$k}, $comment); 
+	$self->writepair($k, $value{$k}, $comment);
+	if (($k == 'service_description') && ($value{$k} != 'chassis')) {
+	    $self->writepair("service_dependencies", ",chassis", $comment);    
+	}
+
 	delete $value {$k};
     }
 
