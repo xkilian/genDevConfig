@@ -276,7 +276,7 @@
     # Generic Device
     
     [[Generic-Device]]
-    
+        ds          = 	sysDescr
     ### Interface target types.
     
     [[standard-interface]]

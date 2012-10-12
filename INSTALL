@@ -33,8 +33,10 @@ logical information:
  - util/CREDITS                       # Thank you notes to contributors
  - util/INSTALL                       # How to install this script in Cricket
  - etc/                               # Expected location of genDevConfig-conf.pl
- - sample-config/genConfig/Defaults   # The cricket config-tree Defaults 
- - sample-config/genConfig/Defaults.* # The cricket config-tree module Defaults
+ - sample-config/genConfig/Defaults   # Shinken Defaults (NOT USED YET)
+ - sample-config/genConfig/Defaults.* # Shinken device specific Defaults (NOT USED YET)
+ - sample-config/genConfig/config.ini # Shinken unified Defaults file
+- sample-config/genConfig/snmp-template.cfg # Shinken template
  - lib/genConfig/File.pm              # Utility library for genDevConfig
  - lib/genConfig/SNMP.pm              # Utility library for genDevConfig
  - lib/genConfig/Utils.pm             # Utility library for genDevConfig
@@ -80,10 +82,9 @@ Copy genDevConfig file structure to your $genDevConfig/ directory.
 
 Make sure the genDevConfig script is executable by your user. And that all
 files are owned by the user.
-the
 
 
-### Step 4 (Copying the Defaults file to your cricket-config tree)
+### Step 2 (Copying the Defaults files to your cricket-config tree)
 
 If you use the genDevConfig Defaults file included in this release within
 your Cricket config-tree (see the example below). You should replace the
@@ -93,14 +94,16 @@ Note: If you do *NOT* use a vanilla version of the genDevConfig Defaults
 file, then you must copy the changes from the new Defaults file to your
 own custom Defaults.
 
-Example of creating and copying the Default files:
+Example of creating and copying the Defaults files to the Shinken SNMP folder:
 
-  # For lazy bash users
-  $ export CRICKET=/path/to/cricket-base
-  $ cd $CRICKET/cricket-config
-  $ mkdir telecom-tree
-  $ cp $CRICKET/sample-config/genDevConfig/Defaults* \
-       $CRICKET/cricket-config/telecom-tree/
+# For lazy bash users
+
+export genDevConfig=/path/to/genDevConfig
+export SHINKEN=/path/to/shinken
+cd $SHINKEN/etc
+mkdir SNMP
+cp $genDevConfig/sample-config/genDevConfig/config.ini $SHINKEN/etc/SNMP/
+cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg $SHINKEN/etc/
 
 
 ##############################################################################
@@ -109,7 +112,7 @@ Example of creating and copying the Default files:
 #
 ##############################################################################
 
-### Step 1 
+### Step 1
 
 Find out the community string and IP adress of the device you want to reach
 
@@ -122,6 +125,8 @@ Add the hostname to your /etc/hosts file or into DNS
 ### Step 3
 
 Do a test call of the device before anything else
+
+cd $genDevConfig/util
 
 ./genDevConfig -C community-name --verbose HOSTNAME
 
@@ -139,7 +144,7 @@ vi HOSTNAME/targets
 #
 # Using genDevConfig - Advanced
 #
-# For even more information lookup the Cricket genDevConfig pages at:
+# For even more information lookup the genDevConfig pages at:
 # http://www.acktomic.com
 #
 ##############################################################################
@@ -206,5 +211,8 @@ Gotchas:
    Some Cisco routers return incorrect interface types for some interfaces.
    Example: Tunnel interfaces return type 0 under IOS 12.0.7T on a 7206
    rather than the expected type 131.  Try "-e 'Tunnel.*'".
+   
+   Graphs are not used, but are there for future conversion to Graphite Templates.
 
+   Shinken SnmpBooster module cannot read the Defaults file yet, use the unified config.ini file. 
 

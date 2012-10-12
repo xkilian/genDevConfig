@@ -161,13 +161,13 @@
 
 [DSTEMPLATE]
 
-    [[Nortel-Passport-8600]]
+    [[Nortel-Passport8600]]
         ds	=    "sysUpTimeInstance,rcSysBufferUtil,rcSysCpuUtil,rcSysSwitchFabricUtil,ChassisTemperature,memoryTotalBytes,memoryUtilKBytes,memoryFreeBytes"
     
-    [[Nortel-Passport-1600]]
+    [[Nortel-Passport1600]]
         ds	=    "sysUpTimeInstance,rcSysBufferUtil,rcSysCpuUtil,rcSysSwitchFabricUtil,ChassisTemperature,memoryTotalBytes,memoryUtilKBytes,memoryFreeBytes"
     
-    [[Nortel-ES-470]]
+    [[Nortel-ES470]]
         ds	=    "sysUpTimeInstance,s5ChasUtilMemoryAvailable,s5ChasUtilMemoryMinAvailable, PowerOperState,FanOperState"
 
     [[ERS-Chassis-PS]]

@@ -601,6 +601,7 @@
     graph	=	"memory: mem5minUsed mem5minFree"
 
 [[Cisco-Terminal]]
+    ds          = 	sysDescr
     graph        = 	""""
 
 [[Cisco-1600-Router]]
