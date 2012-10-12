@@ -40,7 +40,8 @@ define service {
  - etc/                               # Expected location of genDevConfig-conf.pl
  - sample-config/genConfig/Defaults   # Shinken Defaults (NOT USED YET)
  - sample-config/genConfig/Defaults.* # Shinken device specific Defaults (NOT USED YET)
- - sample-config/genConfig/config.ini # Shinken unified Defaults file
+ - sample-config/genConfig/Defaults_unified.ini # Shinken unified Defaults file
+ - sample-config/genConfig/Defaults_triggers.ini # Shinken triggers(NOT USED YET)
 - sample-config/genConfig/snmp-template.cfg # Shinken template
  - lib/genConfig/File.pm              # Utility library for genDevConfig
  - lib/genConfig/SNMP.pm              # Utility library for genDevConfig
@@ -90,7 +91,7 @@ Copy genDevConfig file structure to your $genDevConfig/ directory.
 Make sure the genDevConfig script is executable by your user. And that all
 files are owned by the user.
 
-### Step 2 (Copying the Defaults file to shinken/etc/SnmpBooster)
+### Step 2 (Copying the Defaults_unified.ini file to shinken/etc/SnmpBooster)
 
 If you use the genDevConfig Defaults file included in this release within
 your Shinken confige (see the example below). You should replace the
@@ -108,9 +109,14 @@ export genDevConfig=/path/to/genDevConfig
 export SHINKEN=/path/to/shinken
 cd $SHINKEN/etc
 mkdir SNMP
-cp $genDevConfig/sample-config/genDevConfig/config.ini $SHINKEN/etc/SNMP/
+cp $genDevConfig/sample-config/genDevConfig/Defaults_unified.ini $SHINKEN/etc/SNMP/
 cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg $SHINKEN/etc/
 
+### Step 3 Configure SnmpBooster
+
+Follow instructions on enabling SnmpBooster:
+
+http://www.shinken-monitoring.org/wiki/setup_snmp_booster_module
 
 ##############################################################################
 #
