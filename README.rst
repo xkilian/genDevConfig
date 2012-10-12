@@ -7,11 +7,10 @@ genDevConfig version 2.x can create configuration profiles for the following net
 genDevConfig version 3.x can create configuration profiles for the following networking tools :
 
 	1. Shinken
-	2. xx
-	3. xx
 
-genDevConfig version 3.x (this one) currently creates the Shinken compatible format. This is currently for development purposes.
+genDevConfig version 3.x (this one) creates the Shinken compatible format. This is for development purposes.
 
 TO DO:
 
  - Permit genDevConfig to import custom descriptions and configurations from CSV or INI based inputs
+ - Permit genDevConfig to add service dependencies to the chassis MIB-II (or other custom query in the chassis)
