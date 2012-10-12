@@ -131,7 +131,7 @@ sub writetarget {
     foreach my $k (@keyorder) {
         next unless exists($value{$k});
 	$self->writepair($k, $value{$k}, $comment);
-	if (($k == 'service_description') && ($value{$k} != 'chassis')) {
+	if (($k eq 'service_description') && ($value{$k} ne 'chassis')) {
 	    $self->writepair("service_dependencies", ",chassis", $comment);    
 	}
 
