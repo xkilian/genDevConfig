@@ -4,7 +4,7 @@ genDevConfig version 2.x can create configuration profiles for the following net
 
 	1. Cricket
 
-genDevConfig version 3.x can create configuration profiles for the following networking tools :
+genDevConfig version 3.x (THIS VERSION) can create configuration profiles for the following networking tools :
 
 	1. Shinken
 
