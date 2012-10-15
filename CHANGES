@@ -1,4 +1,3 @@
-
 ===============================================================================
 genDevConfig change log
 
@@ -14,6 +13,22 @@ changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
 ===============================================================================
 
 Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
+
+12/10/2012
+
+# Version 3_0_2
+#
+# - Automatic service dependencies to chassis service
+# - Created a unified config.ini file for Shinken SnmpBooster
+#   This is temporary until SnmpBooster supports reading from multiple ini files
+# - Only Nortel/Avaya devices and generic SNMP devices are supported(See TODO)
+#
+# TODO FOR RELEASE
+#
+# Move other generic tests to external module
+# Convert map(x) to map(rule,x) for all plugins
+# Permit regex-mappings and direct mappings. All others are unsupported.
+# Remove incompatible maps and other features so all plugins can be supported
 
 31/08/2012
 
@@ -35,13 +50,6 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Introduce new options -ctemplate, -htemplate to apply templates
 #   to a host or chassis.
 # - TRIGGER templates with simpler and more powerful syntax
-#
-# TODO FOR RELEASE
-#
-# Move other generic tests to external module
-# Convert map(x) to map(rule,x) for all plugins
-# Permit regex-mappings and direct mappings. All others are unsupported.
-# Remove incompatible maps and other features.
 
 09/01/2012
 
