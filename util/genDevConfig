@@ -1719,6 +1719,7 @@ Force all subdirectory names to lowercase.
 
 =item B<--modular>
 
+UNSUPPORTED WITH SHINKEN
 Treat the device as a modular device; that is, generate subdirectories for each
 module and place that module's interfaces or ports inside. Note that not
 including this option when processing a modular device will work just fine.
@@ -1814,6 +1815,7 @@ Display version information
 
 =item B<--vendorint>
 
+UNSUPPORTED WITH SHINKEN AT THIS TIME
 Get extra interface stats from proprietary MIB (For Cisco IOS and CatOS) or
 MIB-II (for all others). This uses more data sources in the resulting RRD.
 Support for Cisco, Foundry, and rfc1643 Etherlike.
