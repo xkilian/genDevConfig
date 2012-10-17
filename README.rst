@@ -8,11 +8,32 @@ The configuration that is generated is meant to be used with the Shinken monitor
 genDevConfig includes plugins to identify various hosts and RFC compliant interface types. 
 Each plugin is a perl script that is imported at runtime by genDevConfig.
 
+The script includes a definition files called Defaults.* for all the generic SNMP collection parameters such as :
+
+* OIDs (basic SNMP information to collect data)
+* datasources (which add instructions for OID collection)
+* triggers (threshold calculations)
+* device types (for a given device type what datasources should be collected)
+
 ============
 Installation
 ============
 
-The INSTALL file has all the installation and setup information necessary to use the tool.
+The included INSTALL file has all the installation and setup information necessary to use the tool.
+
+=============
+Documentation
+=============
+
+The documentation is maintained in a Microsoft word format and contains references for :
+
+* genDevConfig execution workflow (diagram and explanations)
+* genDevConifg -h (runtme help options explained)
+* How to add a new plugin (very easy, step by step explanation and example)
+* Troubleshooting
+
+Note: It refers to genRtrConfig and genDevConfig 2.x which are previous versions of the script not
+meant for use with Shinken, but the information is still relevant and plugin building has not changed.
 
 ===============
 Expected output
