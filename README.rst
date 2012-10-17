@@ -1,8 +1,24 @@
-genDevConfig is a configuration generator for collecting supervision data from networked devices.
+genDevConfig 3.x - Generate a Shinken host and service config for an networked device using SNMP.
 
-genDevConfig version 3.x (THIS VERSION) can create configuration profiles for the following networking tools :
+For the given device, generate a Shinken configuration directory. Within this
+directory it will place a "deviname" file which will contain the following 
+logical information:
 
-	1. Shinken
+define host {
+     host_name    ...
+     ...
+}
+define service {
+     chassis_target
+}
+     ...
+     custom_target1
+     ...
+     custom_targetN
+
+     interface_target1
+     ...
+     interface_targetN
 
 The INSTALL file has all the installation and setup information necessary to use the tool.
 
