@@ -239,6 +239,7 @@
     ATMInErr: jnxAtmIfInNoBufferOAMCells jnxAtmIfInNoBufDropPkts jnxAtmIfInInvalidVCCells jnxAtmIfInBadCrcs jnxAtmIfInLenErrPkts jnxAtmIfInTimeoutPkts"""
 
 [[juniper-generic]]
+    ds    = SysDescr    
 # Empty target used to store user provided information.
 
 [[juniper-chassis-backplane]]
@@ -425,8 +426,8 @@
 
 [[jnxOperatingTemp]]
     draw-as	=	AREA
-    y-axis	=	"°C"
-    units	=	"°C"
+    y-axis	=	"ï¿½C"
+    units	=	"ï¿½C"
     legend	=	"Temperature"
 
 [[jnxOperatingCPU]]
