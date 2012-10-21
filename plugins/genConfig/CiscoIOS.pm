@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.14;
+my $VERSION = 1.15;
 
 ### End package init
 
@@ -494,10 +494,9 @@ sub custom_targets {
             $file->writetarget("service {", '',
 	            'host_name'           => $opts->{devicename},
                     'service_description' => $target,
-                    '_cpu'                => $cpu,
                     'notes'               => $ldesc,
                     'display_name'        => $sdesc,
-                    '_inst'               => 0,
+                    '_inst'               => $cpu,
                     '_display_order'              => $opts->{order},
                     '_dstemplate'                 => "cisco-vip-cpu",
             );

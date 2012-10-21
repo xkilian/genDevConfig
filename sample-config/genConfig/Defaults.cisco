@@ -480,11 +480,11 @@
         ds_type = GAUGE
     
     [[slotcpu1min]]
-        ds_oid   = cpmCPUTotal1minRev.%cpu%
+        ds_oid   = cpmCPUTotal1minRev.%(instance)s
         ds_type = GAUGE
     
     [[slotcpu5min]]
-        ds_oid   = cpmCPUTotal5minRev.%cpu%
+        ds_oid   = cpmCPUTotal5minRev.%(instance)s
         ds_type = GAUGE
     
     [[bandwidthUsageCurrent]]
@@ -592,6 +592,11 @@
     memory: mem5minUsed mem5minFree processorRam"""
 
 [[Cisco-PIX-Firewall]]
+    ds		=	"cpmCPUTotal1min, cpmCPUTotal5min, mem5minUsed, mem5minFree"
+    graph        = 	"""cpu: cpmCPUTotal1min cpmCPUTotal5min,
+    memory: mem5minUsed mem5minFree"""
+    
+[[Cisco-ASA-Firewall]]
     ds		=	"cpmCPUTotal1min, cpmCPUTotal5min, mem5minUsed, mem5minFree"
     graph        = 	"""cpu: cpmCPUTotal1min cpmCPUTotal5min,
     memory: mem5minUsed mem5minFree"""
@@ -898,8 +903,8 @@
 #    base_oid    = ciscoMemoryPoolName
 #    match       = DRAM
 
-[[cpu-stats]]
-    base_oid    = .1.3.6.1.4.1.9.9.109.1.1.1.1.2
+#[[cpu-stats]]
+#    base_oid    = .1.3.6.1.4.1.9.9.109.1.1.1.1.2
 #    base_oid    = cpmCPUTotalPhysicalIndex
 #    match       = /^.+$/
 
