@@ -73,7 +73,7 @@ __ http://www.shinken-monitoring.org/news/snmp-monitoring-with-shinken/
 __ http://www.shinken-monitoring.org/wiki/setup_snmp_booster_module
 
 =====================
-KNOWN ISSUES and TODO
+Known issues and TODO
 =====================
 
 The `design specification` tracks implemented features.
