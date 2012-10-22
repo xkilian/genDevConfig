@@ -76,8 +76,8 @@ __ http://www.shinken-monitoring.org/wiki/setup_snmp_booster_module
 Known issues and TODO
 =====================
 
-The `design specification` tracks implemented features.
-__ http://www.shinken-monitoring.org/wiki/snmp_design_specification
+The `design specification`__ tracks implemented features.
+__ http://www.shinken-monitoring.org/wiki/snmpbooster_design_specification
 
 There are a number of known issues at this time :
 
