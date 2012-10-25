@@ -82,6 +82,8 @@ __ http://www.shinken-monitoring.org/wiki/snmpbooster_design_specification
 
 There are a number of known issues at this time :
 
-* A DSTEMPLATE cannot have more than one instance map. This is because the instance is passed as a check_command parameter. So DSTEMPLATES that expect different types of instance mapping per DS will not work correctly. We have to choose either Option-1, an inelegant multiple instance
+* A DSTEMPLATE cannot have more than one instance map. 
+
+This is because the instance is passed as a check_command parameter. So DSTEMPLATES that expect different types of instance mapping per DS will not work correctly. We have to choose either Option-1, an inelegant multiple instance
 passed in check_commands, Option-2 split DSTEMPLATEs so that they only use a single instance map passed in the check_command, as is done
 today, option-3 Same as option-2, but also permit static instance mapping keys specified in the DS.
