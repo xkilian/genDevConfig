@@ -14,6 +14,21 @@ changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
 
 Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 
+# TODO FOR FUTURE RELEASES
+#
+# Move other generic tests to external module
+# Permit regex-mappings and direct mappings. All others are unsupported.
+
+28/10/2012
+
+# Version 3_0_3
+
+# - Automatic service dependencies to chassis service for all plugins
+# - Updated Defaults file for all plugins
+# - Converted map(x) to map(rule,x) for all plugins
+# - Removed incompatible maps and other features so all plugins can be supported
+# - SnmpBooster now supports reading in a directory of ini or a single file
+
 12/10/2012
 
 # Version 3_0_2
@@ -22,13 +37,6 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Created a unified config.ini file for Shinken SnmpBooster
 #   This is temporary until SnmpBooster supports reading from multiple ini files
 # - Only Nortel/Avaya devices and generic SNMP devices are supported(See TODO)
-#
-# TODO FOR RELEASE
-#
-# Move other generic tests to external module
-# Convert map(x) to map(rule,x) for all plugins
-# Permit regex-mappings and direct mappings. All others are unsupported.
-# Remove incompatible maps and other features so all plugins can be supported
 
 31/08/2012
 
