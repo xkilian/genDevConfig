@@ -181,7 +181,7 @@
     [[ifOutDiscards]]
         ds_oid = $OidifOutDiscards.%(instance)s
     [[ifOutQLen]]
-        ds_oid = $OidifOutQLen.%inst
+        ds_oid = $OidifOutQLen.%(instance)s
     
     # High capacity counters. These require SNMPv2.
     

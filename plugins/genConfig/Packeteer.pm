@@ -247,8 +247,9 @@ sub custom_targets {
             }
 
             $file->writetarget('service {', '',
-                  'service_description' => $target,
                   'host_name' => $opts->{devicename},
+                  'service_description' => $target,
+                  'service_dependencies'=> ",chassis",
                   'display_name' => $classFullName{$index},
                   '_dstemplate'  => 'packeteer-class',
                   # 'short-desc'     => $sdesc,

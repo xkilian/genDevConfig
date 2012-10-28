@@ -300,7 +300,6 @@ sub do_diskio {
     my @defargs = ('_dstemplate'  => "ucd_diskio",
 		   'host_name' => $opts->{devicename},
 		   'display_name' => $dsply,
-		   '_inst'         => "map(ucd-diskio-device)",
 		   'use'                 => $opts->{dtemplate},
 		   );
 
@@ -337,7 +336,7 @@ sub do_diskio {
 
 	$subf->writetarget('service {', '', @defargs,
 			'service_description' => $target,
-			'_device' => $diskIODevice{$d},
+			'_inst'         => "map(ucd-diskio-device," . $diskIODevice{$d} . ")",
 			'notes' => "DiskIOdevice " . $diskIODevice{$d} . " : $target",
 			'_display_order'  => $opts->{order}--,
 			'use'                 => $opts->{dtemplate},
@@ -369,7 +368,6 @@ sub do_hrstorage {
     my @defargs = ('_dstemplate'           => "hr_Storage",
 		   'host_name'     => $opts->{devicename},
 		   'display_name'  => "\$_storage\$",
-		   '_inst'         => "map(hr-storage-name)",
 		   '_min-size'     => "\$_blksize\$",
 		   '_units'        => "\$_blksize\$,*",
 		   'use'                 => $opts->{dtemplate},
@@ -419,7 +417,7 @@ sub do_hrstorage {
 	$subf->writetarget('service {', '', @defargs,
 			   'service_description' => $target,
 			   '_max-size'  => ($sSize{$f} * $sUnits{$f}) * 1.05,
-			   '_storage'   => $sName{$f},
+			   '_inst'         => "map(hr-storage-name," . $sName{$f} . ")",
 			   '_blksize'   => $sUnits{$f},
 			   '_display_order'     => $opts->{order}--,
 			   'use'                 => $opts->{dtemplate},

@@ -67,7 +67,8 @@ my %OIDS = (
 
 	### mib-jnx-chassis.txt
 
-#	'jnxBoxSerialNo'		=>	'1.3.6.1.4.1.2636.3.1.3.0',
+	#'jnxBoxDescr'			=>	'1.3.6.1.4.1.2636.3.1.2.0',
+	#'jnxBoxSerialNo'		=>	'1.3.6.1.4.1.2636.3.1.3.0',
 
 	'jnxContainersIndex'		=>	'1.3.6.1.4.1.2636.3.1.6.1.1',
 	'jnxContentsSerialNo'		=>	'1.3.6.1.4.1.2636.3.1.8.1.7',
@@ -191,9 +192,8 @@ sub discover {
         $opts->{class} = 'juniper';
 
 	# Create a default chassis, even if no stats are collected
-	# $opts->{chassisstats} = 0;
-        # This is where
-	# we store all user configurable options. Even if no DS's are collected.
+        # This is where we store all user configurable options.
+	# We also do SNMP dependency calculations against this DSTEMPLATE
 
 	return;
 }
@@ -279,7 +279,8 @@ sub custom_targets {
 
 			push(@config,
 			        'host_name'     =>      $opts->{devicename},
-			        'service_description' => $target,
+			        'service_description' => "chassis." . $target,
+				'service_dependencies'=> ",chassis",
 				'_display_order'	=>	$opts->{order},
 				'_display_name'	=>	$sdesc,
 				'notes'	        =>	$ldesc,
@@ -335,8 +336,9 @@ sub custom_targets {
 			my @config = ();
 
 			push(@config,
-			     	'service_description' => $target,
 			     	'host_name'     => 	$opts->{devicename},
+				'service_description' => $target,
+				'service_dependencies'=> ",chassis",
 				'_display_order'	=>	$opts->{order},
 				'display_name'	=>	$opts->{devicename} . " $filter  $counter",
 				'notes'		=>	$ldesc,
@@ -363,8 +365,9 @@ sub custom_targets {
 		foreach $key (keys(%junipermplslspname)) {
 			my @config = ();
 			push(@config,
-			     	'service_description' => $junipermplslspname{$key},
 			     	'host_name'        => $opts->{devicename},
+			     	'service_description' => $junipermplslspname{$key},
+				'service_dependencies'=> ",chassis",
 				'_tunnel-name'     =>	$junipermplslspname{$key},
 				'_inst'            =>	"\"(\'$key\')\"",
 				'_display_order'           =>	$opts->{order},

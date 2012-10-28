@@ -165,8 +165,9 @@ sub custom_targets {
     my ($targetname) = $opts->{devicename};
 
     $file->writetarget('service {', '',
-        'service_description' => $targetname,
         'host_name'       => $opts->{devicename},
+        'service_description' => $targetname,
+        'service_dependencies'=> ",chassis",
         '_display_order'          => $opts->{order},
         'display_name'   => $targetname,
         'notes'   => $ldesc,

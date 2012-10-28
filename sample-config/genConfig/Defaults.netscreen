@@ -23,26 +23,6 @@
 ###############################################################################
 
 
-
-# NetScreen Firewall MIBs
-
-[OID]
-nsResCpuLast5Min                    = .1.3.6.1.4.1.3224.16.1.3.0
-nsResMemLeft                        = .1.3.6.1.4.1.3224.16.2.2.0
-
-# Netscreen Session Numbers
-
-nsResSessAllocate                   = .1.3.6.1.4.1.3224.16.3.2
-nsResSessFailed                     = .1.3.6.1.4.1.3224.16.3.4
-
-# Netscreen Attack Recognition
-
-nsIdsAttkMonSynAttk                 = .1.3.6.1.4.1.3224.3.2.1.3
-nsIdsAttkMonIcmpFlood               = .1.3.6.1.4.1.3224.3.2.1.9
-nsIdsAttkMonPortScan                = .1.3.6.1.4.1.3224.3.2.1.12
-nsIdsAttkMonIpSweep                 = .1.3.6.1.4.1.3224.3.2.1.13
-
-
 ###############################################################################
 #
 # Datasources define the type of data and the period of the data retrieved
@@ -53,33 +33,47 @@ nsIdsAttkMonIpSweep                 = .1.3.6.1.4.1.3224.3.2.1.13
 ### Netscreen Datasource
 
 [DATASOURCE]
-[[nsResMemLeft]]
-    ds_oid   = nsResMemLeft
-    ds-type = GAUGE
-
-[[nsResCpuLast5Min]]
-    ds_oid   = nsResCpuLast5Min
-    ds-type = GAUGE
-
-[[nsResSessAllocate]]
-    ds_oid   = nsResSessAllocate.%inst%
-    ds-type = GAUGE
-
-[[nsResSessFailed]]
-    ds_oid   = nsResSessFailed.%inst%
-
-
-[[nsIdsAttkMonIcmpFlood]]
-    ds_oid   = nsIdsAttkMonIcmpFlood.%inst%
-
-[[nsIdsAttkMonIpSweep]]
-    ds_oid   = nsIdsAttkMonIpSweep.%inst%
-
-[[nsIdsAttkMonPortScan]]
-    ds_oid   = nsIdsAttkMonPortScan.%inst%
-
-[[nsIdsAttkMonSynAttk]]
-    ds_oid   = nsIdsAttkMonSynAttk.%inst%
+    OidnsResCpuLast5Min                    = .1.3.6.1.4.1.3224.16.1.3.0
+    OidnsResMemLeft                        = .1.3.6.1.4.1.3224.16.2.2.0
+    
+    # Netscreen Session Numbers
+    
+    OidnsResSessAllocate                   = .1.3.6.1.4.1.3224.16.3.2
+    OidnsResSessFailed                     = .1.3.6.1.4.1.3224.16.3.4
+    
+    # Netscreen Attack Recognition
+    
+    OidnsIdsAttkMonSynAttk                 = .1.3.6.1.4.1.3224.3.2.1.3
+    OidnsIdsAttkMonIcmpFlood               = .1.3.6.1.4.1.3224.3.2.1.9
+    OidnsIdsAttkMonPortScan                = .1.3.6.1.4.1.3224.3.2.1.12
+    OidnsIdsAttkMonIpSweep                 = .1.3.6.1.4.1.3224.3.2.1.13
+    [[nsResMemLeft]]
+        ds_oid   = $OidnsResMemLeft
+        ds_type = GAUGE
+    
+    [[nsResCpuLast5Min]]
+        ds_oid   = $OidnsResCpuLast5Min
+        ds_type = GAUGE
+    
+    [[nsResSessAllocate]]
+        ds_oid   = $OidnsResSessAllocate.%(instance)s
+        ds_type = GAUGE
+    
+    [[nsResSessFailed]]
+        ds_oid   = $OidnsResSessFailed.%(instance)s
+    
+    
+    [[nsIdsAttkMonIcmpFlood]]
+        ds_oid   = $OidnsIdsAttkMonIcmpFlood.%(instance)s
+    
+    [[nsIdsAttkMonIpSweep]]
+        ds_oid   = $OidnsIdsAttkMonIpSweep.%(instance)s
+    
+    [[nsIdsAttkMonPortScan]]
+        ds_oid   = $OidnsIdsAttkMonPortScan.%(instance)s
+    
+    [[nsIdsAttkMonSynAttk]]
+        ds_oid   = $OidnsIdsAttkMonSynAttk.%(instance)s
 
 ###############################################################################
 #
@@ -100,22 +94,22 @@ nsIdsAttkMonIpSweep                 = .1.3.6.1.4.1.3224.3.2.1.13
 
 
 [DSTEMPLATE]
-[[Netscreen-Firewall]]
-    ds		=	"nsResCpuLast5Min, nsResMemLeft"
-    view        = 	"""cpu: nsResCpuLast5Min,
-    memory: nsResMemLeft"""
-
-[[Netscreen-sessions]]
-    ds               =   "nsResSessAllocate, nsResSessFailed"
-    view             =   "Sessions: nsResSessAllocate nsResSessFailed"
-
-[[Netscreen-stats]]
-    ds               =   "nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep"
-    view             =   "detectedAttacks: nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep"
-
-[[Netscreen-attacks]]
-    ds               =   "nsIdsAttkMonSynAttk, nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep, nsIdsAttkMonPortScan"
-    view             =   "detectedAttacks: nsIdsAttkMonSynAttk nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep nsIdsAttkMonPortScan"
+    [[Netscreen-Firewall]]
+        ds		=	"nsResCpuLast5Min, nsResMemLeft"
+        view        = 	"""cpu: nsResCpuLast5Min,
+        memory: nsResMemLeft"""
+    
+    [[Netscreen-sessions]]
+        ds               =   "nsResSessAllocate, nsResSessFailed"
+        view             =   "Sessions: nsResSessAllocate nsResSessFailed"
+    
+    [[Netscreen-stats]]
+        ds               =   "nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep"
+        view             =   "detectedAttacks: nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep"
+    
+    [[Netscreen-attacks]]
+        ds               =   "nsIdsAttkMonSynAttk, nsIdsAttkMonIcmpFlood, nsIdsAttkMonIpSweep, nsIdsAttkMonPortScan"
+        view             =   "detectedAttacks: nsIdsAttkMonSynAttk nsIdsAttkMonIcmpFlood nsIdsAttkMonIpSweep nsIdsAttkMonPortScan"
 
 
 ###############################################################################
@@ -170,16 +164,16 @@ nsIdsAttkMonIpSweep                 = .1.3.6.1.4.1.3224.3.2.1.13
 
 
 [GRAPH]
-[[nsResSessAllocate]]
-    color   =   dark-green
-    draw-as =   AREA
-    y-min   =   0
-    y-axis  =   "Sessions"
-    legend  =   "Current allocated sessions"
-
-[[nsResSessFailed]]
-    color       =   blue
-    draw-as =   STACK
-    y-axis      =   "Sessions"
-    legend      =   "Failed session allocation"
+    [[nsResSessAllocate]]
+        color   =   dark-green
+        draw-as =   AREA
+        y-min   =   0
+        y-axis  =   "Sessions"
+        legend  =   "Current allocated sessions"
+    
+    [[nsResSessFailed]]
+        color       =   blue
+        draw-as =   STACK
+        y-axis      =   "Sessions"
+        legend      =   "Failed session allocation"
 

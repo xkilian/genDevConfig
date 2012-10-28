@@ -176,99 +176,99 @@
 ###############################################################################
 
 [DSTEMPLATE]
-[[juniper-mpls-tunnel]]
-    ds          =       "mplsLspOctets, mplsLspPackets"
-    graph        =       "All: mplsLspOctets mplsLspPackets"
-
-[[juniper-firewall-counter]]
-    ds	=	"jnxFWCounterPacketCount, jnxFWCounterByteCount"
-    graph        = 	"""Octets: jnxFWCounterByteCount,
-    Packets: jnxFWCounterPacketCount"""
-
-[[juniper-firewall-policer]]
-    ds	=	"jnxFWCounterPacketCount"
-    graph	=	"Packets: jnxFWCounterPacketCount"
-
-
-[[juniper-standard-interface-hc]]
-    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
-    ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"""
-    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
-    UcastPackets: ifHCInUcastPkts ifHCOutUcastPkts,
-    Errors: ifInErrors ifOutErrors"""
-
-[[juniper-interface-hc]]
-    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
-    ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-    ifHCInMulticastPkts, ifHCOutMulticastPkts,
-    ifHCInBroadcastPkts, ifHCOutBroadcastPkts"""
-    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
-    UcastPackets: ifInUcastPackets ifOutUcastPackets,
-    Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
-    Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
-    Errors: ifInErrors ifOutErrors"""
-
-[[juniper-sub-interface-hc]]
-    ds          = 	"""ifHCInOctets, ifHCOutOctets,
-    ifInErrors, ifOutErrors,
-    ifHCInUcastPkts, ifHCOutUcastPkts"""
-    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
-    Packets: ifHCInUcastPkts ifHCOutUcastPkts,
-    Errors: ifInErrors ifOutErrors"""
-
-[[juniper-atm-interface-hc]]
-    ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
-    ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
-    ifHCInMulticastPkts, ifHCOutMulticastPkts,
-    ifHCInBroadcastPkts, ifHCOutBroadcastPkts,
-    jnxAtmIfTxCellCount, jnxAtmIfRxCellCount, jnxAtmIfTxIdleCellCount,
-    jnxAtmIfUncorrHCSErrs, jnxAtmIfCorrHCSErrs,
-    jnxAtmIfTxCellFIFOOverRuns, jnxAtmIfRxCellFIFOOverRuns, jnxAtmIfRxCellFIFOUnderRuns,
-    jnxAtmIfInInvalidVCCells, jnxAtmIfInNoBufferOAMCells,
-    jnxAtmIfInNoBufDropPkts, jnxAtmIfOutVCQueueDrops,
-    jnxAtmIfInBadCrcs, jnxAtmIfInLenErrPkts, jnxAtmIfInTimeoutPkts"""
-    graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
-    UcastPackets: ifInUcastPackets ifOutUcastPackets,
-    Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
-    Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
-    Errors: ifInErrors ifOutErrors,
-    ATMCells: jnxAtmIfTxCellCount jnxAtmIfRxCellCount jnxAtmIfTxIdleCellCount,
-    ATMHCSErrs: jnxAtmIfUncorrHCSErrs jnxAtmIfCorrHCSErrs,
-    ATMFIFO: jnxAtmIfTxCellFIFOOverRuns jnxAtmIfRxCellFIFOOverRuns jnxAtmIfRxCellFIFOUnderRuns,
-    ATMOutDrops: jnxAtmIfOutVCQueueDrops
-    ATMInErr: jnxAtmIfInNoBufferOAMCells jnxAtmIfInNoBufDropPkts jnxAtmIfInInvalidVCCells jnxAtmIfInBadCrcs jnxAtmIfInLenErrPkts jnxAtmIfInTimeoutPkts"""
-
-[[juniper-generic]]
-    ds    = SysDescr    
-# Empty target used to store user provided information.
-
-[[juniper-chassis-backplane]]
-    ds		=	"jnxOperatingTemp"
-    graph		=	"Temp: jnxOperatingTemp"
-
-[[juniper-chassis-powersupply]]
-    ds		=	"jnxOperatingTemp"
-    graph		=	"Temp: jnxOperatingTemp"
-
-[[juniper-chassis-ssb]]
-    ds		=	"jnxOperatingTemp"
-    graph		=	"Temp: jnxOperatingTemp"
-
-[[juniper-chassis-fpc]]
-    ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer, jnxOperatingHeap"
-    graph        = 	"""Temp: jnxOperatingTemp,
-    CPU: jnxOperatingCPU jnxOperatingISR,
-    Mem: jnxOperatingBuffer jnxOperatingHeap"""
-
-[[juniper-chassis-pic]]
-    ds		=	"jnxOperatingTemp"
-    graph		=	"Temp: jnxOperatingTemp"
-
-[[juniper-chassis-re]]
-    ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer"
-    graph        = 	"""Temp: jnxOperatingTemp,
-    CPU: jnxOperatingCPU jnxOperatingISR,
-    Mem: jnxOperatingBuffer"""
+    [[juniper-mpls-tunnel]]
+        ds          =       "mplsLspOctets, mplsLspPackets"
+        graph        =       "All: mplsLspOctets mplsLspPackets"
+    
+    [[juniper-firewall-counter]]
+        ds	=	"jnxFWCounterPacketCount, jnxFWCounterByteCount"
+        graph        = 	"""Octets: jnxFWCounterByteCount,
+        Packets: jnxFWCounterPacketCount"""
+    
+    [[juniper-firewall-policer]]
+        ds	=	"jnxFWCounterPacketCount"
+        graph	=	"Packets: jnxFWCounterPacketCount"
+    
+    
+    [[juniper-standard-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifHCInUcastPkts, ifHCOutUcastPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifHCInUcastPkts ifHCOutUcastPkts,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[juniper-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+        ifHCInMulticastPkts, ifHCOutMulticastPkts,
+        ifHCInBroadcastPkts, ifHCOutBroadcastPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
+        Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[juniper-sub-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets,
+        ifInErrors, ifOutErrors,
+        ifHCInUcastPkts, ifHCOutUcastPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        Packets: ifHCInUcastPkts ifHCOutUcastPkts,
+        Errors: ifInErrors ifOutErrors"""
+    
+    [[juniper-atm-interface-hc]]
+        ds          = 	"""ifHCInOctets, ifHCOutOctets, ifInErrors,
+        ifOutErrors, ifInUcastPackets, ifOutUcastPackets,
+        ifHCInMulticastPkts, ifHCOutMulticastPkts,
+        ifHCInBroadcastPkts, ifHCOutBroadcastPkts,
+        jnxAtmIfTxCellCount, jnxAtmIfRxCellCount, jnxAtmIfTxIdleCellCount,
+        jnxAtmIfUncorrHCSErrs, jnxAtmIfCorrHCSErrs,
+        jnxAtmIfTxCellFIFOOverRuns, jnxAtmIfRxCellFIFOOverRuns, jnxAtmIfRxCellFIFOUnderRuns,
+        jnxAtmIfInInvalidVCCells, jnxAtmIfInNoBufferOAMCells,
+        jnxAtmIfInNoBufDropPkts, jnxAtmIfOutVCQueueDrops,
+        jnxAtmIfInBadCrcs, jnxAtmIfInLenErrPkts, jnxAtmIfInTimeoutPkts"""
+        graph        = 	"""Octets: ifHCInOctets ifHCOutOctets,
+        UcastPackets: ifInUcastPackets ifOutUcastPackets,
+        Multicast: ifHCInMulticastPkts ifHCOutMulticastPkts,
+        Broadcast: ifHCInBroadcastPkts ifHCOutBroadcastPkts,
+        Errors: ifInErrors ifOutErrors,
+        ATMCells: jnxAtmIfTxCellCount jnxAtmIfRxCellCount jnxAtmIfTxIdleCellCount,
+        ATMHCSErrs: jnxAtmIfUncorrHCSErrs jnxAtmIfCorrHCSErrs,
+        ATMFIFO: jnxAtmIfTxCellFIFOOverRuns jnxAtmIfRxCellFIFOOverRuns jnxAtmIfRxCellFIFOUnderRuns,
+        ATMOutDrops: jnxAtmIfOutVCQueueDrops
+        ATMInErr: jnxAtmIfInNoBufferOAMCells jnxAtmIfInNoBufDropPkts jnxAtmIfInInvalidVCCells jnxAtmIfInBadCrcs jnxAtmIfInLenErrPkts jnxAtmIfInTimeoutPkts"""
+    
+    [[juniper-generic]]
+        ds    = SysDescr    
+        # Empty target used to store user provided information and assign SNMP dependencies to.
+    
+    [[juniper-chassis-backplane]]
+        ds		=	"jnxOperatingTemp"
+        graph		=	"Temp: jnxOperatingTemp"
+    
+    [[juniper-chassis-powersupply]]
+        ds		=	"jnxOperatingTemp"
+        graph		=	"Temp: jnxOperatingTemp"
+    
+    [[juniper-chassis-ssb]]
+        ds		=	"jnxOperatingTemp"
+        graph		=	"Temp: jnxOperatingTemp"
+    
+    [[juniper-chassis-fpc]]
+        ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer, jnxOperatingHeap"
+        graph        = 	"""Temp: jnxOperatingTemp,
+        CPU: jnxOperatingCPU jnxOperatingISR,
+        Mem: jnxOperatingBuffer jnxOperatingHeap"""
+    
+    [[juniper-chassis-pic]]
+        ds		=	"jnxOperatingTemp"
+        graph		=	"Temp: jnxOperatingTemp"
+    
+    [[juniper-chassis-re]]
+        ds		=	"jnxOperatingTemp, jnxOperatingCPU, jnxOperatingISR, jnxOperatingBuffer"
+        graph        = 	"""Temp: jnxOperatingTemp,
+        CPU: jnxOperatingCPU jnxOperatingISR,
+        Mem: jnxOperatingBuffer"""
 
 ###############################################################################
 #
