@@ -415,10 +415,6 @@
         # instance is formed of: %peer-id%.%rest%
         ds_oid       =       $OidccarStatFilteredBytes.%(instance)s
     
-    [[ccarStatSwitchedPkts]]
-        # instance is formed of: %peer-id%.%rest%
-        ds_oid       =       $OidccarStatSwitchedPkts.%(instance)s
-    
     [[cbQosCMPrePolicyByte]]
         # instance is formed of: %peer-id%.%rest%
         ds_oid       =       $OidcbQosCMPrePolicyByte.%(instance)s
@@ -1025,10 +1021,7 @@
         y-axis	=   "degrees Centigrade"
         units	=   "&#176"
         space	=   ""
-        legend	=   "Cage temperature in C"
-        y-axis	=   "Cagetemp"
-        units	=   "Cagetemp"
-    
+        legend	=   "Cage temperature in C"    
     
     [[vpnActivePhase1ipSecSessions]]
         color	=   blue
@@ -1167,30 +1160,6 @@
         units       =   "RTT operational value"
         inf-marker  =   true
         y-min	=   0
-    
-    [[rttMonLatestJitterOperRTTMin]]
-        color	=   blue
-        draw-as	=   LINE2
-        legend	=   "Min RTT to remote router"
-        y-axis	=   "Milliseconds"
-        inf-marker	=   true
-        units	=   "ms"
-        y-min	=   0
-        show-max	=   true
-        max-color	=   neongrn
-        draw-max-as	=   LINE1
-    
-    [[rttMonLatestJitterOperRTTMax]]
-        color	=   blue
-        draw-as	=   LINE2
-        legend	=   "Max RTT to remote router"
-        y-axis	=   "Milliseconds"
-        inf-marker	=   true
-        units	=   "ms"
-        y-min	=   0
-        show-max	=   true
-        max-color	=   neongrn
-        draw-max-as	=   LINE1
     
     [[rttMonLatestJitterOperMOS]]
         color       =   blue
@@ -1626,8 +1595,8 @@
         y-max       =   100
     
     [[tempState]]
-        legend  =   "Current temperature state:<br><ul><li>Normal(1)<li>Warning
-    (2)<li>Critical (3)<li>Shutdown (4)<li>Not Present(5)<li>Not Functioning (6)</ul>"
+        legend  =   """Current temperature state:<br><ul><li>Normal(1)<li>Warning
+    (2)<li>Critical (3)<li>Shutdown (4)<li>Not Present(5)<li>Not Functioning (6)</ul>"""
     
     [[cseL2ForwardedTotalPkts]]
         color       =   dark-green
@@ -1700,48 +1669,6 @@
         bytes       =   true
         use-gprint  =   false
         show-max    =   false
-    
-    [[chassisPs1Status]]
-        color       =   magenta
-        draw-as     =   STACK
-        y-axis      =   "status"
-        units       =   ""
-        legend      =   "PS1 status"
-        scale       =   "2,-"
-        precision   =   0
-        show-avg-max = 0
-    
-    [[chassisPs2Status]]
-        color       =   green
-        draw-as     =   STACK
-        y-axis      =   "status"
-        units       =   ""
-        legend      =   "PS2 status"
-        scale       =   "2,-"
-        precision   =   0
-        show-avg-max = 0
-    
-    [[chassisTempAlarm]]
-        color       =   red
-        draw-as     =   AREA
-        y-axis      =   "state"
-        units       =   ""
-        legend      =   "Temp alarm"
-        y-max       =   8
-        y-min       =   -3
-        scale       =   "1,-"
-        precision   =   0
-        show-avg-max = 0
-    
-    [[chassisFanStatus]]
-        color       =   blue
-        draw-as     =   STACK
-        y-axis      =   "status"
-        units       =   ""
-        legend      =   "Fan Status"
-        scale       =   "2,-"
-        precision   =   0
-        show-avg-max = 0
     
     [[bandwidthUsageCurrent]]
         color       =   dark-green
