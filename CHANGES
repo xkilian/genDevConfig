@@ -18,6 +18,18 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 #
 # Move other generic tests to external module
 # Permit regex-mappings and direct mappings. All others are unsupported.
+# Parameters read from INI formatted file at runtime instead of command-line parameters
+
+04/12/2012
+
+# Version 3_0_4
+
+# - Corrected duplicates in Defaults.cisco that did not pass ConfigObj strict checking
+# - Renamed Default files to make sure the base Default files is treated first
+#   This is due to ConfigObj module which needs to load data in order to be able to apply
+#   inheritance.
+# - Renamed Defaults.unified to Defaults_base.ini
+# - Renamed Defaults.pluginname to Defaults_plugin_pluginname.ini
 
 28/10/2012
 
