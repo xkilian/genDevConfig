@@ -779,7 +779,7 @@ if ($opts{chassisstats}) {
     }
 
     push (@options, '_sortby', $opts{sortby}) if ($opts{sortby});
-    push (@options, 'active_checks_enabled', '0') if (!$opts{chassiscollect});
+    #push (@options, 'active_checks_enabled', '0') if (!$opts{chassiscollect});
     push (@options, '_class', $opts{class}) if ($opts{class});
 #    push (@options, '_monitor-type', $opts{chassisname} ) if ($opts{chassisname} ne 'Chassis-Generic');
 
