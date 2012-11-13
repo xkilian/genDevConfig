@@ -20,7 +20,15 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
-04/12/2012
+13/11/2012
+
+# Version 3_0_4
+
+# - Always collect chassisstats, disregard chassiscollect option. active_check_enabled dos not
+#   work correctly in Shinken, it collects the data, but then discards it because the active_check is disabled
+#   instead of just skipping the check.
+
+04/11/2012
 
 # Version 3_0_4
 
