@@ -7,7 +7,7 @@
 genDevConfig - Generate a Shinken host and service config for a network device.
 
 For the given device, generate a Shinken configuration directory. Within this
-directory it will place a "deviname" file which will contain the following 
+directory it will place a "devicename" file which will contain the following 
 logical information:
 
 define host {
@@ -38,11 +38,9 @@ define service {
  - util/CREDITS                       # Thank you notes to contributors
  - util/INSTALL                       # How to install this script in Cricket
  - etc/                               # Expected location of genDevConfig-conf.pl
- - sample-config/genConfig/Defaults   # Shinken Defaults (NOT USED YET)
- - sample-config/genConfig/Defaults.* # Shinken device specific Defaults (NOT USED YET)
- - sample-config/genConfig/Defaults_unified.ini # Shinken unified Defaults file
- - sample-config/genConfig/Defaults_triggers.ini # Shinken triggers(NOT USED YET)
-- sample-config/genConfig/snmp-template.cfg # Shinken template
+ - sample-config/genConfig/Defaults.* # Shinken device specific Defaults
+ - sample-config/genConfig/Defaults_triggers.ini # Shinken triggers
+ - sample-config/genConfig/snmp-template.cfg # Shinken template
  - lib/genConfig/File.pm              # Utility library for genDevConfig
  - lib/genConfig/SNMP.pm              # Utility library for genDevConfig
  - lib/genConfig/Utils.pm             # Utility library for genDevConfig
@@ -50,8 +48,7 @@ define service {
  - lib/genConfig/pluginUtils.pm       # Utility library for genDevConfig
  - lib/genConfig/log.pm               # Utility library for genDevConfig imported from Cricket 1.05
  - lib/genConfig/snmpUtils.pm         # Utility library for genDevConfig imported from Cricket 1.05
- - lib/monitorConfig                  # The configuration file for 
-                                      # Cricket monitor thresholds (NOT USED)
+                                      
  - plugins/genConfig/                 # The plugin directory containing plugins
  - plugins/genConfig/CiscoIOS.pm      # A plugin
  - plugins/genConfig/CatalystCatOS.pm # Another plugin
@@ -89,7 +86,7 @@ Copy genDevConfig file structure to your $genDevConfig/ directory.
 Make sure the genDevConfig script is executable by your user. And that all
 files are owned by the user.
 
-### Step 2 (Copying the Defaults_unified.ini file to shinken/etc/SnmpBooster)
+### Step 2 (Copying the Defaults*.ini file to shinken/etc/SnmpBooster)
 
 If you use the genDevConfig Defaults file included in this release within
 your Shinken confige (see the example below). You should replace the
@@ -107,12 +104,13 @@ export genDevConfig=/path/to/genDevConfig
 export SHINKEN=/path/to/shinken
 cd $SHINKEN/etc
 mkdir SNMP
-cp $genDevConfig/sample-config/genDevConfig/Defaults_unified.ini $SHINKEN/etc/SNMP/
+cp $genDevConfig/sample-config/genDevConfig/Defaults* $SHINKEN/etc/SNMP/
 cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg $SHINKEN/etc/
 
 ### Step 3 Configure SnmpBooster
 
-Follow instructions on enabling SnmpBooster:
+Follow instructions on enabling SnmpBooster in Shinken. SnmpBooster is the SNMP polling
+module for Shinken. Finally high performance SNMp for use with Shinken!! :
 
 http://www.shinken-monitoring.org/wiki/setup_snmp_booster_module
 
@@ -182,6 +180,4 @@ Gotchas:
    rather than the expected type 131.  Try "-e 'Tunnel.*'".
    
    Graphs statements in the Defaults* INI files are not used, but are there for future conversion to Graphite Templates.
-
-   Shinken SnmpBooster module cannot read the Defaults file yet, use the Defaults_unified.ini configuration file. 
 
