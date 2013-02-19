@@ -25,21 +25,21 @@ The included INSTALL file has all the installation and setup information necessa
 Documentation
 =============
 
-The documentation is maintained in a Microsoft word format and contains references for :
+The documentation file is maintained in a Microsoft word format at www.acktomic.com and contains references for :
 
 * genDevConfig execution workflow (diagram and explanations)
-* genDevConifg -h (runtme help options explained)
+* genDevConifg -h (runtime help options explained)
 * How to add a new plugin (very easy, step by step explanation and example)
 * Troubleshooting
 
 Note: It refers to genRtrConfig and genDevConfig 2.x which are previous versions of the script not
-meant for use with Shinken, but the information is still relevant and plugin building has not changed.
+meant for use with Shinken, but the information is still relevant and plugin building format has not changed.
 
 ===============
 Expected output
 ===============
 
-For the given device, genDevConfig will generate a Shinken configuration directory. Within this
+For a device, genDevConfig will generate a Shinken configuration directory. Within this
 directory it will place a file, named after the "device host_name", which will contain the following 
 information:
 
@@ -50,13 +50,18 @@ define host {
 
 define service {
      chassis_service
-}
      ...
+}
+
+define service {
      custom_service1
+}
      ...
      custom_serviceN
 
+define service {
      interface_service1
+}
      ...
      interface_serviceN
 
