@@ -257,7 +257,7 @@ sub custom_targets {
     my $file = $opts->{'file'};
 
     $file->writetarget('service {', '',
-			'service_desciption' => "$opts->{devicename}_system",
+			'service_description' => "$opts->{devicename}_system",
 			'host_name' => $opts->{devicename},
 			'display_name'   => "$opts->{devicename}_system",
 		        '_dstemplate'    => 'hr_System',
