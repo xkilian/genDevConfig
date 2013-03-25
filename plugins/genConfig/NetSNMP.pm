@@ -215,7 +215,7 @@ sub discover {
 
     ### Parse flags given to the plugin.
 
-    self->parse_flags($opts->{pluginflags});
+    $self->parse_flags($opts->{pluginflags});
 
     ###
     ### START DEVICE DISCOVERY SECTION
