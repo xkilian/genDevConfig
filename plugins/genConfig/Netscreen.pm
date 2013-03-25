@@ -161,7 +161,7 @@ sub custom_targets {
         my ($targetname) = 'chassis.sessions_statistics';
 
         $file->writetarget('service {', '',
-            'service_desciption' => $targetname,
+            'service_description' => $targetname,
             'host_name'          => $opts->{devicename},
             '_inst'              => '0',
             '_display_order'             => $opts->{order},
