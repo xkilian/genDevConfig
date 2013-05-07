@@ -733,7 +733,7 @@ my (@options);
 #}
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
-my $dstemplates = 'default-snmp-host-template';
+my $dstemplates = 'SnmpBooster-host';
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
