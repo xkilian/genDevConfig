@@ -4,28 +4,6 @@
 #
 ##############################################################################
 
-genDevConfig - Generate a Shinken host and service config for a network device.
-
-For the given device, generate a Shinken configuration directory. Within this
-directory it will place a "devicename" file which will contain the following 
-logical information:
-
-define host {
-     host_name    ...
-     ...
-}
-define service {
-     chassis_target
-}
-     ...
-     custom_target1
-     ...
-     custom_targetN
-
-     interface_target1
-     ...
-     interface_targetN
-
 
 ##############################################################################
 #
@@ -69,8 +47,13 @@ define service {
 Module             From
 --------------------------------------------------------------------
 SNMP_Session       http://code.google.com/p/snmp-session/downloads/detail?name=SNMP_Session-1.13.tar.gz&can=2&q=
+
+Open the URL in firefox and download SNMP_Session. tar xvfz SNMP_Session-xxxx.tar.gz, cd directory, perl Makefile.pl, make, make install.
+
 Date::Parse        CPAN: by-authors/id/GBARR/TimeDate-*.tar.gz
 MD5                CPAN: by-authors/id/GAAS/Digest-MD5-*.tar.gz
+
+Use CPAN to install the twp modules. Install cpan if you do not have it. 
 
 ### Step 0 
 
@@ -102,10 +85,12 @@ Example of creating and copying the Defaults files to the Shinken SNMP folder:
 
 export genDevConfig=/path/to/genDevConfig
 export SHINKEN=/path/to/shinken
-cd $SHINKEN/etc
-mkdir SNMP
-cp $genDevConfig/sample-config/genDevConfig/Defaults* $SHINKEN/etc/SNMP/
-cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg $SHINKEN/etc/
+cd $SHINKEN/etc/packs/network
+mkdir SnmpBooster
+
+cd $SHINKEN/etc/packs/network/SnmpBooster
+cp $genDevConfig/sample-config/genDevConfig/Defaults* ./
+cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg ./templates.cfg
 
 ### Step 3 Configure SnmpBooster
 
@@ -145,6 +130,36 @@ You can consult www.acktomic.com/cricket/genRtrConfig.html for more information 
 Verify the creation of the configuration for chassis, interfaces..
 
 vi HOSTNAME/targets
+
+##############################################################################
+#
+# Using genDevConfig - Output
+#
+##############################################################################
+
+genDevConfig - Generate a Shinken host and service config for a network device.
+
+For the given device, generate a Shinken configuration directory. Within this
+directory it will place a "devicename" file which will contain the following 
+logical information:
+
+define host {
+     host_name    ...
+     ...
+}
+define service {
+     chassis_target
+}
+     ...
+     custom_target1
+     ...
+     custom_targetN
+
+     interface_target1
+     ...
+     interface_targetN
+
+
 
 
 
