@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.01;
+my $VERSION = 1.02;
 
 ### End package init
 
@@ -53,7 +53,8 @@ my %OIDS = (
 ## returned by the devices. The name is a regular expression.
 ################################################################################
 my @types = ( "PIX Firewall",
-              "Cisco PIX Security Appliance Version 7");
+              "Cisco PIX Security Appliance Version 7",
+              "Cisco Adaptive Security Appliance");
 
 
 ###############################################################################
@@ -126,9 +127,12 @@ sub discover {
         $opts->{model} = 'PIX-62+';
     }elsif ($opts->{sysDescr} =~ /Cisco PIX Security Appliance Version 7/) {
         $opts->{model} = 'PIX-62+';
+    }elsif ($opts->{sysDescr} =~ /Cisco Adaptive Security Appliance/) {
+        $opts->{model} = 'ASA';
     }elsif ($opts->{sysDescr} =~ /PIX Firewall/) {
         $opts->{model} = 'PIX';
     }
+    
 
     #$opts->{vendor_soft_ver} = get('versionOID');
     $opts->{class} = 'pix';
@@ -139,7 +143,11 @@ sub discover {
     } elsif ($opts->{model} =~ /^PIX-62+/) {
         $opts->{chassisttype} = 'Cisco-PIX-Firewall';
         $opts->{chassisname} = 'Chassis-PIX';
-        $opts->{chassisinst} = 'map(cpu-stats)';
+        $opts->{chassisinst} = '1';
+    } elsif ($opts->{model} =~ /^ASA/) {
+        $opts->{chassisttype} = 'Cisco-ASA-Firewall';
+        $opts->{chassisname} = 'Chassis-ASA';
+        $opts->{chassisinst} = '1';
     }
 
     #$opts->{vendor_soft_ver} = get('versionOID');
@@ -186,6 +194,7 @@ sub custom_targets {
         $file->writetarget('service {', '',
             'host_name'           => $opts->{devicename},
             'service_description' => $targetname,
+            'service_dependencies'=> ",chassis",
             '_inst'             => '0',
             '_display_order'            => $opts->{order},
             'display_name'      => $targetname,

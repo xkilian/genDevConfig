@@ -1,4 +1,3 @@
-
 ===============================================================================
 genDevConfig change log
 
@@ -14,6 +13,50 @@ changelog is handled by the sourceforge cvs cricket.sourceforge.net for version
 ===============================================================================
 
 Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
+
+# TODO FOR FUTURE RELEASES
+#
+# Move other generic tests to external module
+# Permit regex-mappings and direct mappings. All others are unsupported.
+# Parameters read from INI formatted file at runtime instead of command-line parameters
+
+13/11/2012
+
+# Version 3_0_4
+
+# - Always collect chassisstats, disregard chassiscollect option. active_check_enabled dos not
+#   work correctly in Shinken, it collects the data, but then discards it because the active_check is disabled
+#   instead of just skipping the check.
+
+04/11/2012
+
+# Version 3_0_4
+
+# - Corrected duplicates in Defaults.cisco that did not pass ConfigObj strict checking
+# - Renamed Default files to make sure the base Default files is treated first
+#   This is due to ConfigObj module which needs to load data in order to be able to apply
+#   inheritance.
+# - Renamed Defaults.unified to Defaults_base.ini
+# - Renamed Defaults.pluginname to Defaults_plugin_pluginname.ini
+
+28/10/2012
+
+# Version 3_0_3
+
+# - Automatic service dependencies to chassis service for all plugins
+# - Updated Defaults file for all plugins
+# - Converted map(x) to map(rule,x) for all plugins
+# - Removed incompatible maps and other features so all plugins can be supported
+# - SnmpBooster now supports reading in a directory of ini or a single file
+
+12/10/2012
+
+# Version 3_0_2
+#
+# - Automatic service dependencies to chassis service
+# - Created a unified config.ini file for Shinken SnmpBooster
+#   This is temporary until SnmpBooster supports reading from multiple ini files
+# - Only Nortel/Avaya devices and generic SNMP devices are supported(See TODO)
 
 31/08/2012
 
@@ -50,13 +93,6 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Introduce new options -ctemplate, -htemplate to apply templates
 #   to a host or chassis.
 # - TRIGGER templates with simpler and more powerful syntax
-#
-# TODO FOR RELEASE
-#
-# Move other generic tests to external module
-# Convert map(x) to map(rule,x) for all plugins
-# Permit regex-mappings and direct mappings. All others are unsupported.
-# Remove incompatible maps and other features.
 
 09/01/2012
 

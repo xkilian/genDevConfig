@@ -121,6 +121,7 @@ sub custom_targets {
     $opts->{'file'}->writetarget('service {', '',
 	                         'host_name'           => $opts->{devicename},
 				 'service_description' => $targetname,
+				 'service_dependencies'=> ",chassis",
 				 '_display_order'         => $opts->{order},
 				 '_inst'          => (keys %snmpinpkts)[0],
 				 'display_name'   => $targetname,

@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.14;
+my $VERSION = 1.15;
 
 ### End package init
 
@@ -494,10 +494,10 @@ sub custom_targets {
             $file->writetarget("service {", '',
 	            'host_name'           => $opts->{devicename},
                     'service_description' => $target,
-                    '_cpu'                => $cpu,
+		    'service_dependencies'=> ",chassis",
                     'notes'               => $ldesc,
                     'display_name'        => $sdesc,
-                    '_inst'               => 0,
+                    '_inst'               => $cpu,
                     '_display_order'              => $opts->{order},
                     '_dstemplate'                 => "cisco-vip-cpu",
             );
@@ -568,6 +568,7 @@ sub custom_targets {
                     $file->writetarget("service {", '',
 			'host_name'           => $opts->{devicename},
                         'service_description'   => $targetname,
+			'service_dependencies'=> ",chassis",
                         '_interface_name' => $targetdesc,
                         'notes'          => $ldesc,
                         'display_name'   => $targetname,
@@ -607,6 +608,7 @@ sub custom_targets {
             $file->writetarget("service {", '',
 		'host_name'           => $opts->{devicename},
                 'service_description'=> $targetname,
+		'service_dependencies'=> ",chassis",
                 '_interface-name'=> $targetdesc,
                 'notes' => $ldesc,
                 'display_name'    => $targetname,
@@ -650,6 +652,7 @@ if ($opts->{ciscobox} && keys(%cisco_car)) {
         push(@config,
 	    'host_name'           => $opts->{devicename},
             'service_description' =>  "ifcar." . $ifname,
+	    'service_dependencies'=> ",chassis",
             '_display_order'              =>  $opts->{order},
             'notes'               =>  $ldesc . " " . $rest,
             'display_name'        =>  $ifdescr{$ifindex},
@@ -689,6 +692,7 @@ if ($opts->{rtragents} && %rttMonCtrlOperState) {
            $file->writetarget("service {", '',
 	    'host_name'           => $opts->{devicename},
             'service_description'        => $targetname,
+	    'service_dependencies'=> ",chassis",
             '_inst'        => $key,
             '_display_order'       => $opts->{order},
             'display_name' => $targetname,
