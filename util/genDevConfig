@@ -894,12 +894,12 @@ if ($opts{wirelessAssociations}) {
 
     $file->writetarget("service {", '',
 	'service_description'  => $servicename,
-	'display_name'    => $sdesc,
-	'host_name'       =>$opts{devicename},
-	'_inst'           => '0',
-        '_display_order'          =>      $opts{order},
-        'notes'           => $ldesc,
-        '_dstemplate'             => 'Cisco-Aironet-Associations',
+	'display_name'         => $sdesc,
+	'host_name'            =>$opts{devicename},
+	'_inst'                => '0',
+        '_display_order'       => $opts{order},
+        'notes'                => $ldesc,
+        '_dstemplate'          => 'Cisco-Aironet-Associations',
     );
 
     $opts{order} -= 1;
@@ -919,13 +919,13 @@ if ( %dsx1TotalIndex ) {
         my $ldesc = "<BR>Controller $ifacedescr<BR>$ifacealias";
   
         $file->writetarget("service {", '',
-         'service_description'  => $ifacedescr,
-	     'display_name'         => $ifacedescr,
-	     'host_name'            => $opts{devicename},
-         '_inst'                => $key,
-         '_display_order'               => $opts{order},
-         'notes'                => $ldesc,
-         '_dstemplate'                  => 'dsx-controller'
+	    'service_description'  => $ifacedescr,
+	    'display_name'         => $ifacedescr,
+	    'host_name'            => $opts{devicename},
+	    '_inst'                => $key,
+	    '_display_order'       => $opts{order},
+	    'notes'                => $ldesc,
+	    '_dstemplate'          => 'dsx-controller'
          );
         $opts{order} -= 1;
     }
