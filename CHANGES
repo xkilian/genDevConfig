@@ -17,6 +17,21 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 
 31/08/2012
 
+# Version 3_0_2 to 3_0_6
+#
+# - shinken host and service template renamed template.cfg
+# - updated docs to make people copy to shinken/etc/packs/network/SnmpBooster to
+#   make it more consistent with how things are managed in Shinken.
+# - Cleanup duplicate keys in base Defaults
+# - Updates to all Nortel templates
+# - Bug fixes to various Defaults files
+# - Add RFC1253 Number of OSPF runs
+# - Add RFC1253 number of OSPF routes
+# - Add STP invalid community requests
+
+
+31/08/2012
+
 # Version 3_0_1
 #
 # Script is now dedicated to sending Shinken compatible formatted output.
