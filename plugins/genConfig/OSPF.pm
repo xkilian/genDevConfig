@@ -52,7 +52,7 @@ my %OIDS = (
 ## the names should be contained in the sysdescr string
 ## returned by the devices. The name is a regular expression.
 ################################################################################
-my @types = ( "$OIDS{'.*'}",
+my @types = ( "",
             );
 
 
