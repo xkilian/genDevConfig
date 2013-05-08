@@ -160,13 +160,13 @@ sub custom_targets {
             $file->writetarget("service {", '',
                 'service_description'  => $servicename,
                 'display_name'         => $servicename,
-                'host_name'            => $opts{devicename},
+                'host_name'            => $opts->{devicename},
                 '_inst'                => $key,
-                '_display_order'       => $opts{order},
+                '_display_order'       => $opts->{order},
                 'notes'                => $ldesc,
                 '_dstemplate'          => 'ospf-spfruns'
             );
-            $opts{order} -= 1;
+            $opts->{order} -= 1;
         }
     }
     ###
