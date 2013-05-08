@@ -36,6 +36,7 @@ my $VERSION = 1.00;
 
 ### End package init
 
+my %ospfSpfRuns;
 
 # These are the OIDS used by this plugin
 # the OIDS should only be those necessary for index mapping or
@@ -99,9 +100,9 @@ sub can_handle {
     Debug ("Trying to see if OID ospfSpfRuns is supported" . $OIDS{ospfSpfRuns});
     ### Add our OIDs to the the global OID list
 
-    register_oids(%OIDS););
+    register_oids(%OIDS);
     
-    my %ospfSpfRuns     = gettable('ospfSpfRuns');
+    %ospfSpfRuns     = gettable('ospfSpfRuns');
     return 1 if ( %ospfSpfRuns );
     return 0;
 }
