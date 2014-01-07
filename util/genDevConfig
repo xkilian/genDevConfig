@@ -4,7 +4,7 @@
 # genDevConfig - Generate template config tree for various networked devices.
 #
 #    Copyright (C) 2000 Mike Fisher and Tech Data Corporation
-#    Copyright (C) 2002-2012 Francois Mikus "fmikus" domain "acktomic.com"
+#    Copyright (C) 2002-2013 Francois Mikus "fmikus" domain "acktomic.com"
 #   
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ BEGIN { # Try to find the config; one level below $0 in ./etc, or in other likel
           unless $Common::global::gInstallRoot;
     }
     $Common::global::gInstallRoot ||= $programdir . "/..";
-    $Common::global::gConfigRoot = $programdir . "/../config-tree";
+    #$Common::global::gConfigRoot = $programdir . "/util";
 }
 
 #
@@ -51,6 +51,7 @@ use Pod::Usage;
 use Socket;
 use Net::hostent;
 use Net::Ping;
+#use Data::Dumper;
 
 #
 # Load modules originally from the Cricket project version 1.05.
@@ -72,6 +73,13 @@ use genConfig::pluginUtils; ### Plugin processing
 Common::Log::setFormat('minimal');
 
 #
+# Variables to apply to all services
+%Common::global::service_vars = (
+
+       'business_impact' => '0',
+);
+
+#
 # Get a copy of the ifType table.
 my %ifType_d = ();
 {
@@ -82,7 +90,7 @@ my %ifType_d = ();
 }
 
 
-my $VERSION = 'genDevConfig 3.0.5';
+my $VERSION = 'genDevConfig 3.0.6';
 
 ###############################################################################
 sub version {
@@ -214,6 +222,7 @@ my %opts = (
     'pluginflags'          => {},
     'outputdir'            => '', # Absolute path from system /
     'outputdir_ct'         => '', # Config-tree relative path
+    'business_impact'      => '', # Shinken business impact
 
     ### Variables requiring promotion
 
@@ -342,10 +351,11 @@ GetOptions(
   "outputdir|o=s"         => \&setOutputDir,
   "parents=s"             => \&parentlist,
   "ports|p=s"             => \&portlist,
-  "ctemplates=s"           => \&template,
-#  "itemplates=s"           => \&template,
-  "htemplates=s"           => \&template,
-  "info|i=s"              => \&info,
+  "ctemplates=s"          => \&template,
+#  "itemplates=s"         => \&template,
+  "htemplates=s"          => \&template,
+#  "cinfo=s"              => \&chassisinfo,
+  "info|i=s"              => \%Common::global::service_vars,
   "ip=s"                  => \$opts{ip},
   "sortby=s"              => \$opts{sortby},
   "rtragents!"            => \$opts{rtragents},
@@ -357,13 +367,12 @@ GetOptions(
   "voip"                  => \$opts{req_voip},
   "snmpv2c|2"             => \$opts{req_usev2c},
   "forceplugin=s"         => \$opts{plugin},
-  "P:s"                   => \&pluginflags,
+#  "P:s"                   => \&pluginflags,
 );
 
 #
 # Exit with a brief message if no hostname was given.
 pod2usage("No hostname given. Use --help for help.\n") unless defined $ARGV[0];
-
 
 ###############################################################################
 
@@ -384,6 +393,8 @@ Info ("Script genDevConfig started on: " . Common::Log::timeStr(time()));
 Info ("Building Name to IP Adress Translation   ");
 
 $opts{devicename} = $ARGV[0];
+
+#Debug ( "Dumping Common:  " . Dumper(%Common::global::service_vars));
 
 # Get the ip address of the device we wish to build a configuration for
 my $hbn;
@@ -738,7 +749,7 @@ $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
     'host_name'         => $opts{devicename},
-	'display_name'      => $displayname,
+    'display_name'      => $displayname,
     'alias'             => $opts{alias},
     'address'           => $opts{ip},
     '_sys_location'     => $opts{sysLocation},
@@ -779,7 +790,7 @@ if ($opts{chassisstats}) {
     }
 
     push (@options, '_sortby', $opts{sortby}) if ($opts{sortby});
-    #push (@options, 'active_checks_enabled', '0') if (!$opts{chassiscollect});
+    push (@options, 'active_checks_enabled', '0') if (!$opts{chassiscollect});
     push (@options, '_class', $opts{class}) if ($opts{class});
 #    push (@options, '_monitor-type', $opts{chassisname} ) if ($opts{chassisname} ne 'Chassis-Generic');
 
@@ -793,7 +804,7 @@ if ($opts{chassisstats}) {
 	'display_name'  => $sdesc,
         'host_name'     => $opts{devicename},     
         '_inst'         => $inst,
-        '_display_order'        => $opts{order},
+        '_display_order'=> $opts{order},
         'notes'         => $ldesc,
         '_dstemplate'   => $opts{chassisttype},
         'use'           => $templates,
@@ -823,7 +834,7 @@ if ($ipForwDatagrams && $ipForwDatagrams != 0) {
         'service_description'  => $servicename,
         'display_name'     => $sdesc,
         'host_name'        => $opts{devicename},	       
-        '_display_order'           => $opts{order},
+        '_display_order'   => $opts{order},
         'notes'            => $ldesc,
         '_dstemplate'      => 'Device-Traffic',
         'use'              => $opts{dtemplate},
@@ -872,12 +883,12 @@ if ($opts{vpntunnels}) {
     $file->writetarget("service {", '',
         'service_description'  => $servicename,
         'display_name'    => $sdesc,
-	    'host_name'       => $opts{devicename},	
+	'host_name'       => $opts{devicename},	
         '_inst'           => '0',
-        '_display_order'          => $opts{order},
+        '_display_order'  => $opts{order},
         'notes'           => $ldesc,
         '_dstemplate'     => 'Cisco-vpn-tunnels',
-        'use'              => $opts{dtemplate},
+        'use'             => $opts{dtemplate},
     );
 
     $opts{order} -= 1;
@@ -894,12 +905,12 @@ if ($opts{wirelessAssociations}) {
 
     $file->writetarget("service {", '',
 	'service_description'  => $servicename,
-	'display_name'         => $sdesc,
-	'host_name'            =>$opts{devicename},
-	'_inst'                => '0',
-        '_display_order'       => $opts{order},
-        'notes'                => $ldesc,
-        '_dstemplate'          => 'Cisco-Aironet-Associations',
+	'display_name'    => $sdesc,
+	'host_name'       =>$opts{devicename},
+	'_inst'           => '0',
+        '_display_order'  =>      $opts{order},
+        'notes'           => $ldesc,
+        '_dstemplate'     => 'Cisco-Aironet-Associations',
     );
 
     $opts{order} -= 1;
@@ -919,13 +930,13 @@ if ( %dsx1TotalIndex ) {
         my $ldesc = "<BR>Controller $ifacedescr<BR>$ifacealias";
   
         $file->writetarget("service {", '',
-	    'service_description'  => $ifacedescr,
-	    'display_name'         => $ifacedescr,
-	    'host_name'            => $opts{devicename},
-	    '_inst'                => $key,
-	    '_display_order'       => $opts{order},
-	    'notes'                => $ldesc,
-	    '_dstemplate'          => 'dsx-controller'
+         'service_description'  => $ifacedescr,
+	     'display_name'     => $ifacedescr,
+	     'host_name'        => $opts{devicename},
+         '_inst'                => $key,
+         '_display_order'       => $opts{order},
+         'notes'                => $ldesc,
+         '_dstemplate'          => 'dsx-controller'
          );
         $opts{order} -= 1;
     }
@@ -1589,11 +1600,14 @@ sub template {
 	$opts{$opt} = join (",", $opts{$opt}, $value);
     }
 }
-sub info {
+
+sub chassisinfo {
     my($opt,$value) = @_;
     my @atmp = split/:/,$value;
     $opts{refinfo}->{$atmp[0]} = $atmp[1];
+    Debug("Writing to chassis_vars: " . $atmp[0] ."=>" . $atmp[1]);
 }
+
 sub pluginflags {
     my($opt,$value) = @_;
     if ($value =~ /^(\w+)(=(.*))?/) {
@@ -1610,8 +1624,7 @@ sub setOutputDir {
     # absolut system path to where to write the target
     $value =~ s/^\///; #Strip any leading slashes
     $value =~ s/\/$//; #Strip any trailing slashes
-#    $opts{outputdir} = $Common::global::gConfigRoot . '/' . $value . '/';
-    $opts{outputdir} = $Common::global::gConfigRoot . '/' . $value . '/';
+    $opts{outputdir} = $value . '/';
     # config-tree relative path
     $opts{outputdir_ct} = '/' . $value; 
 }
@@ -1625,7 +1638,7 @@ genDevConfig [options] hostname
 
 =head1 SYNOPSIS
 
-genDevConfig --snmpv2c --namedonly --community=public <hostname>
+genDevConfig --snmpv2c --namedonly --community public <hostname>
 
 =head1 OPTIONS
 
@@ -1635,7 +1648,7 @@ genDevConfig --snmpv2c --namedonly --community=public <hostname>
 
 Report speeds in bytes/second rather than bits/second.
 
-=item B<-c <community>>, B<--community=<community>>
+=item B<-c <community>>, B<--community <community>>
 
 Use the specified SNMP read community string.
 If the community string is not set it will default to "public".
@@ -1644,24 +1657,24 @@ Note that by default the community string given here will not be added to the
 generated configuration file (see L<-C <community>> below). This allows the
 community string used to be inherited from further up in the config three.
 
-=item B<-C <community>>, B<--addcommunity=<community>>
+=item B<-C <community>>, B<--addcommunity <community>>
 
 Like L<-c <community>> abive except it saves the SNMP read community string in
 the generated configuration.
 
-=item B<--communityrw=<community-rw>>
+=item B<--communityrw <community-rw>>
 
 Include the snmp-rw string in the config.
 
 This is only useful with getRunningConfig script which is used for backing up
 the device configuration via SNMP and TFTP in CVS.
 
-=item B<-d <list>>, B<--dontcollect=<list>>
+=item B<-d <list>>, B<--dontcollect <list>>
 
 Do not collect interfaces with these types. The argument is a comma separated
 list of numeric interface types.
 
-=item B<-e <regex>>, B<--exception=<regex>>
+=item B<-e <regex>>, B<--exception <regex>>
 
 Interfaces types or interface descriptions that match the given regular 
 expression are exceptions to the
@@ -1671,44 +1684,52 @@ L<--dontcollect> list. Can be used multiple times. Case insensitive.
 
 Print this message.
 
-=item B<--htemplate="host-template-name">
+=item B<--htemplate "host-template-name">
 
 Add arbitrary templates to the host. These will appear in the use statement of the host.
 Double-quoted values. This option can be used multiple times.
 
-Example: --htemplate="my-host-template"
+Example: --htemplate "my-host-template"
 
-=item B<--ctemplate="chassis-template-name">
-
-Add arbitrary templates to the host. These will appear in the use statement of the host.
-Double-quoted values. This option can be used multiple times.
-
-Example: --ctemplate="my-chassis-template-name"
-
-=item B<--itemplate="interface-template-name">
+=item B<--ctemplate "chassis-template-name">
 
 Add arbitrary templates to the host. These will appear in the use statement of the host.
 Double-quoted values. This option can be used multiple times.
 
-Example: --itemplate="my-interface-template-name"
+Example: --ctemplate "my-chassis-template-name"
+
+=item B<--itemplate "interface-template-name">
+
+Add arbitrary templates to the host. These will appear in the use statement of the host.
+Double-quoted values. This option can be used multiple times.
+
+Example: --itemplate "my-interface-template-name"
 
 
-=item B<-i "key:text">, B<--info="key:text">
+=item B<--cinfo key=text>
 
 Arbitrary values to be stored in chassis target of the devices config.
 Double-quoted value pairs. This option can be used multiple times.
 
-Example: -i "testsla:true"
-         -i "pagergroup:admins"
+Example: -cinfo testsla=true
+         -cinfo pagergroup=admins
 
-=item B<--ip=<ip>>
+=item B<-i key=text>, B<--info keyr=:text>
+
+Arbitrary values to be stored in all service targets of the devices config.
+Double-quoted value pairs. This option can be used multiple times.
+
+Example: -i testsla=true
+         -i pagergroup=admins
+
+=item B<--ip <ip>>
 
 Specify an alternate ip address for the device in case the hostname can not be
 resolved. Most people use an IP or HOSTNAME for the hostname option, but due to
 natting and firewalled zones, it may be necessary to specify the IP and the
 hostname directly on the command-line.
 
-=item B<--loglevel=<level>>
+=item B<--loglevel <level>>
 
 Set Verbose Level to one of "debug", "monitor", "info", "warn", or "error".
 Default level is "warn".
@@ -1760,12 +1781,12 @@ Don not check for insane MTU, use it for interactive discovery.
 
 Do not check for insane speed, use it for interactive discovery.
 
-=item B<-o>, B<--outputdir=<path>>
+=item B<-o>, B<--outputdir <path>>
 
-Specify the output directory where the servicename subdir will be created in the
-config-tree. This path is relative to \$genDevConfig/config-tree/.
+Specify the output directory where the servicename subdir will be created. 
+This path is absolut.
 
-Example: --ouputdir=genconfig/routers/
+Example: --ouputdir genconfig/routers/
 
 =item B<--showunused>
 
@@ -1782,13 +1803,13 @@ Can be used multiple times.
 Print the vendor specific module help info and exit.
 This is a special case of the "-P <option>" syntax.
 
-=item B<-p <portlist>>, B<--ports=<portlist>>
+=item B<-p <portlist>>, B<--ports <portlist>>
 
 Collect data for the listed ports only. Do not forget to double quote the list. This feature is only available for CiscoIOS and CatOS devices that support the OLD-CHASSIS-MIB. Matching is case sensitive.
 
-Example: --ports="0/*,1/5-7,4/6,FastEthernet0/*,FastEthernet2"
+Example: --ports "0/*,1/5-7,4/6,FastEthernet0/*,FastEthernet2"
 
-=item B<--forceplugin=<name>>
+=item B<--forceplugin <name>>
 
 Explicitly select the vendor specific plugin that will be used with this device.
 Use this option in case the device matches multiple plugins.
@@ -1798,7 +1819,7 @@ Use this option in case the device matches multiple plugins.
 This will process only the gigabit interfaces with full threholds and collection.
 This will comment out all interfaces of less than gigabit speed.
 
-=item B<--sortby=<key>>
+=item B<--sortby <key>>
 
 Arbitrary values to store in Shinken/Nagios config
 Primarly used for display and sorting in outside scripts

@@ -51,6 +51,7 @@ my %OIDS = (
       'rcChasPowerSupplyDetailSerialNumber'     => '1.3.6.1.4.1.2272.1.4.8.2.1.3',
       'rcChasPowerSupplyDetailHardwareRevision' => '1.3.6.1.4.1.2272.1.4.8.2.1.4',
       'rcChasPowerSupplyDetailPartNumber'       => '1.3.6.1.4.1.2272.1.4.8.2.1.5',
+      'rcChasPowerSupplyDetailDescription'       => '1.3.6.1.4.1.2272.1.4.8.2.1.6',
       'rcChasFanId'                             => '1.3.6.1.4.1.2272.1.4.7.1.1.1',
       'rcA1200'                                 => '1.3.6.1.4.1.2272.8',
       'rcA8003'                                 => '1.3.6.1.4.1.2272.280887555',
@@ -237,7 +238,8 @@ sub custom_targets {
     my %detailSerialNumber;
     my %detailHardwareRevision;
     my %detailPartNumber;
-   
+    my %detailDescription;
+    
     # Fan status
     my %FanId;
    
@@ -248,6 +250,7 @@ sub custom_targets {
        %detailSerialNumber =   gettable('rcChasPowerSupplyDetailSerialNumber');
        %detailHardwareRevision = gettable('rcChasPowerSupplyDetailHardwareRevision');
        %detailPartNumber =     gettable('rcChasPowerSupplyDetailPartNumber');
+       %detailDescription =    gettable('rcChasPowerSupplyDetailDescription');
     }
     if ($chassisfan){
        %FanId =                   gettable('rcChasFanId');
@@ -255,8 +258,10 @@ sub custom_targets {
    
     ### Build powersupply status
     if ($chassispowersupply) {
-    
-        foreach  my $id (keys %idtable) {
+         my %typehash = ('1' => "ac",
+                         '2' => "dc",
+                         '3' => "not installed");
+         foreach  my $id (keys %idtable) {
             Debug ("Current id : " . $id);
             next if (!defined($detailId{$id}));
             my $did = $detailId{$id};
@@ -264,13 +269,14 @@ sub custom_targets {
             my $serial = $detailSerialNumber{$id};
             my $hwversion = $detailHardwareRevision{$id};
             my $partnumber = $detailPartNumber{$id};
+            my $description = $detailDescription{$id};
 
             my ($ldesc, $sdesc);
             $ldesc = "Power Supply Status, power supply " . $id;
-            $ldesc .= "<BR>rcChasPowerSupplyId : " . $did . " type : " . $type;
+            $ldesc .= "<BR>rcChasPowerSupplyId : " . $did . " type : " . $typehash{$type};
             $ldesc .= "<BR>hardware serial and version : " . $serial . " " . $hwversion;
-            $ldesc .= "<BR>partnumber : " . $partnumber;
-            $sdesc = "Power supply status for ps :" . $id . " type : " . $type; # FIXME table to convert type
+            $ldesc .= "<BR>partnumber : " . $partnumber . " " . $description;
+            $sdesc = "Power supply status for ps :" . $id . " type : " . $typehash{$type};
             my ($targetname) = 'powerSupply_' . $id;
          
             $file->writetarget("service {", '',
@@ -284,9 +290,9 @@ sub custom_targets {
                '_dstemplate'                 => "ERS-Chassis-PS",
                'use'                 => $opts->{dtemplate},
             );
-        
+            
             $opts->{order} -= 1;
-        }
+          }
     }
     
     ### Build Fan status
