@@ -22,7 +22,16 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 
 13/11/2012
 
-# Version 3_0_4
+# Version 3_0_6
+
+# - Updated nortel/avaya ERS plugin with better power supply descriptions
+# - New command-line argument for setting the business impact, acts globally on all services
+#   All informational variables added with -i are also added globally to all services
+# - Updated command-line help
+
+13/11/2012
+
+# Version 3_0_5
 
 # - Always collect chassisstats, disregard chassiscollect option. active_check_enabled dos not
 #   work correctly in Shinken, it collects the data, but then discards it because the active_check is disabled
