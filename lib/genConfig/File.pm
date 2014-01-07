@@ -4,7 +4,7 @@
 #    genConfig::File module
 #
 #    Copyright (C) 2004 Mike Fisher
-#    Copyright (C) 2005-2012 Francois Mikus
+#    Copyright (C) 2005-2014 Francois Mikus
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ BEGIN {
 use Common::Log;
 use genConfig::Utils;
 
-my $VERSION = '0.91';
+my $VERSION = '0.92';
 my $header = '';
 
 ###############################################################################
@@ -142,7 +142,11 @@ sub writetarget {
     foreach my $key (sort keys %value) {
         $self->writepair($key, $value{$key}, $comment);
     }
-    
+    # Add the global variable statement as these are not templates
+    foreach my $key (keys %Common::global::service_vars) {
+    	next unless exists($Common::global::service_vars{$key});
+    	$self->writepair($key, $Common::global::service_vars{$key}, $comment);
+    }
     # Add the register statement as these are not templates
     $self->writepair('register', 1, $comment);
     print $f "${comment}}\n";    
