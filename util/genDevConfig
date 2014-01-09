@@ -710,6 +710,8 @@ my %slotList;
 
 my $ipForwDatagrams = get('ipForwDatagrams');
 
+
+
 ###########################################################################
 ###
 ### Creating the destination target file
@@ -954,24 +956,31 @@ if ( %dsx1TotalIndex ) {
     }
 }
 
+### MIB-II routing  traffic statistics
+
+
+
+
 if ($opts{ospfruns}) {
 
+    #FIX ME find out the configured areas
     #foreach my $area ( keys %xxxxxxxxxxxxxxxxxxxx ) {
-    	my $area = '0.0.0.0';
-    	next if !defined($area);
-    	my ($ldesc, $sdesc);
-    	$ldesc = "Number of ospf runs for area : " . $area;
-    	$sdesc = "Number of ospf runs for area : " . $area;
-	 my ($servicename) = 'routing_ospfruns';
+    my $area = '0.0.0.0';
+    next if !defined($area);
+    my ($ldesc, $sdesc);
+    $ldesc = "Number of ospf runs for area : " . $area;
+    $sdesc = "Number of ospf runs for area : " . $area;
+	my ($servicename) = 'routing_ospfruns';
 
-	 $file->writetarget("service {", '',
+	$file->writetarget("service {", '',
 		'service_description'  => $servicename,
+		'service_dependencies'=> ",chassis",
 		'display_name'    => $sdesc,
 		'host_name'       => $opts{devicename},
 		'_inst'           => $area,
-        	'_display_order'  => $opts{order},
-        	'notes'           => $ldesc,
-        	'_dstemplate'     => 'routing-ospf-status',
+        '_display_order'  => $opts{order},
+        'notes'           => $ldesc,
+        '_dstemplate'     => 'routing-ospf-status',
     	);
 
     	$opts{order} -= 1;
@@ -979,24 +988,24 @@ if ($opts{ospfruns}) {
 }
 
 if ($opts{mcastroutes}) {
+	my $mcastroutes     = get('ipMRouteEntryCount');
+    my ($ldesc, $sdesc);
+    $ldesc = "Number of multicast routes";
+    $sdesc = "Number of multicast routes";
+	my ($servicename) = 'routing_number_of_mcast_routes';
 
-    	my ($ldesc, $sdesc);
-    	$ldesc = "Number of multicast routes";
-    	$sdesc = "Number of multicast routes";
-	 my ($servicename) = 'routing_mcast_routes';
-
-	 $file->writetarget("service {", '',
+	$file->writetarget("service {", '',
 		'service_description'  => $servicename,
+		'service_dependencies'=> ",chassis",
 		'display_name'    => $sdesc,
 		'host_name'       => $opts{devicename},
 		'_inst'           => '0',
-        	'_display_order'  => $opts{order},
-        	'notes'           => $ldesc,
-        	'_dstemplate'     => 'routing-ospf-status',
+    	'_display_order'  => $opts{order},
+    	'notes'           => $ldesc,
+    	'_dstemplate'     => 'routing-multicast',
     	);
 
     	$opts{order} -= 1;
-    #}
 }
 
 
