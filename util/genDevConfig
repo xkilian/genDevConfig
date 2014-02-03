@@ -164,9 +164,6 @@ my %OID = (
 
        ### from rfc1406.dsx1ConfigTable (6).dsx1ConfigEntry (1).
        'dsx1TotalIndex' => '1.3.6.1.2.1.10.18.9.1.1',
- 
-       # OIDs for RFC 1850 Number of OSPF runs, indicator of routing stability
-       'ospfSpfRuns' => '1.3.6.1.2.1.14.2.1.4',
 
        # OIDs for RFC 2932 Number of multicast routes
        'ipMRouteEntryCount' => '1.3.6.1.2.1.83.1.1.7.0',
@@ -249,7 +246,7 @@ my %opts = (
     'req_getconfig' => 0,
     'getconfig'     => 0,
     'req_usev2c'    => 0,
-    'usev2c'        => 0,
+    'usev2c'        => 1,
     'req_voip'      => 0,
     'voip'          => 0,
     'req_framestats'=> 1,
@@ -300,7 +297,7 @@ my %opts = (
     ### SNMP MIB Collection variables
     ###
 
-    'snmp_ver'             => '', ### SNMP string used for snmpUtil calls
+    'snmp_ver'             => '2c', ### SNMP string used for snmpUtil calls
     'snmp'             => '', ### SNMP string used for snmpUtil calls
     'sysDescr_orig'    => '', ### MIB-II sysDescr for textual output
     'sysDescr'         => '', ### MIB-II sysDescr for web based output
@@ -957,35 +954,6 @@ if ( %dsx1TotalIndex ) {
 }
 
 ### MIB-II routing  traffic statistics
-
-
-
-
-if ($opts{ospfruns}) {
-
-    #FIX ME find out the configured areas
-    #foreach my $area ( keys %xxxxxxxxxxxxxxxxxxxx ) {
-    my $area = '0.0.0.0';
-    next if !defined($area);
-    my ($ldesc, $sdesc);
-    $ldesc = "Number of ospf runs for area : " . $area;
-    $sdesc = "Number of ospf runs for area : " . $area;
-	my ($servicename) = 'routing_ospfruns';
-
-	$file->writetarget("service {", '',
-		'service_description'  => $servicename,
-		'service_dependencies'=> ",chassis",
-		'display_name'    => $sdesc,
-		'host_name'       => $opts{devicename},
-		'_inst'           => $area,
-        '_display_order'  => $opts{order},
-        'notes'           => $ldesc,
-        '_dstemplate'     => 'routing-ospf-status',
-    	);
-
-    	$opts{order} -= 1;
-    #}
-}
 
 if ($opts{mcastroutes}) {
 	my $mcastroutes     = get('ipMRouteEntryCount');

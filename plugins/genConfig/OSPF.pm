@@ -43,8 +43,8 @@ my %ospfSpfRuns;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-    ### OSPF
-    'ospfSpfRuns'                            => '1.3.6.1.2.1.14.2.1.4',
+       # OIDs for RFC 1850 Number of OSPF runs, indicator of routing stability
+       'ospfSpfRuns' => '1.3.6.1.2.1.14.2.1.4',
     );
 
 ###############################################################################
@@ -61,7 +61,7 @@ my @types = ( "",
 ###############################################################################
 
 my $snmp;
-my $script = "OSPF Module";
+my $script = "OSPF genDevConfig Module";
 
 ###############################################################################
 ###############################################################################
@@ -122,6 +122,9 @@ sub discover {
     ### START DEVICE DISCOVERY SECTION
     ###
 
+    #'req_ospfruns'  => 0,
+    #'ospfruns'      => 0,
+    
     ### Figure out the OS version number this device is running.  
     ### We need this to figure out which oid to use to get
     ### interface descriptions and which
@@ -153,22 +156,25 @@ sub custom_targets {
     ###
     if ( %ospfSpfRuns ) {
         foreach my $key ( keys %ospfSpfRuns ) {
+            Debug("OSPF spfruns table key: " . $key);
             my ($a,$b,$c,$area) = split(/\./,$key);        
             my ($servicename) = "Area_" . $area . "_Number_of_SPFruns";
-            my ($ldesc) = "Number of OSPF runs in a given area, " .$area .".
+            my ($ldesc) = "Number of OSPF runs for area: " .$area ."
             Increasing numbers show instability in the routing architecture.";
             $file->writetarget("service {", '',
                 'service_description'  => $servicename,
                 'display_name'         => $servicename,
+                'service_dependencies'=> ",chassis",
                 'host_name'            => $opts->{devicename},
                 '_inst'                => $key,
                 '_display_order'       => $opts->{order},
                 'notes'                => $ldesc,
-                '_dstemplate'          => 'ospf-spfruns'
+                '_dstemplate'          => 'routing-ospf-spfruns'
             );
             $opts->{order} -= 1;
         }
     }
+      
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###
