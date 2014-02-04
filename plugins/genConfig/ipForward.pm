@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-package IPFORWARD;
+package ipForward;
 
 use strict;
 
@@ -97,13 +97,13 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("Trying to see if OID inetCidrRouteNumber is supported : " . $OIDS{inetCidrRouteNumber});
+    Debug ("Trying to query support for OID inetCidrRouteNumber : " . $OIDS{inetCidrRouteNumber});
     ### Add our OIDs to the the global OID list
 
     register_oids(%OIDS);
     
     $inetCidrRouteNumber     = get('inetCidrRouteNumber');
-    return 1 if ( %inetCidrRouteNumber );
+    return 1 if ( $inetCidrRouteNumber );
     return 0;
 }
 

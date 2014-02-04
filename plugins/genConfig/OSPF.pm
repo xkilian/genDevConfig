@@ -97,7 +97,7 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("Trying to see if OID ospfSpfRuns is supported : " . $OIDS{ospfSpfRuns});
+    Debug ("Trying to query support for OID ospfSpfRuns is supported : " . $OIDS{ospfSpfRuns});
     ### Add our OIDs to the the global OID list
 
     register_oids(%OIDS);

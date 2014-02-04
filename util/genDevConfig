@@ -205,7 +205,7 @@ my %opts = (
     'parents'            => '', # parent dependancies
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
-    'htemplates'         => '', # host templates added to discovered templates
+    'htemplates'         => 'pack-generic-host', # host templates added to discovered templates
     #'itemplates'         => '', # interface templates added to discovered templates
     'nodns'             => 0,
     'vpntunnels'        => 0,
@@ -289,7 +289,7 @@ my %opts = (
     ###
     'force_nospeedcheck' => 0, ### Override non-stikyness for no speedcheck.
     'force_nomtucheck'   => 0, ### Override non-stickyness for nomtucheck
-
+    'forcedplugin'      => "", ### Name of a plugin that would override all others
 
     'deprecatedoption'   => 0, ### Deprecated option used on command-line
 
@@ -469,13 +469,14 @@ Debug ("\nMIB-II System description: $opts{sysDescr}");
 # uses $opts{vendor_soft_ver};
 
 ### External plugins for device discovery
+Debug ("Plugin discovery function");
 
 my @plugins = genConfig::pluginUtils::find_plugin($Common::global::gInstallRoot, \%opts);
 
 if (!@plugins) {
     Info (" No plugin found for $opts{sysDescr} using builtin functions.");
 } elsif (@plugins > 1) {
-    Info (" Multiple plugins found. ");
+    Info (" Multiple plugins foundr: " . @plugins);
     my $forcedplugin;
     if (grep { $opts{forcedplugin} =~ m/$_->plugin_name()/gi } @plugins ) {
         foreach my $plugin (@plugins) {
