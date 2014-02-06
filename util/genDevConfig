@@ -965,7 +965,6 @@ if ($opts{mcastroutes}) {
 
 	$file->writetarget("service {", '',
 		'service_description'  => $servicename,
-		'service_dependencies'=> ",chassis",
 		'display_name'    => $sdesc,
 		'host_name'       => $opts{devicename},
 		'_inst'           => '0',
