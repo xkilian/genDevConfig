@@ -756,8 +756,8 @@ my (@options);
 #}
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
-my $dstemplates = 'SnmpBooster-host';
-$dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
+my $hosttemplate = 'pack.generic.host';
+$hosttemplate = $opts{htemplates} . "," . $hosttemplate if ($opts{htemplates} ne "");
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
     'host_name'         => $opts{devicename},
@@ -768,7 +768,7 @@ $file->writetarget("host {", '', # FIXME Move static or macro definitions to tem
     'parents'           => $opts{parents},
     'hostgroups'        => '', # FIXME
     'notes'             => '',
-    'use'               => $dstemplates,
+    'use'               => $hosttemplate,
     @options,
     );
 
