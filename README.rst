@@ -21,6 +21,8 @@ Installation
 
 The included INSTALL file has all the installation and setup information necessary to use the tool.
 
+A debian/Ubuntu package is in the works for SnmpBooster and genDevConfig which should make it really easy to install!
+
 =============
 Documentation
 =============
