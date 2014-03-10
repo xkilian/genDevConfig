@@ -1324,10 +1324,10 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     $name = (defined $iphost{$index}) ? $iphost{$index} : '';
     $sdesc .= "$target ";
     $ldesc = ((defined $intdescr{$index}) ? $intdescr{$index} : '');
-    $ldesc .= "$name" if ($name);
+    $ldesc .= "$name " if ($name);
     $ldesc .= "" . ((defined $ipaddr{$index}) ? $ipaddr{$index} : '');
     $ldesc .= "$speed_str $ifType_d{$iftype{$index}}";
-    $ldesc .= "DLCI = $dlci" if (defined $dlci);
+    $ldesc .= "DLCI = $dlci " if (defined $dlci);
     $ldesc .= $customldesc if ($customldesc);
 
     if (defined $intdescr{$index}) {
