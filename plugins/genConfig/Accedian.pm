@@ -211,8 +211,8 @@ sub custom_targets {
         );
         $opts->{order} -= 1;
         
-        my ($servicename) = "PAA_CPU_USAGE_" . $Name;
-        my ($ldesc) = "Metronid: $servicename";
+        $servicename = "PAA_CPU_USAGE_" . $Name;
+        $ldesc = "Metronid: $servicename";
         $file->writetarget("service {", '',
             'service_description'  => $servicename,
             'display_name'         => $servicename,
