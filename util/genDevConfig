@@ -201,11 +201,11 @@ my %opts = (
     'triggers'          => 0,
     'triggertemplateclass'       => '',
     'refinfo'           => {},
-    'pingparents'        => 1,  # ping parents if defined by default
+    'pingparents'        => 0,  # ping parents if defined by default
     'parents'            => '', # parent dependancies
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
-    'htemplates'         => 'pack-generic-host', # host templates added to discovered templates
+    'htemplates'         => '', # host templates added to discovered templates
     #'itemplates'         => '', # interface templates added to discovered templates
     'nodns'             => 0,
     'vpntunnels'        => 0,
@@ -756,8 +756,8 @@ my (@options);
 #}
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
-my $hosttemplate = 'pack.generic.host';
-$hosttemplate = $opts{htemplates} . "," . $hosttemplate if ($opts{htemplates} ne "");
+my $dstemplates = 'SnmpBooster-host';
+$dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
     'host_name'         => $opts{devicename},
@@ -768,7 +768,7 @@ $file->writetarget("host {", '', # FIXME Move static or macro definitions to tem
     'parents'           => $opts{parents},
     'hostgroups'        => '', # FIXME
     'notes'             => '',
-    'use'               => $hosttemplate,
+    'use'               => $dstemplates,
     @options,
     );
 
@@ -965,6 +965,7 @@ if ($opts{mcastroutes}) {
 
 	$file->writetarget("service {", '',
 		'service_description'  => $servicename,
+		'service_dependencies'=> ",chassis",
 		'display_name'    => $sdesc,
 		'host_name'       => $opts{devicename},
 		'_inst'           => '0',

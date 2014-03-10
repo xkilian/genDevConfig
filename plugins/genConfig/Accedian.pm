@@ -210,6 +210,20 @@ sub custom_targets {
             'use'                  => $opts->{dtemplate}
         );
         $opts->{order} -= 1;
+        
+        my ($servicename) = "PAA_CPU_USAGE_" . $Name;
+        my ($ldesc) = "Metronid: $servicename";
+        $file->writetarget("service {", '',
+            'service_description'  => $servicename,
+            'display_name'         => $servicename,
+            'host_name'            => $opts->{devicename},
+            '_inst'                => $key,
+            '_display_order'       => $opts->{order},
+            'notes'                => $ldesc,
+            '_dstemplate'          => 'Accedian-metronid-paacpu',
+            'use'                  => $opts->{dtemplate}
+        );
+         $opts->{order} -= 1;
     }
     ###
     ### END DEVICE CUSTOM CONFIG SECTION

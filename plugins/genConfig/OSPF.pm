@@ -97,7 +97,7 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("Trying to query support for OID ospfSpfRuns is supported : " . $OIDS{ospfSpfRuns});
+    Debug ("Trying to see if OID ospfSpfRuns is supported : " . $OIDS{ospfSpfRuns});
     ### Add our OIDs to the the global OID list
 
     register_oids(%OIDS);
@@ -159,14 +159,15 @@ sub custom_targets {
             Debug("OSPF spfruns table key: " . $key);
             my ($a,$b,$c,$area) = split(/\./,$key);        
             my ($servicename) = "Area_" . $area . "_Number_of_SPFruns";
-            my ($ldesc) = "Number of OSPF runs for area: " .$area ."
-            Increasing numbers show instability in the routing architecture.";
+            my ($ldesc) = "Number of OSPF runs for area: " .$area ." <BR> Increasing numbers show instability in the routing architecture.";
             $file->writetarget("service {", '',
                 'service_description'  => $servicename,
                 'display_name'         => $servicename,
+                'service_dependencies'=> ",chassis",
                 'host_name'            => $opts->{devicename},
                 '_inst'                => $key,
                 '_display_order'       => $opts->{order},
+                'use'                  => $opts->{dtemplate},
                 'notes'                => $ldesc,
                 '_dstemplate'          => 'routing-ospf-spfruns'
             );

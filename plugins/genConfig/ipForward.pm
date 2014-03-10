@@ -154,7 +154,7 @@ sub custom_targets {
     ###
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
-    if ( $inetCidrRouteNumber ) {
+    if ( $inetCidrRouteNumber && $inetCidrRouteNumber != 1 ) {
         Debug("inetCidrRouteNumber: " . $inetCidrRouteNumber);
         my ($servicename) = "Number_of_active_routes";
         my ($ldesc) = "Number of active routes installed in routing table. This number should be stable.";
