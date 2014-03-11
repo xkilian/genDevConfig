@@ -163,6 +163,7 @@ sub custom_targets {
             'display_name'         => $servicename,
             'host_name'            => $opts->{devicename},
             '_inst'                => '0',
+            '_triggergroup'        => 'routes',
             '_display_order'       => $opts->{order},
             'notes'                => $ldesc,
             '_dstemplate'          => 'routing-ipforward-routes'

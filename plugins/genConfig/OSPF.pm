@@ -165,6 +165,7 @@ sub custom_targets {
                 'display_name'         => $servicename,
                 'host_name'            => $opts->{devicename},
                 '_inst'                => $key,
+                '_triggergroup'        => 'ospf',
                 '_display_order'       => $opts->{order},
                 'use'                  => $opts->{dtemplate},
                 'notes'                => $ldesc,

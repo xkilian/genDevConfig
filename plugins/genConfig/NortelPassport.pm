@@ -184,6 +184,7 @@ sub discover {
     if ($opts->{model} =~ /ERS-86/) {
         $opts->{chassisttype} = 'Nortel-ERS8600';
         $opts->{chassisname} = 'chassis.Nortel-ERS8600';
+        $opts->{chassistriggergroup} = 'chassis_ERS8600';
         $chassispowersupply = 1;
         $chassisfan = 1;
     } elsif ($opts->{model} =~ /1200/) {
@@ -194,11 +195,14 @@ sub discover {
     } elsif ($opts->{model} =~ /ERS-16/) {
         $opts->{chassisttype} = 'Nortel-ERS1600';
         $opts->{chassisname} = 'chassis.Nortel-ERS1600';
+        $opts->{chassistriggergroup} = 'chassis_ERS1600';
         $opts->{class} = 'passport';
         $opts->{chassisinst} = "0";
     } else {
         $opts->{chassisttype} = 'Nortel-ERS8600';
         $opts->{chassisname} = 'chassis.Nortel-Generic-8K';
+        $opts->{chassistriggergroup} = 'chassis_ERS8600';
+        $opts->{class} = 'passport';
         $chassispowersupply = 1;
         $chassisfan = 1;
     }

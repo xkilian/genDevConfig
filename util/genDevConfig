@@ -180,6 +180,17 @@ $script = $VERSION if !($script);
 my $file;
 
 my %collectable = ();
+my %triggergroup = (
+    'access'            => 'interface',
+    'distribution'      => 'interface',
+    'core'              => 'interface',
+    'ospf'              => 'ospf',
+    'routes'            => 'routes',
+    'saa'               => 'saa',
+    'chassis'           => 'chassis',
+    'uptime'            => 'uptime',
+);
+
 my %opts = (
     'savedargs'         => join(" ", @ARGV),
     'community'         => "public",
@@ -199,7 +210,7 @@ my %opts = (
     'nustats'           => 0,
     'gigonly'           => 0,
     'triggers'          => 0,
-    'triggertemplateclass'       => '',
+    'triggertemplateclass'       => 'access',
     'refinfo'           => {},
     'pingparents'        => 0,  # ping parents if defined by default
     'parents'            => '', # parent dependancies
@@ -220,6 +231,7 @@ my %opts = (
     'chassisname'          => 'chassis',
     ### Unique target type that matches a template in the shinken config
     'chassisttype'         => '',
+    'chassistriggergroup'  => '',
     'order'                => 999, # Base order for all graphical display
     'plugindir'            => 'plugins/genConfig', # Alternate plugin directory
     'pluginflags'          => {},
@@ -353,6 +365,7 @@ GetOptions(
   "ospf"                  => \$opts{ospfruns},
   "mcast"                 => \$opts{mcastroutes},
   "triggers|m"            => \$opts{triggers},
+  "interfacetriggers=s"   => \$opts{triggertemplateclass},
   "nodns|n"               => \$opts{nodns},
   "showunused"            => sub {$opts{nounused} = 0;},
   "nospeedcheck"          => \$opts{force_nospeedcheck},
@@ -804,7 +817,7 @@ if ($opts{chassisstats}) {
     push (@options, '_sortby', $opts{sortby}) if ($opts{sortby});
     push (@options, 'active_checks_enabled', '0') if (!$opts{chassiscollect});
     push (@options, '_class', $opts{class}) if ($opts{class});
-#    push (@options, '_monitor-type', $opts{chassisname} ) if ($opts{chassisname} ne 'Chassis-Generic');
+    push (@options, '_triggergroup', $opts{chassistriggergroup}) if ($opts{chassistriggergroup});
 
     # Apply chassis dstemplates from the plugins and runtime argument ctemplate
     my $templates = $opts{dtemplate};
@@ -1100,7 +1113,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my @config = ();
     my $hc = '';
     my $class = ''; # Used for classifying devices, out of the box for rancid
-    my $mtclass = ''; # Used for adding options to triggers
     my $match = 0;
     my $wmatch = 0;
     my $customsdesc = '';
@@ -1169,11 +1181,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     # $class = '-core' if ($opts{coreint} && $iftype{$index} != 22);
 
-    # If monitoring templates classes are requested, activate the class modifier for
-    # that will be appended to the monitor-type value
-    if ($opts{triggertemplateclass}) {
-        $mtclass = $opts{triggertemplateclass};
-    }
 
     ### Set the target name and replace all spaces and commas with underscores
 
@@ -1326,7 +1333,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     $ldesc = ((defined $intdescr{$index}) ? $intdescr{$index} : '');
     $ldesc .= "$name " if ($name);
     $ldesc .= "" . ((defined $ipaddr{$index}) ? $ipaddr{$index} : '');
-    $ldesc .= "$speed_str $ifType_d{$iftype{$index}}";
+    $ldesc .= " $speed_str $ifType_d{$iftype{$index}}";
     $ldesc .= "DLCI = $dlci " if (defined $dlci);
     $ldesc .= $customldesc if ($customldesc);
 
@@ -1337,8 +1344,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     } else {
         $sdesc .= "Description: None defined";
     }
-    $sdesc .= $customsdesc if ($customsdesc);
-    $sdesc .= "$speed_str $ifType_d{$iftype{$index}}";
+    $sdesc .= " " . $customsdesc if ($customsdesc);
+    $sdesc .= " $speed_str $ifType_d{$iftype{$index}}";
 
     push (@config,
 	'display_name' => $sdesc) if $unique{$ifdescr{$index}};
@@ -1444,10 +1451,12 @@ $c="# ";
     ### Add the trigger templates for the selected type of interface
     #
     my %tmpconfig = @config;
-    my $triggertemplate = getTriggerTemplate($tmpconfig{use}, $mtclass, $hc);
+    my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
+    Info ("Trigger to apply : $trigger");
     push(@config,
-         '_triggergroup' => $triggertemplate,
-    ) if ($triggertemplate ne "");
+         '_triggergroup' => $trigger,
+    ) if ($trigger ne "");
+    #) if (exists($triggergroup{$trigger}) && $triggergroup{$trigger} ne "");
     
     ### Write the target interface to the configuration file
     
@@ -1594,7 +1603,12 @@ sub getTriggers {
     return ($opts{triggers});
 }
 sub getTriggerTemplate {
-    return "";
+    my ($config, $class) = @_;
+    if (exists $triggergroup{$class}) {
+        return $triggergroup{$class};
+    } else {
+        return "";
+    }
 }
 sub getOutputDir {
     return ($opts{output_dir});
