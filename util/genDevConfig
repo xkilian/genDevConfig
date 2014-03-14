@@ -184,6 +184,15 @@ my %triggergroup = (
     'access'            => 'interface',
     'distribution'      => 'interface',
     'core'              => 'interface',
+    'access-nu'            => 'interface-nu',
+    'distribution-nu'      => 'interface-nu',
+    'core-nu'              => 'interface-nu',
+    'access-hc'            => 'interface-hc',
+    'distribution-hc'      => 'interface-hc',
+    'core-hc'              => 'interface-hc',
+    'access-nu-hc'            => 'interface-nu-hc',
+    'distribution-nu-hc'      => 'interface-nu-hc',
+    'core-nu-hc'              => 'interface-nu-hc',    
     'ospf'              => 'ospf',
     'routes'            => 'routes',
     'saa'               => 'saa',
@@ -1305,8 +1314,17 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 	} else {
              push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
 	}
+	push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts{triggers});
     }
-
+    
+    ### Add the trigger templates for the selected type of interface
+    #
+    my %tmpconfig = @config;
+    my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
+    Info ("Trigger to apply : $trigger");
+    push(@config,
+	 '_triggergroup' => $trigger,
+	 ) if ($trigger ne "");
 
     ### Deal with non-unique interface descriptions by hard coding the
     ### instance number.  Append the numeric interface type to
@@ -1446,17 +1464,6 @@ $c="# ";
     $opts{show_max} = 1; 
     $opts{nomtucheck} = 0; 
     $opts{nospeedcheck} = 0; 
-
-    # Commented out for Nagios migration
-    ### Add the trigger templates for the selected type of interface
-    #
-    my %tmpconfig = @config;
-    my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
-    Info ("Trigger to apply : $trigger");
-    push(@config,
-         '_triggergroup' => $trigger,
-    ) if ($trigger ne "");
-    #) if (exists($triggergroup{$trigger}) && $triggergroup{$trigger} ne "");
     
     ### Write the target interface to the configuration file
     
