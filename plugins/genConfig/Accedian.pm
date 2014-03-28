@@ -50,16 +50,17 @@ my %OIDS = (
       'acdPaaResultPktLossPrevLargestGap'                           => '1.3.6.1.4.1.22420.2.5.1.1.101',
 
       
-      'acdDescFirmwareVersion'                        => '1.3.6.1.4.1.22420.2.5.1.1.52',
-      'acdDescIdentifier'                             => '1.3.6.1.4.1.22420.2.5.1.1.19',
-      'acdDescSerialNumber  '                         => '1.3.6.1.4.1.22420.2.5.1.1.30',
-      'acdDescCpuUsageCurrent  '                      => '1.3.6.1.4.1.22420.2.5.1.1.41',
-      'acdDescCpuUsageAverage15  '                    => '1.3.6.1.4.1.22420.2.5.1.1.101',
+      'acdDescFirmwareVersion'                        => '1.3.6.1.4.1.22420.1.4',
+      'acdDescIdentifier'                             => '1.3.6.1.4.1.22420.1.3',
+      'acdDescSerialNumber  '                         => '1.3.6.1.4.1.22420.1.6',
+      'acdDescCpuUsageCurrent  '                      => '1.3.6.1.4.1.22420.1.20',
+      'acdDescCpuUsageAverage15  '                    => '1.3.6.1.4.1.22420.1.21',
       
       # Invented OID names
       'acdPaaKeyName'                                 => '1.3.6.1.4.1.22420.2.5.3.1.2',
       'acdPaaKeyMtu'                                  => '1.3.6.1.4.1.22420.2.5.3.1.4',
       'AMN-1000-TE'                                   => '1.3.6.1.4.1.22420.1.1',
+      'acdPaaKeyPeer'                                 => '1.3.6.1.4.1.22420.2.5.2.1.13'
 
    
      );
@@ -160,6 +161,7 @@ sub discover {
     if ($opts->{model} =~ /AMN-1000-TE/) {
         $opts->{chassisttype} = 'Accedian-metronid';
         $opts->{chassisname} = 'chassis.Accedian-metronid';
+        $opts->{chassistriggergroup} = 'chassis-accedian-metronid';
     }
     
     # Default feature promotions for Nortel routing switches
@@ -191,14 +193,15 @@ sub custom_targets {
     
     my %acdPaaKeyName     = gettable('acdPaaKeyName');
     my %acdPaaKeyMtu         = gettable('acdPaaKeyMtu');
-    
+    my %acdPaaKeyPeer         = gettable('acdPaaKeyStatusState');
     foreach my $key ( sort keys %acdPaaKeyName ) {
       my $Name     = $acdPaaKeyName{$key};
       my $Mtu        = $acdPaaKeyMtu{$key};
+      my $Peer      = $acdPaaKeyPeer{$key};
         Debug("Accedian table key: " . $key);
      
         my ($servicename) = "PAA_" . $Name;
-        my ($ldesc) = "Metronid: $servicename Mtu: $Mtu";
+        my ($ldesc) = "Metronid: $servicename Mtu: $Mtu Peer: $Peer";
         $file->writetarget("service {", '',
             'service_description'  => $servicename,
             'display_name'         => $servicename,
@@ -207,23 +210,25 @@ sub custom_targets {
             '_display_order'       => $opts->{order},
             'notes'                => $ldesc,
             '_dstemplate'          => 'Accedian-metronid-paa',
+            '_triggergroup'        => 'accedian-metronid-paa',
             'use'                  => $opts->{dtemplate}
         );
         $opts->{order} -= 1;
         
-        $servicename = "PAA_CPU_USAGE_" . $Name;
-        $ldesc = "Metronid: $servicename";
-        $file->writetarget("service {", '',
-            'service_description'  => $servicename,
-            'display_name'         => $servicename,
-            'host_name'            => $opts->{devicename},
-            '_inst'                => $key,
-            '_display_order'       => $opts->{order},
-            'notes'                => $ldesc,
-            '_dstemplate'          => 'Accedian-metronid-paacpu',
-            'use'                  => $opts->{dtemplate}
-        );
-         $opts->{order} -= 1;
+        #$servicename = "PAA_CPU_USAGE_" . $Name;
+        #$ldesc = "Metronid: $servicename";
+        #$file->writetarget("service {", '',
+        #    'service_description'  => $servicename,
+        #    'display_name'         => $servicename,
+        #    'host_name'            => $opts->{devicename},
+        #    '_inst'                => $key,
+        #    '_display_order'       => $opts->{order},
+        #    'notes'                => $ldesc,
+        #    '_dstemplate'          => 'Accedian-metronid-paacpu',
+        #    'use'                  => $opts->{dtemplate}
+        #);
+        #$opts->{order} -= 1;
+        
     }
     ###
     ### END DEVICE CUSTOM CONFIG SECTION

@@ -46,6 +46,7 @@ my %OIDS = (
       ### Rapidcity MIB
       'rcSysVersion'                            => '1.3.6.1.4.1.2272.1.1.7.0',
       'rcBayStack'                                 => '1.3.6.1.4.1.2272.40',
+      'rcBayStackOld'                             => '1.3.6.1.4.1.45.3.54.1',
     );
 
 ###############################################################################
@@ -54,6 +55,7 @@ my %OIDS = (
 ## returned by the devices. The name is a regular expression.
 ################################################################################
 my @types = ( "$OIDS{'rcBayStack'}",
+             "$OIDS{'rcBayStackOld'}",
             );
 
 
@@ -63,6 +65,7 @@ my @types = ( "$OIDS{'rcBayStack'}",
 
 my $snmp;
 my $script = "Nortel ES genDevConfig Module";
+my $module = "NortelES";
 
 ###############################################################################
 ###############################################################################
@@ -98,11 +101,11 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("Trying to match sysObjectID : " . $opts->{sysObjectID});
+    Debug ("$module Trying to match sysObjectID : " . $opts->{sysObjectID});
     
     foreach my $type (@types) {
         $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
-        Debug ("Type : " . $type);
+        Debug ("$module Type : " . $type);
         return 1 if ($opts->{sysObjectID} =~ m/$type/gi)
     }
     return 0;
@@ -139,7 +142,7 @@ sub discover {
     $opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
  
-    Debug("Model : " . $opts->{model});
+    Debug("$module Model : " . $opts->{model});
     
     if ($opts->{model} =~ /ES-470/) {
         $opts->{chassisttype} = 'Nortel-ES470';
@@ -213,6 +216,8 @@ sub custom_interfaces {
     my $match      = $data->{match};
     my $customsdesc = $data->{customsdesc};
     my $customldesc = $data->{customldesc};
+    my $c = $data->{c};
+    
 
     ###
     ### START DEVICE CUSTOM INTERFACE CONFIG SECTION
@@ -222,6 +227,11 @@ sub custom_interfaces {
     if ($opts->{chassisttype} =~ /^Nortel-ES/){
         $opts->{nospeedcheck} = 1;
     }
+    if ($intdescr{$index} !~ /GBIC/) {
+      $c = "# "
+    }
+    
+    Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
     
     ###
     ### END INTERFACE CUSTOM CONFIG SECTION
@@ -240,7 +250,7 @@ sub custom_interfaces {
     $data->{match}  = $match;
     $data->{customsdesc} = $customsdesc;
     $data->{customldesc} = $customldesc;
-
+    $data->{c} = $c;
     return;
 }
 

@@ -173,7 +173,7 @@ my %OID = (
 ###############################################################################
 
 ### General variables
-
+setDir();
 my($script) = $0 =~ /\/([^\/]+)$/;
 $script = $VERSION if !($script);
 
@@ -203,7 +203,7 @@ my %triggergroup = (
 my %opts = (
     'savedargs'         => join(" ", @ARGV),
     'community'         => "public",
-    'addcomm'           => 0, # If set add community to --default--
+    'addcomm'           => 0, # If set to 1 add community string to host
     'units'             => "bits",
     'inst'              => '',
     'logLevel'          => 'warn',
@@ -770,16 +770,15 @@ EOD
 ### of the target.
 
 my (@options);
-# Commented out as templates are now a space delimited string
-#if ($opts{templates}) {
-#    foreach my $key (keys %{ $opts{templates} } ){
-#        push (@options, $key, $opts{templates}->{$key});
-#    }
-#}
+if ($opts{addcommunity}) {
+    push (@options, '_SNMPCOMMUNITYREAD', $opts{community});
+}
+
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
 my $dstemplates = 'SnmpBooster-host';
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
+
 
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
     'host_name'         => $opts{devicename},
@@ -1269,6 +1268,9 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
                     'ldesc'    => $ldesc,
                     'customsdesc' => $customsdesc,
                     'customldesc' => $customldesc,
+		    'c' => $c,
+		    'target' => $target,
+		    'name' => $name,
                     );
 
         $plugin->custom_interfaces($index, \%data, \%opts);
@@ -1290,6 +1292,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $ldesc      = $data{ldesc};
         $customsdesc = $data{customsdesc};
         $customldesc = $data{customldesc};
+	$c           = $data{c};
+	$target      = $data{target};
 	}
     }
 
@@ -1338,23 +1342,17 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         push(@config, '_inst' => $index);
 
         push(@config,
-             'display_name' => "$ifdescr{$index} <FONT COLOR=RED>*</FONT>"
+             'display_name' => "$target <FONT COLOR=RED>*</FONT>"
              ) if (!$opts{nodupwarn});
         push(@config,
              '_inst'         => $index);
     }
 
     ### Build the interface target description strings and add them in the config.
+    
+    $name = ((defined $iphost{$index}) ? $iphost{$index} : '');
 
-    $name = (defined $iphost{$index}) ? $iphost{$index} : '';
     $sdesc .= "$target ";
-    $ldesc = ((defined $intdescr{$index}) ? $intdescr{$index} : '');
-    $ldesc .= "$name " if ($name);
-    $ldesc .= "" . ((defined $ipaddr{$index}) ? $ipaddr{$index} : '');
-    $ldesc .= " $speed_str $ifType_d{$iftype{$index}}";
-    $ldesc .= "DLCI = $dlci " if (defined $dlci);
-    $ldesc .= $customldesc if ($customldesc);
-
     if (defined $intdescr{$index}) {
         $sdesc .= "Description: $intdescr{$index}";
     } elsif ($ipaddr{$index}) {
@@ -1362,9 +1360,18 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     } else {
         $sdesc .= "Description: None defined";
     }
-    $sdesc .= " " . $customsdesc if ($customsdesc);
+    if ($customsdesc) {
+        $sdesc .= " Custom: $customsdesc";
+    }
     $sdesc .= " $speed_str $ifType_d{$iftype{$index}}";
 
+    $ldesc = ((defined $intdescr{$index}) ? "$intdescr{$index} " : '');
+    $ldesc .= "$name " if ($name);
+    $ldesc .= ((defined $ipaddr{$index}) ? "$ipaddr{$index} " : '');
+    $ldesc .= "$speed_str $ifType_d{$iftype{$index}} ";
+    $ldesc .= "DLCI = $dlci " if (defined $dlci);
+    $ldesc .= "Custom: $customldesc " if ($customldesc);
+    
     push (@config,
 	'display_name' => $sdesc) if $unique{$ifdescr{$index}};
     
@@ -1715,7 +1722,7 @@ community string used to be inherited from further up in the config three.
 
 =item B<-C <community>>, B<--addcommunity <community>>
 
-Like L<-c <community>> abive except it saves the SNMP read community string in
+Like L<-c <community>> above except it saves the SNMP read community string in
 the generated configuration.
 
 =item B<--communityrw <community-rw>>

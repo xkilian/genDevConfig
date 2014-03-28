@@ -291,6 +291,7 @@ sub custom_targets {
                '_inst'               => $id,
                '_display_order'              => $opts->{order},
                '_dstemplate'                 => "ERS-Chassis-PS",
+               '_triggergroup'               => "ERS_powersupply",
                'use'                 => $opts->{dtemplate},
             );
             
@@ -318,6 +319,7 @@ sub custom_targets {
                 '_inst'               => $id,
                 '_display_order'              => $opts->{order},
                 '_dstemplate'                 => "ERS-Chassis-Fan",
+                '_triggergroup'               => "ERS_fan",
                 'use'                 => $opts->{dtemplate},
             );
             
@@ -363,6 +365,8 @@ sub custom_interfaces {
     my $match      = $data->{match};
     my $customsdesc = $data->{customsdesc};
     my $customldesc = $data->{customldesc};
+    my $c          = $data->{c};
+    my $target = $data->{target};
 
     ###
     ### START DEVICE CUSTOM INTERFACE CONFIG SECTION
@@ -371,6 +375,10 @@ sub custom_interfaces {
     # Set a non-sticky interface setting for invalid speed in nortel MIBs
     if ($opts->{chassisttype} =~ /^Nortel-ERS/){
         $opts->{nospeedcheck} = 1;
+    }
+    if ($target =~ /_Name_/) {
+
+      ($target, $customsdesc) = split (/_Name_/,$target);
     }
     
     ###
@@ -390,8 +398,11 @@ sub custom_interfaces {
     $data->{match}  = $match;
     $data->{customsdesc} = $customsdesc;
     $data->{customldesc} = $customldesc;
-
+    $data->{target} = $target;
+    $data->{c} = $c;
+    
     return;
+    
 }
 
 #-------------------------------------------------------------------------------
