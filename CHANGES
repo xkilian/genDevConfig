@@ -20,6 +20,21 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
+Unreleased
+
+# Version 3_0_X
+
+# - Updated Nortel/Avaya plugin
+# - New plugin for OSPF area spf runs
+# - New plugin for number of routes in routing table
+# - Defined triggers (thresholds) for OSPF, number of routes, Nortel/Avaya metrics and various interfaces
+# - Saner handling of service_descriptions for Shinken so that names are unique but any
+#   user input descriptions show up in the description not the service name.
+# - Nortel/Avaya ES-470 type switches, only apply thresholds on the gigabit uplinks and not the 10/100 ports
+# - Updated all Defaults files: Removed duplicate keys (oups), normalized OID naming
+# - Performance testing with Shinken and the SnmpBooster module
+
+
 13/11/2012
 
 # Version 3_0_6
