@@ -173,7 +173,6 @@ my %OID = (
 ###############################################################################
 
 ### General variables
-setDir();
 my($script) = $0 =~ /\/([^\/]+)$/;
 $script = $VERSION if !($script);
 
@@ -203,7 +202,7 @@ my %triggergroup = (
 my %opts = (
     'savedargs'         => join(" ", @ARGV),
     'community'         => "public",
-    'addcomm'           => 0, # If set to 1 add community string to host
+    'addcommunity'           => 0, # If set to 1 add community string to host
     'units'             => "bits",
     'inst'              => '',
     'logLevel'          => 'warn',
@@ -244,7 +243,7 @@ my %opts = (
     'order'                => 999, # Base order for all graphical display
     'plugindir'            => 'plugins/genConfig', # Alternate plugin directory
     'pluginflags'          => {},
-    'outputdir'            => '', # Absolute path from system /
+    'outputdir'            => 'gen', # Absolute path from system /
     'outputdir_ct'         => '', # Config-tree relative path
     'business_impact'      => '', # Shinken business impact
 
@@ -288,6 +287,7 @@ my %opts = (
     'ospfruns'      => 0,
     'req_mcastroutes'  => 0,
     'mcastroutes'      => 0,
+    'usestaticindex' => 0,
     
     ###
     ### Informational variables
@@ -356,7 +356,7 @@ $Getopt::Long::ignorecase = 0;
 GetOptions(
   "bytes|b"               => sub {$opts{units} = 'bytes';},
   "community|c=s"         => \$opts{community},
-  "addcommunity|C=s"      => sub {$opts{community} = $_[1]; $opts{addcomm} = 1;},
+  "addcommunity|C=s"      => sub {$opts{community} = $_[1]; $opts{addcommunity} = 1;},
   "communityrw=s"         => \$opts{communityrw},
   "ciscoint"              => \&deprecatedoption,
   "vendorint|extendedint" => sub {$opts{req_extendedint} = 1; $opts{req_vendorint} = 1;},
@@ -398,6 +398,7 @@ GetOptions(
   "voip"                  => \$opts{req_voip},
   "snmpv2c|2"             => \$opts{req_usev2c},
   "forceplugin=s"         => \$opts{plugin},
+  "staticinstance"           => \$opts{staticinstance},
 #  "P:s"                   => \&pluginflags,
 );
 
@@ -746,7 +747,7 @@ my $ipForwDatagrams = get('ipForwDatagrams');
 
 ### Create the target directory and targets file
 
-$opts{rdir} = subdir($opts{outputdir} . $opts{devicename}, $opts{lowercase});
+$opts{rdir} = subdir($opts{outputdir}, $opts{lowercase});
 
 #$file = $opts{file} = new genConfig::File("$opts{rdir}/devicename.cfg");
 $file = $opts{file} = new genConfig::File("$opts{rdir}/" . $opts{devicename} . ".cfg");
@@ -770,6 +771,7 @@ EOD
 ### of the target.
 
 my (@options);
+
 if ($opts{addcommunity}) {
     push (@options, '_SNMPCOMMUNITYREAD', $opts{community});
 }
@@ -1192,9 +1194,11 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     ### Set the target name and replace all spaces and commas with underscores
 
+    my ($target_raw);
     my($target) = $ifdescr{$index};
     $target =~ s/[\/\s:]/\_/g;
     $target =~ s/\,/_/g;
+    $target_raw = $target;
     
     ### Set the interface speed format
     
@@ -1319,16 +1323,19 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
              push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
 	}
 	push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts{triggers});
+    } else {
+	
+        ### Add the trigger templates for the selected type of interface
+        #
+        my %tmpconfig = @config;
+        my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
+        Info ("Trigger to apply : $trigger");
+        push(@config,
+	     '_triggergroup' => $trigger,
+	     ) if ($trigger ne "");
+
     }
     
-    ### Add the trigger templates for the selected type of interface
-    #
-    my %tmpconfig = @config;
-    my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
-    Info ("Trigger to apply : $trigger");
-    push(@config,
-	 '_triggergroup' => $trigger,
-	 ) if ($trigger ne "");
 
     ### Deal with non-unique interface descriptions by hard coding the
     ### instance number.  Append the numeric interface type to
@@ -1338,14 +1345,11 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     if (!$unique{$ifdescr{$index}}) {
         $target .= "_I$index";
         $ifdescr{$index} .= " I$index";
+	$opts{staticinstance} = 1;
 
-        push(@config, '_inst' => $index);
-
-        push(@config,
-             'display_name' => "$target <FONT COLOR=RED>*</FONT>"
-             ) if (!$opts{nodupwarn});
-        push(@config,
-             '_inst'         => $index);
+        #push(@config,
+        #     'display_name' => "$target <FONT COLOR=RED>*</FONT>"
+        #     ) if (!$opts{nodupwarn});
     }
 
     ### Build the interface target description strings and add them in the config.
@@ -1497,14 +1501,20 @@ $c="# ";
             Debug (" Commented-out: False ");            
         }
         Debug " Config: @config";
+
+
+	push(@config, 'service_description'  => "if." . $target);
+	
+	if ($opts{staticinstance}) {
+	    unshift (@config, '_inst' => $index);
+	} else {
+	    unshift (@config, '_inst'      => "map(interface-name,$target_raw)");
+	}
+	        
 	unshift(@config,
-		'service_description'  => "if." . $target,
-        '_inst'      => "map(interface-name,$target)",
         'host_name'            => $opts{devicename},
         'use'              => $opts{dtemplate});
 
-        # FIXME Why a comment?
-	# $file->write("#\n");
         $file->writetarget("service {", $c, @config);
     }
 }

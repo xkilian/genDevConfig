@@ -161,7 +161,7 @@ sub discover {
     if ($opts->{model} =~ /AMN-1000-TE/) {
         $opts->{chassisttype} = 'Accedian-metronid';
         $opts->{chassisname} = 'chassis.Accedian-metronid';
-        $opts->{chassistriggergroup} = 'chassis-accedian-metronid';
+        # $opts->{chassistriggergroup} = 'chassis-accedian-metronid';
     }
     
     # Default feature promotions for Nortel routing switches
