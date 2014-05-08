@@ -208,6 +208,7 @@ my %opts = (
     'logLevel'          => 'warn',
     'nodupwarn'         => 0,
     'collectall'        => 1,
+    'collectoperdown'  => 0,
     'chassisstats'      => 1, # Mandatory to create chassis target services
     'nounused'          => 1,
     'lowercase'         => 0,
@@ -369,6 +370,7 @@ GetOptions(
   "namedonly"             => \$opts{req_namedonly},
   "nodupwarn"             => \$opts{nodupwarn},
   "nounused"              => \&deprecatedoption,
+  "collectoperdown"      => \$opts{collectoperdown},
   "vlans"                 => \$opts{req_vlans},
   "modular|mod"           => \$opts{req_modular},
   "ospf"                  => \$opts{ospfruns},
@@ -510,7 +512,7 @@ if (!@plugins) {
 	}
         @plugins = ($forcedplugin) if ($forcedplugin);
     } else {
-        Warn (" No plugins forced on multiple matched plugins. ",
+        Info (" No plugins forced on multiple matched plugins. ",
 	"Defaulting to using all matched plugins.");
         foreach my $plugin (@plugins) {
 		Info (" Using multiple plugins: " . $plugin->plugin_name());
@@ -1417,10 +1419,14 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $header .= "\n### - Commented out by an administrator.\n";
         $c="# ";
         Debug (" Skipping the interface due commandline collect filter.");
-    } elsif ($ifoperstatus{$index} != 1 || $ifadminstatus{$index} != 1) {
+    } elsif ( $ifadminstatus{$index} != 1) {
         $header .= "\n### - Administratively down or in test mode.\n";
         $c="# ";
-        Debug (" Skipping the interface due to down oper or admin state");
+        Debug (" Skipping the interface due to admin state");
+    } elsif (!$opts{collectoperdown} && $ifoperstatus{$index} != 1) {
+        $header .= "\n### - Operating status down or in test mode.\n";
+        $c="# ";
+        Debug (" Skipping the interface due to down oper state");
     } elsif (!$opts{voip} && ($iftype{$index} == 103 || $iftype{$index} == 104)) {
         $header .= "\n### - Use '--voip' to enable stats.\n";
         $c="# ";
@@ -1746,6 +1752,10 @@ the device configuration via SNMP and TFTP in CVS.
 
 Do not collect interfaces with these types. The argument is a comma separated
 list of numeric interface types.
+
+=item B<--collectoperdown >
+
+Collect interface that are oper down, but admin up.
 
 =item B<-e <regex>>, B<--exception <regex>>
 
