@@ -46,7 +46,8 @@ my %OIDS = (
       ### Rapidcity MIB
       'OSA5220'                            => '1.3.6.1.4.1.2021.250.10',
       'osaSysVersion'                      => '1.3.6.1.4.1.5551.1.0.11',
-
+      'osaOntpsnmp'                        => '1.3.6.1.4.1.5551.1.0',
+      'osaGpsstatsnmp'                        => '1.3.6.1.4.1.5551.1.0',
     );
 
 ###############################################################################
@@ -64,7 +65,7 @@ my @types = ( "$OIDS{'OSA5220'}",
 ###############################################################################
 
 my $snmp;
-my $ontpstat = 0;
+my $ntpstat = 0;
 my $gpsstat = 0;
 my $script = "Oscilloquartz 5220 GPS receiver and NTP source";
 
@@ -134,8 +135,10 @@ sub discover {
     ### interface descriptions and which
     ### MIBs are supported.
     
-    my ($name, $model, $rest) = split( / /,get('rcSysVersion'));
-    $opts->{model} = "$name $model" ;
+    #Cannot get coherent data using the perl snmp library, always returns 1
+    #my $model = get('osaSysVersion');
+    #Debug ("Model: " . $model);
+    $opts->{model} = "OSA-Unknown" ;
       
     # Default options for all oscilloquartz class devices
     $opts->{class} = 'oscilloquartz';
@@ -151,15 +154,17 @@ sub discover {
         $opts->{chassisname} = 'chassis.OSA-5220';
         $opts->{chassistriggergroup} = 'chassis_OSA-5220';
     }  else {
-        $opts->{chassisttype} = 'OSA UNKNOWN';
-        $opts->{chassisname} = 'chassis.OSA-5220';
-        $opts->{chassistriggergroup} = 'chassis_OSA-5220';
+        $opts->{chassisttype} = 'OSA-Generic';
+        $opts->{chassisname} = 'chassis.generic';
+        #$opts->{chassistriggergroup} = 'chassis_OSA-5220';
         $opts->{class} = 'oscilloquartz';
     }
     
     # Default feature promotions for Nortel routing switches
     $opts->{usev2c} = 1      if ($opts->{req_usev2c});
     $opts->{oscilloquartzbox} = 1;
+    $ntpstat = 1;
+    $gpsstat =1;
     return;
 }
 
@@ -185,72 +190,14 @@ sub custom_targets {
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
     
-    # Power Supply
-    my %ontpsnmp ;
-    my %gpsstatsnmp;
-    
-    # ontpstatsnmp
-    # id = 1 to 19
-    my $rxpkts_count;
-    my $txpkts_count;
-    my $ignoredpkts_count;
-    my $droppedpkts_count;
-    my $auth_failures;
-    my $TFOM;
-    my $LIBits
-    my $SyncSource;
-    my $OffsetToSyncSource;
-    my $Stratum;
-    my $Version;
-    my $OscType;
-    my $TimeMode;
-    my $LocalOffset;
-    my $DST_Start_Month;
-    my $DST_Start_Sunday;
-    my $DST_Start_Hour;
-    my $DST_Stop_Month;
-    my $DST_Stop_Sunday;
-    my $DST_Stop_Hour;
-    
-    # gpsstatsnmp
-    # id = 1 to 12
-    my $fault_status_word;
-    my $TFOM;
-    my $sigprocstate;
-    my $N_satellites;
-    my $VCDAC;
-    my $Carrier_to_Noise;
-    my $RefPos;
-    my $RefPosSrc;
-    my $Current_Leap_seconds;
-    my $Future_Leap_seconds;
-    my $version;
-    my $Dynamic_Mode;
+    my $id = 0;
 
-   
-    if ($ontpstat){
-       %ontpsnmp =              gettable('osaOntpsnmp');
-    }
-    if ($gpsstat){
-       %gpsstatsnmp =           gettable('osaGpsstatsnmp');
-    }
    
     ### Build NTP subsystem stats
-    if ($ontpstat) {
-
-       $rxpkts_count = $ontpsnmp{1};
-       $txpkts_count = $ontpsnmp{2};
-       $ignoredpkts_count = $ontpsnmp{3};
-       $droppedpkts_count = $ontpsnmp{4};
-       $auth_failures = $ontpsnmp{5};
-       $TFOM = $ontpsnmp{6};
-       $LIBits = $ontpsnmp{7};
-       $SyncSource = $ontpsnmp{8};
-       $OffsetToSyncSource = $ontpsnmp{9};
-       $OscType = $ontpsnmp{9};
+    if ($ntpstat) {
 
       my ($ldesc, $sdesc);
-      $sdesc = "NTP subsystem Time Figure of Merit 4 to 9, a higher number being bad sync to GPS. Oscillator type: $ontpsnmp{12};.";
+      $sdesc = "NTP subsystem Time Figure of Merit 4 to 9, a higher number being bad sync to GPS.";
       $ldesc = "NTP subsystem Time Figure of Merit 4 to 9, a higher number being bad sync to GPS, consult Oscilloquartz manual.";
    
       $file->writetarget("service {", '',
@@ -258,7 +205,7 @@ sub custom_targets {
          'service_description' => "ntpstat.TFOM",
          'notes'               => $ldesc,
          'display_name'        => $sdesc,
-         '_inst'               => 0,
+         '_inst'               => $id,
          '_display_order'              => $opts->{order},
          '_dstemplate'                 => "OSA-Chassis-TFOM",
          '_triggergroup'               => "ontpstat_TFOM",
@@ -273,7 +220,7 @@ sub custom_targets {
    
       $file->writetarget("service {", '',
          'host_name'           => $opts->{devicename},
-         'service_description' => "ntpstat.authfailures,
+         'service_description' => "ntpstat.authfailures",
          'notes'               => $ldesc,
          'display_name'        => $sdesc,
          '_inst'               => $id,
@@ -310,13 +257,8 @@ sub custom_targets {
    
     if ($gpsstat) {
     
-       my $fault_status_word = $ontpsnmp{1};
-       my $TFOM = $ontpsnmp{2};
-       my $sigprocstate = $ontpsnmp{3};
-       my $N_satellites = $ontpsnmp{4};
-       my $VCDAC = $ontpsnmp{5};
-       my $Carrier_to_Noise = $ontpsnmp{6};
        
+      my ($ldesc, $sdesc);       
       $sdesc = "GPS subsystem State and Statistics.";
       $ldesc = "GPS subsystem State and Statistics.";
    
