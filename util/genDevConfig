@@ -4,7 +4,7 @@
 # genDevConfig - Generate template config tree for various networked devices.
 #
 #    Copyright (C) 2000 Mike Fisher and Tech Data Corporation
-#    Copyright (C) 2002-2013 Francois Mikus "fmikus" domain "acktomic.com"
+#    Copyright (C) 2002-2014 Francois Mikus "fmikus" domain "acktomic.com"
 #   
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ my %ifType_d = ();
 }
 
 
-my $VERSION = 'genDevConfig 3.0.6';
+my $VERSION = 'genDevConfig 3.0.7';
 
 ###############################################################################
 sub version {

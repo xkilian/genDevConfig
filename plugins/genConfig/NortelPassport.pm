@@ -279,8 +279,8 @@ sub custom_targets {
             $ldesc = "Power Supply Status, power supply " . $id;
             $ldesc .= "<BR>rcChasPowerSupplyId : " . $did . " type : " . $typehash{$type};
             $ldesc .= "<BR>hardware serial and version : " . $serial . " " . $hwversion;
-            $ldesc .= "<BR>partnumber : " . $partnumber . " " . $description;
-            $sdesc = "Power supply status for ps :" . $id . " type : " . $typehash{$type};
+            $ldesc .= "<BR>partnumber : " . $partnumber . " " . $description . " Status: 1 unknown, 2 Up, 3 Down";
+            $sdesc = "Power supply status for ps :" . $id . " type : " . $typehash{$type} . " Status: 1 unknown, 2 Up, 3 Down";
             my ($targetname) = 'powerSupply_' . $id;
          
             $file->writetarget("service {", '',
@@ -307,8 +307,8 @@ sub custom_targets {
         foreach  my $id (keys %FanId) {
             
             my ($ldesc, $sdesc);
-            $ldesc = "Fan status for FanId : " . $id;
-            $sdesc = "Fan status for FanId : " . $id;
+            $ldesc = "Fan status for FanId : " . $id . " Status: 1 unknown, 2 Up, 3 Down";
+            $sdesc = "Fan status for FanId : " . $id . " Status: 1 unknown, 2 Up, 3 Down";
             my ($targetname) = 'fan_' . $id;
             
             $file->writetarget("service {", '',
