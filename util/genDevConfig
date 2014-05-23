@@ -216,7 +216,7 @@ my %opts = (
     'groupname'         => '',
     'rtragents'         => 1,
     'coreint'           => 0,
-    'nustats'           => 0,
+    'nucast'           => 0,
     'gigonly'           => 0,
     'triggers'          => 0,
     'triggertemplateclass'       => 'access',
@@ -1175,6 +1175,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     ### If all conditions are met the interface targetType will include
     ### a '-hc' identifier, which will also cause the snmp-version to be set
     ### to '2c' for that interface.
+    ### Add -nu for non unicast or multicast statistics.
 
 
     $hc = '-hc' if ($opts{usev2c} && defined $ifHCInOctets{$index} && $ifHCInOctets{$index} != 0 && (int($ifspeed{$index}) > 100000000));
@@ -1315,8 +1316,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         # include the default type of standard-interface for each target
 	# unless extended mib-ii are supported.
 
-        # Check if NU Cast packet statistics are required
-	my ($nu) = $opts{nustats} ? '-nu' : '';
+        # Check if Multicast or non unicast packet statistics are required
+	my ($nu) = $opts{nucast} ? '-nu' : '';
 	
 
         if($opts{extendedint}) {
