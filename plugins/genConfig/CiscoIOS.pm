@@ -242,12 +242,15 @@ sub discover {
      if ($opts->{sysDescr} =~ /IOS\s+(\(tm\)|Software,)/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /IOS\s+(?:\(tm\)|Software,)\s+(\S+)/;
         Info("Found an IOS device: model: $opts->{model}");
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{sysDescr} =~ /Cisco Systems Catalyst/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /Cisco Systems Catalyst (\d+)/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{sysDescr} =~ /C\d\d\d+ Software \(/ ) {
  	 ($opts->{model}) = $opts->{sysDescr} =~ /(\S+) Software \(/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     }
 
     if ($opts->{model} =~ /MSFC/) {
@@ -270,23 +273,29 @@ sub discover {
     if  ($opts->{model} eq 'C3500XL' || $opts->{model} eq 'C2900XL') {
         $opts->{chassisttype} = 'Catalyst-XL-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C3550") {
         $opts->{chassisttype} = 'Catalyst-3550-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C2950") {
         $opts->{chassisttype} = 'Catalyst-2950-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "1900") {
         $opts->{chassisttype} = 'Catalyst-1900-Switch';
     } elsif ($opts->{model} eq "7500") {
         $opts->{chassisttype} = 'Cisco-7500-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "7200") {
         $opts->{chassisttype} = 'Cisco-7200-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "7000") {
         $opts->{chassisttype} = 'Cisco-7000-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /4500/) {
         $opts->{chassisttype} = 'Cisco-4500-Router';
     } elsif ($opts->{model} =~ /3[789]00/) {
@@ -294,17 +303,22 @@ sub discover {
 	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /3600/) {
         $opts->{chassisttype} = 'Cisco-3600-Router';
+	$opts->{dtemplate} = "default-snmp-template-bulk";
    } elsif ($opts->{model} =~ /2[789]00/) {
         $opts->{chassisttype} = 'Cisco-2900-Router';
 	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C1200") {
         $opts->{chassisttype} = 'Cisco-1200-AP';
     } elsif ($opts->{model} =~ /2600/) {
         $opts->{chassisttype} = 'Cisco-2600-Router';
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1[89]00/) {
         $opts->{chassisttype} = 'Cisco-1800-Router';
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1700/) {
         $opts->{chassisttype} = 'Cisco-1700-Router';
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1600/) {
         $opts->{chassisttype} = 'Cisco-1600-Router';
     } elsif ($opts->{model} =~ /3000/) {
@@ -318,12 +332,15 @@ sub discover {
     } elsif ($opts->{model} =~ /c6sup2_rp/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /WS-X5530/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /MSFC2/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /LS1010/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
@@ -336,6 +353,7 @@ sub discover {
     } elsif ($opts->{model} =~ /RSP/) {
         $opts->{chassisttype} = 'Cisco-7500-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{ciscobox}) {   # Default Cisco config
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});

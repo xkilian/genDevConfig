@@ -147,11 +147,14 @@ sub discover {
     if ($opts->{model} =~ /ES-470/) {
         $opts->{chassisttype} = 'Nortel-ES470';
         $opts->{chassisname} = 'chassis.Nortel-ES8600';
+        $opts->{dtemplate} = "default-snmp-template-bulk";
+        $opts->{nucast} = 0;
     }
     
     # Default feature promotions for Nortel routing switches
     $opts->{usev2c} = 1      if ($opts->{req_usev2c});
     $opts->{nortelbox} = 1;
+    $opts->{dtemplate} = "default-snmp-template-bulk";
     return;
 }
 

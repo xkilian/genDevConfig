@@ -192,12 +192,14 @@ sub discover {
         $opts->{chassisname} = 'chassis.Nortel-Accelar1200';
         $opts->{class} = 'passport';
         $opts->{chassisinst} = "0";
+        $opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /ERS-16/) {
         $opts->{chassisttype} = 'Nortel-ERS1600';
         $opts->{chassisname} = 'chassis.Nortel-ERS1600';
         $opts->{chassistriggergroup} = 'chassis_ERS1600';
         $opts->{class} = 'passport';
         $opts->{chassisinst} = "0";
+        $opts->{dtemplate} = "default-snmp-template-bulk";
     } else {
         $opts->{chassisttype} = 'Nortel-ERS8600';
         $opts->{chassisname} = 'chassis.Nortel-Generic-8K';
