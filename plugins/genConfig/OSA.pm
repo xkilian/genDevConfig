@@ -158,11 +158,13 @@ sub discover {
         $opts->{chassisname} = 'chassis.generic';
         #$opts->{chassistriggergroup} = 'chassis_OSA-5220';
         $opts->{class} = 'oscilloquartz';
+
     }
     
     # Default feature promotions for Nortel routing switches
     $opts->{usev2c} = 1      if ($opts->{req_usev2c});
     $opts->{oscilloquartzbox} = 1;
+    $opts->{dtemplate} = "default-snmp-template-bulk";
     $ntpstat = 1;
     $gpsstat =1;
     return;
