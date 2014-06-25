@@ -268,10 +268,14 @@ sub custom_targets {
                          '2' => "dc",
                          '3' => "not installed");
          foreach  my $id (keys %idtable) {
-            Debug ("Current id : " . $id);
+            # Skip it in case the power supply table is not supported
             next if (!defined($detailId{$id}));
-            my $did = $detailId{$id};
+
+            # Skip power supply slots that do not contain a power supply
             my $type = $detailType{$id};
+            next if ($typehash{$type} == 3);
+            
+            my $did = $detailId{$id};
             my $serial = $detailSerialNumber{$id};
             my $hwversion = $detailHardwareRevision{$id};
             my $partnumber = $detailPartNumber{$id};
