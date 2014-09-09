@@ -146,7 +146,7 @@ sub discover {
     
     if ($opts->{model} =~ /ES-470/) {
         $opts->{chassisttype} = 'Nortel-ES470';
-        $opts->{chassisname} = 'chassis.Nortel-ES8600';
+        $opts->{chassisname} = 'chassis.Nortel-ES470';
         $opts->{dtemplate} = "default-snmp-template-bulk";
         $opts->{nucast} = 0;
     }

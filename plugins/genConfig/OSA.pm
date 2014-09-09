@@ -212,6 +212,7 @@ sub custom_targets {
          '_dstemplate'                 => "OSA-Chassis-TFOM",
          '_triggergroup'               => "ontpstat_TFOM",
          'use'                 => $opts->{dtemplate},
+         'check_interval'       =>   15,
       );
       
       $opts->{order} -= 1;
@@ -230,6 +231,7 @@ sub custom_targets {
          '_dstemplate'                 => "OSA-ntp-authfailure",
          '_triggergroup'               => "ontpstat_authfailure",
          'use'                 => $opts->{dtemplate},
+         'check_interval'       =>   15,
       );
       
       $opts->{order} -= 1;
@@ -247,6 +249,7 @@ sub custom_targets {
          '_dstemplate'                 => "OSA-ntp-offset",
          #'_triggergroup'               => "ontpstat_offset",
          'use'                 => $opts->{dtemplate},
+         'check_interval'       =>   15,
       );
       
       $opts->{order} -= 1;
@@ -274,6 +277,7 @@ sub custom_targets {
          '_dstemplate'                 => "OSA-gps-stats",
          '_triggergroup'               => "ogpsstat_all",
          'use'                 => $opts->{dtemplate},
+         'check_interval'       =>   15,
       );
       
       $sdesc = "GPS subsystem Time Figure of Merit 4 to 6, a higher number being bad sync to satelittes, consult Oscilloquartz manual.";
@@ -288,6 +292,7 @@ sub custom_targets {
          '_dstemplate'                 => "OSA-gps-TFOM",
          '_triggergroup'               => "ogpsstat_TFOM",
          'use'                 => $opts->{dtemplate},
+         'check_interval'       =>   15,
       );
       
       $opts->{order} -= 1;

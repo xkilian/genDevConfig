@@ -95,7 +95,7 @@ sub writepair {
     $comment = '' if (!defined $comment);
 
     my $quote = '';
-    my $tabs = int(((24 - length($name))/8) + 0.5);
+    my $tabs = int(((32 - length($name))/8) + 0.5);
 
     if (defined($value)) {
         # quote empty (or white-space only) lines, or lines which
@@ -107,7 +107,7 @@ sub writepair {
 	    $quote = ''; # Unquoted for Nagios
         }
         print({$self->{'file'}} "$comment   $name", 
-              "\t"x$tabs, "$quote$value$quote\n");
+              "\t"$tabs, "$quote$value$quote\n");
     }
 }
 
