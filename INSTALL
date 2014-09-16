@@ -84,13 +84,10 @@ Example of creating and copying the Defaults files to the Shinken SNMP folder:
 # For lazy bash users
 
 export genDevConfig=/path/to/genDevConfig
-export SHINKEN=/path/to/shinken
-cd $SHINKEN/etc/packs/network
-mkdir SnmpBooster
 
-cd $SHINKEN/etc/packs/network/SnmpBooster
-cp $genDevConfig/sample-config/genDevConfig/Defaults* ./
-cp $genDevConfig/sample-config/genDevConfig/snmp-template.cfg ./templates.cfg
+mkdir -p /etc/shinken/packs/SnmpBooster
+cd /etc/shinken/packs/SnmpBooster
+cp $genDevConfig/sample-config/genConfig/* ./
 
 ### Step 3 Configure SnmpBooster
 
