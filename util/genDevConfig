@@ -223,6 +223,7 @@ my %opts = (
     'refinfo'           => {},
     'pingparents'        => 0,  # ping parents if defined by default
     'parents'            => '', # parent dependancies
+    'noconcurrency'      => '0',
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
     'htemplates'         => '', # host templates added to discovered templates
@@ -233,6 +234,7 @@ my %opts = (
     'chassiscollect'       => 1, ### Empty targets should have this option unset
     'rdir'                 => '',
     'file'                 => '',
+    'pollertag'            => '',
     'model'                => '',
     'class'                => '',
     'chassisinst'          => '',
@@ -260,6 +262,8 @@ my %opts = (
     'req_vendorbox' => 1, # always request chassis stats(temp, cpu, mem)
     'ciscobox'      => 0,
     'juniperbox'      => 0,
+    'nortelbox'       => 0,
+    'alcatelbox'      => 0,
     'req_contivitytunnels' => 1,
     'contivitytunnels' => 0,
     'req_ciscoslotport' => 1,
@@ -777,6 +781,10 @@ my (@options);
 
 if ($opts{addcommunity}) {
     push (@options, '_SNMPCOMMUNITYREAD', $opts{community});
+}
+
+if ($opts{noconcurrency} eq "1") {
+    push (@options, '_NOCONCURRENCY', $opts{noconcurrency});
 }
 
 my $displayname = $opts{devicename};
@@ -1516,7 +1524,8 @@ $c="# ";
 	if ($opts{staticinstance}) {
 	    unshift (@config, '_inst' => $index);
 	} else {
-	    unshift (@config, '_inst'      => "map(interface-name,$target_raw)");
+	    unshift (@config, '_instname'      => $target_raw);
+	    unshift (@config, '_mapping'       => "interface-name");
 	}
 	        
 	unshift(@config,

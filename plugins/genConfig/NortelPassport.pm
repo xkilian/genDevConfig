@@ -53,6 +53,7 @@ my %OIDS = (
       'rcChasPowerSupplyDetailPartNumber'       => '1.3.6.1.4.1.2272.1.4.8.2.1.5',
       'rcChasPowerSupplyDetailDescription'       => '1.3.6.1.4.1.2272.1.4.8.2.1.6',
       'rcChasFanId'                             => '1.3.6.1.4.1.2272.1.4.7.1.1.1',
+      'rcChasPowerSupplyOperStatus'             => '1.3.6.1.4.1.2272.1.4.8.1.1.2',
       'rcA1200'                                 => '1.3.6.1.4.1.2272.8',
       'rcA8003'                                 => '1.3.6.1.4.1.2272.280887555',
       'rcA8006'                                 => '1.3.6.1.4.1.2272.280887558',
@@ -192,14 +193,18 @@ sub discover {
         $opts->{chassisname} = 'chassis.Nortel-Accelar1200';
         $opts->{class} = 'passport';
         $opts->{chassisinst} = "0";
-        $opts->{dtemplate} = "default-snmp-template-bulk";
+        $opts->{noconcurrency} = "1";
+        $opts->{maxoidrequest} = "64";
+        $opts->{pollertag} = "NOCONCURRENCY";   
     } elsif ($opts->{model} =~ /ERS-16/) {
         $opts->{chassisttype} = 'Nortel-ERS1600';
         $opts->{chassisname} = 'chassis.Nortel-ERS1600';
         $opts->{chassistriggergroup} = 'chassis_ERS1600';
         $opts->{class} = 'passport';
         $opts->{chassisinst} = "0";
-        $opts->{dtemplate} = "default-snmp-template-bulk";
+        $opts->{noconcurrency} = "1";
+        $opts->{maxoidrequest} = "64";
+        $opts->{pollertag} = "NOCONCURRENCY";     
     } else {
         $opts->{chassisttype} = 'Nortel-ERS8600';
         $opts->{chassisname} = 'chassis.Nortel-Generic-8K';
@@ -245,6 +250,7 @@ sub custom_targets {
     my %detailHardwareRevision;
     my %detailPartNumber;
     my %detailDescription;
+    my %operStatus;
     
     # Fan status
     my %FanId;
@@ -257,6 +263,7 @@ sub custom_targets {
        %detailHardwareRevision = gettable('rcChasPowerSupplyDetailHardwareRevision');
        %detailPartNumber =     gettable('rcChasPowerSupplyDetailPartNumber');
        %detailDescription =    gettable('rcChasPowerSupplyDetailDescription');
+       %operStatus        =    gettable('rcChasPowerSupplyOperStatus');
     }
     if ($chassisfan){
        %FanId =                   gettable('rcChasFanId');
@@ -271,10 +278,10 @@ sub custom_targets {
             # Skip it in case the power supply table is not supported
             next if (!defined($detailId{$id}));
 
-            # Skip power supply slots that do not contain a power supply
-            my $type = $detailType{$id};
-            next if ($typehash{$type} == 3);
+            # Skip power supply slots that are unknown, empty or present but down
+            next if ($operStatus{$id} != 3);
             
+            my $type = $detailType{$id};
             my $did = $detailId{$id};
             my $serial = $detailSerialNumber{$id};
             my $hwversion = $detailHardwareRevision{$id};
@@ -285,8 +292,8 @@ sub custom_targets {
             $ldesc = "Power Supply Status, power supply " . $id;
             $ldesc .= "<BR>rcChasPowerSupplyId : " . $did . " type : " . $typehash{$type};
             $ldesc .= "<BR>hardware serial and version : " . $serial . " " . $hwversion;
-            $ldesc .= "<BR>partnumber : " . $partnumber . " " . $description . " Status: 1 unknown, 2 Up, 3 Down";
-            $sdesc = "Power supply status for ps :" . $id . " type : " . $typehash{$type} . " Status: 1 unknown, 2 Up, 3 Down";
+            $ldesc .= "<BR>partnumber : " . $partnumber . " " . $description . " Status: 1 unknown, 2 Empty, 3 Up, 4 present but down";
+            $sdesc = "Power supply status for ps :" . $id . " Status: 1 unknown, 2 Empty, 3 Up, 4 present but down";
             my ($targetname) = 'powerSupply_' . $id;
          
             $file->writetarget("service {", '',
