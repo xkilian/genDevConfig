@@ -242,15 +242,15 @@ sub discover {
      if ($opts->{sysDescr} =~ /IOS\s+(\(tm\)|Software,)/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /IOS\s+(?:\(tm\)|Software,)\s+(\S+)/;
         Info("Found an IOS device: model: $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template-bulk";
+	$opts->{dtemplate} = "default-snmp-template";
     } elsif ($opts->{sysDescr} =~ /Cisco Systems Catalyst/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /Cisco Systems Catalyst (\d+)/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template-bulk";
+	$opts->{dtemplate} = "default-snmp-template";
     } elsif ($opts->{sysDescr} =~ /C\d\d\d+ Software \(/ ) {
  	 ($opts->{model}) = $opts->{sysDescr} =~ /(\S+) Software \(/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template-bulk";
+	$opts->{dtemplate} = "default-snmp-template";
     }
 
     if ($opts->{model} =~ /MSFC/) {

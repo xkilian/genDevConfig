@@ -25,6 +25,7 @@ Unreleased
 # Version 3_0_X
 
 # - Updated Nortel/Avaya plugin
+# - Updated Accedian plugin
 # - New plugin for OSPF area spf runs
 # - New plugin for number of routes in routing table
 # - Defined triggers (thresholds) for OSPF, number of routes, Nortel/Avaya metrics and various interfaces
@@ -33,7 +34,9 @@ Unreleased
 # - Nortel/Avaya ES-470 type switches, only apply thresholds on the gigabit uplinks and not the 10/100 ports
 # - Updated all Defaults files: Removed duplicate keys (oups), normalized OID naming
 # - Performance testing with Shinken and the SnmpBooster module
-
+# - Introduce noconcurrency option for devices that cannot deal with multiple concurrent SNMP requests
+# - Introduce pollertag option to force certain checks on a specific poller(s)
+# - New SNMP Host template with variables for concurrency maxoidreuqests and usebulk
 
 13/11/2012
 

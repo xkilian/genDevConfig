@@ -135,7 +135,8 @@ sub discover {
     $opts->{'model'} = 'CatOS-Generic';
     $opts->{'class'} = 'catalyst';
     $opts->{'vendor_descr_oid'} = 'portName';
-    $opts->{'inst'} = 'map(module-port)';
+    $opts->{'instname'} = 0;
+    $opts->{'mapping'} = 'module-port';
     $opts->{catalystint} = 1 if ($opts->{req_vendorint});
     $opts->{extendedint} = 0    if ($opts->{req_extendedint});
     $opts->{usev2c} = 1 if ($opts->{req_use2c});
@@ -243,7 +244,9 @@ sub custom_targets {
         $file->writetarget('service {', '',
 	    'host_name'           => $opts->{devicename},				    
 	    'service_description' => $targetname,
-            '_inst'               => 'map(cpu-stats)',
+            '_instname'               => 0,
+	    # TODO Instance needs to be fixed
+	    '_mapping'            => 'cpu-stats',
             '_display_order'              => $opts->{order},
             'display_name'        => $targetname,
             'notes'               => $ldesc,
@@ -265,7 +268,8 @@ sub custom_targets {
         $file->writetarget('service {', '',
 	    'host_name'           => $opts->{devicename},
 	    'service_description' => $targetname,
-            '_inst'               => 'map(mem-stats)',
+            '_instname'               => 'DRAM',
+	    '_mapping'                => 'mem-stats',
             '_display_order'              => $opts->{order},
             'display_name'        => $targetname,
             'notes'               => $ldesc,
