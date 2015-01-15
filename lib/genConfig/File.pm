@@ -107,7 +107,7 @@ sub writepair {
 	    $quote = ''; # Unquoted for Nagios
         }
         print({$self->{'file'}} "$comment   $name", 
-              "\t"$tabs, "$quote$value$quote\n");
+              "\t" . $tabs, "$quote$value$quote\n");
     }
 }
 
