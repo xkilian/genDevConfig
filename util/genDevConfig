@@ -224,6 +224,7 @@ my %opts = (
     'pingparents'        => 0,  # ping parents if defined by default
     'parents'            => '', # parent dependancies
     'noconcurrency'      => '0',
+    'maxoidrequest'      => '64',
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
     'htemplates'         => '', # host templates added to discovered templates
@@ -786,6 +787,12 @@ if ($opts{addcommunity}) {
 if ($opts{noconcurrency} eq "1") {
     push (@options, '_NOCONCURRENCY', $opts{noconcurrency});
 }
+
+if ($opts{pollertag} ne "") {
+    push (@options, 'poller_tag', $opts{pollertag});
+}
+
+push (@options, '_MAXOIDREQUEST', $opts{maxoidrequest});
 
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
