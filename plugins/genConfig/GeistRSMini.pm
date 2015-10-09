@@ -178,7 +178,7 @@ sub custom_targets {
                'display_name'        => "Temperature sensor " . $id,
                '_inst'               => $id,
                '_dstemplate'                 => "geist-sensor-temperature",
-#               '_triggergroup'               => "ERS_powersupply",
+               '_triggergroup'               => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
 
