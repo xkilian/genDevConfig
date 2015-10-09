@@ -44,6 +44,7 @@ my %OIDS = (
 
       'productVersion'                            => '1.3.6.1.4.1.21239.2.1.2',
       'rcRsMini'                                 => '1.3.6.1.4.1.21239.2',
+      'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
     );
 
 ###############################################################################
@@ -132,7 +133,7 @@ sub discover {
     $opts->{model} = $opts->{sysDescr};
     
     # Default options for all passport class devices
-    $opts->{class} = '163';
+    $opts->{class} = 'Geist RSMINI';
     $opts->{chassisinst} = "0";
     $opts->{vendor_soft_ver} = get('productVersion');
     $opts->{vendor_descr_oid} = "ifName";
@@ -140,9 +141,7 @@ sub discover {
  
     Debug("$module Model : " . $opts->{model});
     
-    # Default feature promotions for Nortel routing switches
-    $opts->{usev2c} = 1      if ($opts->{req_usev2c});
-    $opts->{nortelbox} = 1;
+    $opts->{usev2c} = 1;
     $opts->{dtemplate} = "default-snmp-template";
     return;
 }
@@ -168,7 +167,22 @@ sub custom_targets {
     ###
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
-    
+    my %idtable;
+    %idtable = gettable('OidtempSensorTempC'); 
+
+    foreach my $id (keys %idtable) {
+    $file->writetarget("service {", '',
+               'host_name'           => $opts->{devicename},
+               'service_description' => "temperature_sensor_" . $id,
+#               'notes'               => $ldesc,
+               'display_name'        => "Temperature sensor " . $id,
+               '_inst'               => $id,
+               '_dstemplate'                 => "geist-sensor-temperature",
+#               '_triggergroup'               => "ERS_powersupply",
+               'use'                 => $opts->{dtemplate},
+            );
+
+    }
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###
@@ -216,12 +230,6 @@ sub custom_interfaces {
     ###
     
     # Set a non-sticky interface setting for invalid speed in nortel MIBs
-    if ($opts->{chassisttype} =~ /^Nortel-ES/){
-        $opts->{nospeedcheck} = 1;
-    }
-    if ($intdescr{$index} !~ /GBIC/) {
-      $c = "# "
-    }
     
     Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
     
