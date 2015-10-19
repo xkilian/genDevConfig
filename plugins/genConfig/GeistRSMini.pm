@@ -43,7 +43,7 @@ my $VERSION = 1.00;
 my %OIDS = (
 
       'productVersion'                            => '1.3.6.1.4.1.21239.2.1.2',
-      'rcRsMini'                                 => '1.3.6.1.4.1.21239.2',
+      'rcRsMini'                                 => '1.3.6.1.4.1.21239.2.0',
       'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
     );
 
