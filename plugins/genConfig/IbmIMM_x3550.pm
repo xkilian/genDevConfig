@@ -1,7 +1,7 @@
 # -*-perl-*-
 #    genDevConfig plugin module
 #
-#    Copyright (C) 2015 Sebastien Coavoux
+#    Copyright (C) 2015 Flavien Peyre
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-package GeistRSMini;
+package IbmIMM_x3550;
 
 use strict;
 
@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.02;
+my $VERSION = 1.00;
 
 ### End package init
 
@@ -42,17 +42,9 @@ my $VERSION = 1.02;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-      'productVersion'                            => '1.3.6.1.4.1.21239.2.1.2',
-      'rcRsMini'                                 => '1.3.6.1.4.1.21239.2.0',
-      'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
-      'OidclimateHumidity' => '1.3.6.1.4.1.21239.2.2.1.7',
-      'OidclimateAirflow'  => '1.3.6.1.4.1.21239.2.2.1.9',
-
-      'OidairFlowSensorTempC'       => '1.3.6.1.4.1.21239.2.5.1.5',
-      'OidairFlowSensorFlow'        => '1.3.6.1.4.1.21239.2.5.1.7',
-      'OidairFlowSensorHumidity'    => '1.3.6.1.4.1.21239.2.5.1.8',
-      'OidairFlowSensorDewPointC'   => '1.3.6.1.4.1.21239.2.5.1.9',
-
+      'productVersion'                            => '1.3.6.1.4.1.2.3.51.3.1.5.2.1.5.0',
+      'rcIbmImm'                                 => '1.3.6.1.4.1.8072.3.2.10',
+      'OidSystemHealthStat' => '1.3.6.1.4.1.2.3.51.3.1.4.1',
     );
 
 ###############################################################################
@@ -60,7 +52,7 @@ my %OIDS = (
 ## the names should be contained in the sysdescr string
 ## returned by the devices. The name is a regular expression.
 ################################################################################
-my @types = ( "$OIDS{'rcRsMini'}",
+my @types = ( "$OIDS{'rcIbmImm'}",
             );
 
 
@@ -69,8 +61,8 @@ my @types = ( "$OIDS{'rcRsMini'}",
 ###############################################################################
 
 my $snmp;
-my $script = "Geist RS Mini genDevConfig Module";
-my $module = "GeistRSMini";
+my $script = "IBM Imm x3550 genDevConfig Module";
+my $module = "IbmIMM_x3550";
 
 ###############################################################################
 ###############################################################################
@@ -141,7 +133,7 @@ sub discover {
     $opts->{model} = $opts->{sysDescr};
     
     # Default options for all passport class devices
-    $opts->{class} = 'Geist RSMINI';
+    $opts->{class} = 'IbmIMM_x3550';
     $opts->{chassisinst} = "0";
     $opts->{vendor_soft_ver} = get('productVersion');
     $opts->{vendor_descr_oid} = "ifName";
@@ -150,7 +142,7 @@ sub discover {
     Debug("$module Model : " . $opts->{model});
     
     $opts->{usev2c} = 1;
-    $opts->{dtemplate} = "generic-snmp-template";
+    $opts->{dtemplate} = "default-snmp-template";
     return;
 }
 
@@ -175,87 +167,22 @@ sub custom_targets {
     ###
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
-    my %idtableST;
-    my $idtableSH;
-    my $idtableSF;
-    my $idtableSD;
-    my $idtableSC;
+    my %idtable;
+    %idtable = gettable('OidSystemHealthStat'); 
 
-    %idtableST = gettable('OidtempSensorTempC'); 
-
-    foreach my $id (keys %idtableST) {
+    foreach my $id (keys %idtable) {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
-               'service_description' => "temperature_sensor_" . $id,
+               'service_description' => "health_statistic_" . $id,
 #               'notes'               => $ldesc,
-               'display_name'        => "Temperature sensor " . $id,
+               'display_name'        => "Health statistic " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "geist-sensor-temperature",
-               '_triggergroup'               => "RSMini_Temp",
+               '_dstemplate'                 => "ibm-system-health-stat",
+               '_triggergroup'               => "Ibm_Health_Stat",
                'use'                 => $opts->{dtemplate},
             );
 
     }
-    
-    foreach my $id (0..15) {
-    	($idtableSH) = get("OidairFlowSensorHumidity.$id");
- 	next if (!defined ($idtableSH));
-    	$file->writetarget("service {", '',
-               	'host_name'           => $opts->{devicename},
-               	'service_description' => "airflow_humidity_" . $id,
-#               'notes'               => $ldesc,
-               'display_name'        => "Airflow humidity " . $id,
-               '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-humidity",
-              # '_triggergroup'               => "RSMini_Temp",
-               'use'                 => $opts->{dtemplate},
-            );
-
-    }
-    foreach my $id (0..15) {
-    	($idtableSF) = get("OidairFlowSensorFlow.$id");
-	next if (!defined ($idtableSF));    
-	$file->writetarget("service {", '',
-               'host_name'           => $opts->{devicename},
-               'service_description' => "airflow_airflow_" . $id,
-#               'notes'               => $ldesc,
-               'display_name'        => "Airflow airflow " . $id,
-               '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-airflow",
-              # '_triggergroup'               => "RSMini_Temp",
-               'use'                 => $opts->{dtemplate},
-            );
-    }
-    foreach my $id (0..15) {
-    	($idtableSD) = get("OidairFlowSensorDewPointC.$id");
- 	 next if (!defined ($idtableSD));
-    	 $file->writetarget("service {", '',
-               'host_name'           => $opts->{devicename},
-               'service_description' => "airflow_dewpoint_" . $id,
-#               'notes'               => $ldesc,
-               'display_name'        => "Airflow Dew Point " . $id,
-               '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-dewpoint",
-              # '_triggergroup'               => "RSMini_Temp",
-               'use'                 => $opts->{dtemplate},
-            );
-    }
-    foreach my $id (0..15) {
-    	($idtableSC) = get("OidairFlowSensorTempC.$id");
- 	 next if (!defined ($idtableSC));
-    	 $file->writetarget("service {", '',
-               'host_name'           => $opts->{devicename},
-               'service_description' => "airflow_temperature_" . $id,
-#               'notes'               => $ldesc,
-               'display_name'        => "Airflow Temperature " . $id,
-               '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-temperature",
-              # '_triggergroup'               => "RSMini_Temp",
-               'use'                 => $opts->{dtemplate},
-            );
-    }
-
-
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###
@@ -304,7 +231,7 @@ sub custom_interfaces {
     
     # Set a non-sticky interface setting for invalid speed in nortel MIBs
     
-    ###Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
+    Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
     
     ###
     ### END INTERFACE CUSTOM CONFIG SECTION
