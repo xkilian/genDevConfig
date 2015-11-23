@@ -152,7 +152,7 @@ sub discover {
     # Default options for all passport class devices
     $opts->{class} = 'metronid';
     $opts->{chassisinst} = "0";
-    $opts->{vendor_soft_ver} = get('acdDescFirmwareVersion');
+    ($opts->{vendor_soft_ver}) = get('acdDescFirmwareVersion');
     $opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
  
