@@ -122,9 +122,9 @@ sub discover {
     ### START DEVICE DISCOVERY SECTION
     ###
 
-    #'req_ospfruns'  => 0,
-    #'ospfruns'      => 0,
-    
+    if ($opts->{req_ospfruns} eq 1) {
+        $opts->{ospfruns} = 1;
+    }
     ### Figure out the OS version number this device is running.  
     ### We need this to figure out which oid to use to get
     ### interface descriptions and which
@@ -151,12 +151,16 @@ sub custom_targets {
     my %slotPortMapping   = %{$data->{slotPortMapping}};
     my $file = $opts->{file};
 
+    # Skip generating OSPF MIB-II targets if overriden by another plugin
+    return if (!$opts->{ospfruns} == 1);
+    
     ###
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
     if ( %ospfSpfRuns ) {
         foreach my $key ( keys %ospfSpfRuns ) {
-            Debug("OSPF spfruns table key: " . $key);
+            Debug("OSPF spfruns table key: " . $key . "value: " .$ospfSpfRuns{$key});
+            next if ($ospfSpfRuns{$key} eq 0);
             my ($a,$b,$c,$area) = split(/\./,$key);        
             my ($servicename) = "Area_" . $area . "_Number_of_SPFruns";
             my ($ldesc) = "Number of OSPF runs for area: " .$area ." <BR> Increasing numbers show instability in the routing architecture.";
