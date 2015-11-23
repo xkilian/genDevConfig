@@ -20,9 +20,7 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
-Unreleased
-
-# Version 3_0_X
+# Version 3_0_8 unreleased
 
 # - New plugin for Alcatel Vxworks based L2 switches
 # - New plugin for Alcatel Linux based L2/L3 switches
@@ -30,6 +28,13 @@ Unreleased
 # - New plugin for Geist rsmini
 # - If hostgroups are empty do not write to configuration files (fails on Shinken 2.x config check)
 # - If parents are empty do not write to configuration files (fails on Shinken 2.x config check)
+# - By default usebulk
+# - Minor update to OSPF plugin
+# - Bug fix for SNMP_Session get use in plugins where returned value was not cast into an array
+# - Triggergroup handling is now functional
+
+# Version 3_0_7
+
 # - Updated Nortel/Avaya plugin
 # - Updated Accedian plugin
 # - New plugin for OSPF area spf runs
