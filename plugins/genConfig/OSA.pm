@@ -103,13 +103,16 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("Trying to match sysObjectID : " . $opts->{sysObjectID});
+    # This plugin is disabled, the SNMP agentx script on the OSA servers
+    # are not stable enough and crash.
     
-    foreach my $type (@types) {
-        $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
-        Debug ("Type : " . $type);
-        return 1 if ($opts->{sysObjectID} =~ m/$type/gi)
-    }
+    #Debug ("Trying to match sysObjectID : " . $opts->{sysObjectID});
+    
+    #foreach my $type (@types) {
+    #    $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
+    #    Debug ("Type : " . $type);
+    #    return 1 if ($opts->{sysObjectID} =~ m/$type/gi)
+    #}
     return 0;
 }
 
@@ -136,14 +139,12 @@ sub discover {
     ### MIBs are supported.
     
     #Cannot get coherent data using the perl snmp library, always returns 1
-    #my $model = get('osaSysVersion');
-    #Debug ("Model: " . $model);
-    $opts->{model} = "OSA-Unknown" ;
+    my ($model) = get('osaSysVersion');
       
     # Default options for all oscilloquartz class devices
     $opts->{class} = 'oscilloquartz';
     $opts->{chassisinst} = "0";
-    $opts->{vendor_soft_ver} = get('osaSysVersion');
+    ($opts->{vendor_soft_ver}) = get('osaSysVersion');
     $opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
  
