@@ -24,6 +24,12 @@ Unreleased
 
 # Version 3_0_X
 
+# - New plugin for Alcatel Vxworks based L2 switches
+# - New plugin for Alcatel Linux based L2/L3 switches
+# - New plugin for Tripplite powerbar NET module
+# - New plugin for Geist rsmini
+# - If hostgroups are empty do not write to configuration files (fails on Shinken 2.x config check)
+# - If parents are empty do not write to configuration files (fails on Shinken 2.x config check)
 # - Updated Nortel/Avaya plugin
 # - Updated Accedian plugin
 # - New plugin for OSPF area spf runs
