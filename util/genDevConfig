@@ -90,7 +90,7 @@ my %ifType_d = ();
 }
 
 
-my $VERSION = 'genDevConfig 3.0.7';
+my $VERSION = 'genDevConfig 3.0.7alpha';
 
 ###############################################################################
 sub version {
@@ -102,7 +102,7 @@ sub version {
 # Interface types that we don't deal with for one reason or another.  Index
 # to the list ifType_d in lib/genConfig/Utils.
 
-my @DONTCOLLECT = (1, 18, 19, 24, 30, 37, 53, 59, 60, 61, 63, 74, 75, 76, 81, 94, 124, 134, 135, 162);
+my @DONTCOLLECT = (1, 18, 19, 24, 30, 37, 53, 59, 60, 61, 63, 74, 75, 76, 81, 94, 124, 134, 135, 136, 161, 162);
 
 
 # Exceptions to the above.
@@ -191,7 +191,7 @@ my %triggergroup = (
     'core-hc'              => 'interface-hc',
     'access-nu-hc'            => 'interface-nu-hc',
     'distribution-nu-hc'      => 'interface-nu-hc',
-    'core-nu-hc'              => 'interface-nu-hc',    
+    'core-nu-hc'              => 'interface-nu-hc',
     'ospf'              => 'ospf',
     'routes'            => 'routes',
     'saa'               => 'saa',
@@ -273,13 +273,15 @@ my %opts = (
     'getconfig'     => 0,
     'req_usev2c'    => 0,
     'usev2c'        => 1,
-    'usev2cbulk'    => 0,
+    'usev2cbulk'    => 1,
     'req_voip'      => 0,
     'voip'          => 0,
     'req_framestats'=> 1,
     'framestats'    => 0,
     'req_namedonly' => 0,
     'namedonly'     => 0,
+    'req_ddm'       => 1,
+    'ddm'           => 0,
     'req_vendorint' => 0, # Try to get vendor specific proprietary information for interface stats
     'req_extendedint' => 0, # Try to get extended mib-ii interface stats if no vendor intrfs defined
     'extendedint'   => 0,
@@ -290,7 +292,7 @@ my %opts = (
     'vlans'         => 0,
     'req_modular'   => 0,
     'modular'       => 0,  ### Create a hierarchical output for chassis based devices
-    'req_ospfruns'  => 0,
+    'req_ospfruns'  => 1,
     'ospfruns'      => 0,
     'req_mcastroutes'  => 0,
     'mcastroutes'      => 0,
@@ -366,6 +368,7 @@ GetOptions(
   "addcommunity|C=s"      => sub {$opts{community} = $_[1]; $opts{addcommunity} = 1;},
   "communityrw=s"         => \$opts{communityrw},
   "ciscoint"              => \&deprecatedoption,
+  "ddm"                   => sub {$opts{req_ddm} = 1;},
   "vendorint|extendedint" => sub {$opts{req_extendedint} = 1; $opts{req_vendorint} = 1;},
   "dontcollect|d=s"       => sub {push @DONTCOLLECT, split /\s*,\s*/, $_[1]},
   "exception|e=s"         => sub {push @EXCEPTIONS,  split /\s*,\s*/, $_[1]},
@@ -737,7 +740,7 @@ my %slotList;
 
 ### MIB-II Switch traffic statistics
 
-my $ipForwDatagrams = get('ipForwDatagrams');
+my ($ipForwDatagrams)= get('ipForwDatagrams');
 
 
 
@@ -788,6 +791,10 @@ if ($opts{noconcurrency} eq "1") {
     push (@options, '_NOCONCURRENCY', $opts{noconcurrency});
 }
 
+if ($opts{usev2cbulk} eq "0") {
+    push (@options, '_NOBULK', 1);
+}
+
 if ($opts{pollertag} ne "") {
     push (@options, 'poller_tag', $opts{pollertag});
 }
@@ -799,15 +806,15 @@ $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opt
 my $dstemplates = 'SnmpBooster-host';
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
-
+if ($opts{parents} ne "") {
+    push (@options, 'parents', $opts{parents});
+}
 $file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
     'host_name'         => $opts{devicename},
     'display_name'      => $displayname,
     'alias'             => $opts{alias},
     'address'           => $opts{ip},
     '_sys_location'     => $opts{sysLocation},
-    'parents'           => $opts{parents},
-    'hostgroups'        => '', # FIXME
     'notes'             => '',
     'use'               => $dstemplates,
     @options,
@@ -998,7 +1005,7 @@ if ( %dsx1TotalIndex ) {
 ### MIB-II routing  traffic statistics
 
 if ($opts{mcastroutes}) {
-	my $mcastroutes     = get('ipMRouteEntryCount');
+	my ($mcastroutes)     = get('ipMRouteEntryCount');
     my ($ldesc, $sdesc);
     $ldesc = "Number of multicast routes";
     $sdesc = "Number of multicast routes";
@@ -1196,6 +1203,9 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     $hc = '-hc' if ($opts{usev2c} && defined $ifHCInOctets{$index} && $ifHCInOctets{$index} != 0 && (int($ifspeed{$index}) > 100000000));
 
+    # Check if Multicast or non unicast packet statistics are required
+    my ($nu) = $opts{nucast} ? '-nu' : '';
+    
     # Push in the configuration for the interface the snmp-version required
     # to query HC 64bit snmp counters. Only if all the conditions are met.
     Debug (" Conditions met for HC counters applying -hc\n") if ($hc eq '-hc');
@@ -1241,7 +1251,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     ### problems in config or during HTML processing.
     ###
 
-    $intdescr{$index} =~ s/\</\&gt\;/g;
+    $intdescr{$index} =~ s/\</\&gt\;/g if defined($intdescr{$index});
 
     ###
     ### Do special collection on certain interface types.
@@ -1285,6 +1295,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
                     'slotPortMapping' => \%slotPortMapping,
                     'config'   => \@config,
                     'hc'       => $hc,
+                    'nu'       => $nu,
                     'class'    => $class,
                     'match'    => $match,
                     'sdesc'    => $sdesc,
@@ -1309,6 +1320,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         %slotPortMapping   = %{$data{slotPortMapping}};
         @config     = @{$data{config}};
         $hc         = $data{hc};
+        $nu         = $data{nu};
         $class      = $data{class};
         $match      = $data{match};
         $sdesc      = $data{sdesc};
@@ -1331,9 +1343,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         # If there is no special interface match
         # include the default type of standard-interface for each target
 	# unless extended mib-ii are supported.
-
-        # Check if Multicast or non unicast packet statistics are required
-	my ($nu) = $opts{nucast} ? '-nu' : '';
 	
 
         if($opts{extendedint}) {
@@ -1346,12 +1355,12 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 	
         ### Add the trigger templates for the selected type of interface
         #
-        my %tmpconfig = @config;
-        my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
-        Info ("Trigger to apply : $trigger");
-        push(@config,
-	     '_triggergroup' => $trigger,
-	     ) if ($trigger ne "");
+        #my %tmpconfig = @config;
+        #my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
+        #Info ("Trigger to apply : $trigger");
+        #push(@config, '_triggergroup' => $trigger,) if ($trigger ne "");
+        Info ("Trigger to apply : $opts{triggers}");
+        push(@config, '_triggergroup' => $opts{triggers},) if ($opts{triggers} ne "");
 
     }
     
