@@ -124,7 +124,7 @@ sub discover {
     ### MIBs are supported.
 
     $opts->{model} = "Sensatronics EM1";
-    $opts->{vendor_soft_ver} =  ""; # get('sysVersion');
+    ($opts->{vendor_soft_ver}) =  ""; # get('sysVersion');
     #$opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
     $opts->{chassisttype} = 'Sensatronics EM1';

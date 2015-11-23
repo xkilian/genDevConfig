@@ -158,7 +158,7 @@ sub discover {
     $opts->{model} = 'Foundry-Generic';
     $opts->{chassisttype} = 'Chassis-Foundry-Generic';
     $opts->{chassisname} = 'chassis.Foundry';
-    $opts->{vendor_soft_ver}  = get('snAgBuildVer');
+    ($opts->{vendor_soft_ver})  = get('snAgBuildVer');
     $opts->{model} = 'Foundry-Generic';
     
     if ($types{$opts->{sysObjectID}} =~ /^BigIron/) {

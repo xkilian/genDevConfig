@@ -186,7 +186,7 @@ sub custom_targets {
 
     # Simple example of writing out a target
     #
-    # my $someOID = get('someOID');
+    # my ($someOID) = get('someOID');
     # my $ldesc = "Total number of widgets for card $someOID";
     # my $sdesc = "Total number of widgets for card $someOID";
     # $targetname = 'packeteer-cardinfo';
