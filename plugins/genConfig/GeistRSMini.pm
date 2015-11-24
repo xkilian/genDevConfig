@@ -42,8 +42,9 @@ my $VERSION = 1.02;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-      'productVersion'                            => '1.3.6.1.4.1.21239.2.1.2',
-      'rcRsMini'                                 => '1.3.6.1.4.1.21239.2.0',
+      'productVersion' => '1.3.6.1.4.1.21239.2.1.2',
+      'rcRsMini'       => '1.3.6.1.4.1.21239.2.0',
+
       'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
       'OidclimateHumidity' => '1.3.6.1.4.1.21239.2.2.1.7',
       'OidclimateAirflow'  => '1.3.6.1.4.1.21239.2.2.1.9',
@@ -187,11 +188,11 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "temperature_sensor_" . $id,
-#               'notes'               => $ldesc,
+              #'notes'               => $ldesc,
                'display_name'        => "Temperature sensor " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "geist-sensor-temperature",
-               '_triggergroup'               => "RSMini_Temp",
+               '_dstemplate'         => "geist-sensor-temperature",
+               '_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -204,11 +205,11 @@ sub custom_targets {
                	'host_name'           => $opts->{devicename},
                	'service_description' => "airflow_humidity_" . $id,
 #               'notes'               => $ldesc,
-               'display_name'        => "Airflow humidity " . $id,
-               '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-humidity",
-              # '_triggergroup'               => "RSMini_Temp",
-               'use'                 => $opts->{dtemplate},
+               'display_name'         => "Airflow humidity " . $id,
+               '_inst'                => $id,
+               '_dstemplate'          => "geist-airflow-humidity",
+              # '_triggergroup'       => "RSMini_Temp",
+               'use'                  => $opts->{dtemplate},
             );
 
     }
@@ -218,11 +219,11 @@ sub custom_targets {
 	$file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "airflow_airflow_" . $id,
-#               'notes'               => $ldesc,
+              #'notes'               => $ldesc,
                'display_name'        => "Airflow airflow " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-airflow",
-              # '_triggergroup'               => "RSMini_Temp",
+               '_dstemplate'         => "geist-airflow-airflow",
+              #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
     }
@@ -232,11 +233,11 @@ sub custom_targets {
     	 $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "airflow_dewpoint_" . $id,
-#               'notes'               => $ldesc,
+              #'notes'               => $ldesc,
                'display_name'        => "Airflow Dew Point " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-dewpoint",
-              # '_triggergroup'               => "RSMini_Temp",
+               '_dstemplate'         => "geist-airflow-dewpoint",
+              #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
     }
@@ -246,11 +247,11 @@ sub custom_targets {
     	 $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "airflow_temperature_" . $id,
-#               'notes'               => $ldesc,
+              #'notes'               => $ldesc,
                'display_name'        => "Airflow Temperature " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "geist-airflow-temperature",
-              # '_triggergroup'               => "RSMini_Temp",
+               '_dstemplate'         => "geist-airflow-temperature",
+              #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
     }

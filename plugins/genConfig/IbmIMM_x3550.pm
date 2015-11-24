@@ -42,8 +42,9 @@ my $VERSION = 1.00;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-      'productVersion'                            => '1.3.6.1.4.1.2.3.51.3.1.5.2.1.5.0',
-      'rcIbmImm'                                 => '1.3.6.1.4.1.8072.3.2.10',
+      'productVersion' => '1.3.6.1.4.1.2.3.51.3.1.5.2.1.5.0',
+      'rcIbmImm'       => '1.3.6.1.4.1.8072.3.2.10',
+
       'OidSystemHealthStat' => '1.3.6.1.4.1.2.3.51.3.1.4.1',
     );
 
@@ -142,7 +143,7 @@ sub discover {
     Debug("$module Model : " . $opts->{model});
     
     $opts->{usev2c} = 1;
-    $opts->{dtemplate} = "default-snmp-template";
+    $opts->{dtemplate} = "generic-snmp-template";
     return;
 }
 
@@ -174,11 +175,11 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "health_statistic_" . $id,
-#               'notes'               => $ldesc,
+              #'notes'               => $ldesc,
                'display_name'        => "Health statistic " . $id,
                '_inst'               => $id,
-               '_dstemplate'                 => "ibm-system-health-stat",
-               '_triggergroup'               => "Ibm_Health_Stat",
+               '_dstemplate'         => "ibm-system-health-stat",
+               '_triggergroup'       => "Ibm_Health_Stat",
                'use'                 => $opts->{dtemplate},
             );
 
