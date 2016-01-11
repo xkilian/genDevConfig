@@ -22,6 +22,7 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 
 # Version 3_0_8 unreleased
 
+# - New plugin for Alcatel OXE Call server nodes
 # - New plugin for Alcatel Vxworks based L2 switches
 # - New plugin for Alcatel Linux based L2/L3 switches
 # - New plugin for Tripplite powerbar NET module
