@@ -57,14 +57,14 @@ my %OIDS = (
     'OidcacUsed' => '1.3.6.1.4.1.637.64.4400.1.3.1.10',
     'OidcacOverrun' => '1.3.6.1.4.1.637.64.4400.1.3.1.11',
 
-     'hrSystemNumUsers'         => '1.3.6.1.2.1.25.1.5',    # .0
-     'hrSystemProcesses'        => '1.3.6.1.2.1.25.1.6',    # .0
+    'hrSystemNumUsers'         => '1.3.6.1.2.1.25.1.5',    # .0
+    'hrSystemProcesses'        => '1.3.6.1.2.1.25.1.6',    # .0
 
 
     # Load averages.
-     'ucd_loadTable'        => '1.3.6.1.4.1.2021.10.1.3',
-     'ucd_load1min'         => '1.3.6.1.4.1.2021.10.1.3.1',
-     'ucd_load5min'         => '1.3.6.1.4.1.2021.10.1.3.2',
+    'ucd_loadTable'        => '1.3.6.1.4.1.2021.10.1.3',
+    'ucd_load1min'         => '1.3.6.1.4.1.2021.10.1.3.1',
+    'ucd_load5min'         => '1.3.6.1.4.1.2021.10.1.3.2',
     'ucd_load15min'        => '1.3.6.1.4.1.2021.10.1.3.3',
 	    
     # Memory stats
@@ -221,12 +221,14 @@ sub custom_targets {
     my %idtableCaO;
     my %idtableDisk;
 
+    my $ldesc;
+
     ($idtableGenericInfo) = get("ucd_cpuUser");
     if (defined ($idtableGenericInfo)){
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "generic_netSNMP" ,
-#               'notes'               => $ldesc,
+               #'notes'               => $ldesc,
                'display_name'        => "Generic box netsnmp",
                '_inst'               => 0,
                '_dstemplate'                 => "generic-box-netsnmp",
@@ -236,10 +238,11 @@ sub custom_targets {
 
     ($idtablePS) = get("OidpbxState");
     if (defined ($idtablePS)){
+    $ldesc = "pbxState can take 6 int value: 0 = unknown, 1 = critical, 2 = major, 3 = minor, 4 = warning, 5 = OK.";
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "pbx_status" ,
-#               'notes'               => $ldesc,
+               'notes'               => $ldesc,
                'display_name'        => "Pbx status",
                '_inst'               => 0,
                '_dstemplate'                 => "alcatel-pbx-state",
@@ -253,7 +256,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => get("ucd_diskpath.$id"),
-#               'notes'               => $ldesc,
+               #'notes'               => $ldesc,
                'display_name'        => "Disk information from netsnmp",
                '_inst'               => $id,
                '_dstemplate'         => "ucd_Storage",               
@@ -266,7 +269,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "conference_circuit",
-#               'notes'               => $ldesc,
+               #'notes'               => $ldesc,
                'display_name'        => "Conference circuits available, busy and out of order",
                '_inst'               => $id,
                '_dstemplate'         => "alcatel-conf",               
@@ -279,7 +282,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "dsp_ress",
-#               'notes'               => $ldesc,
+               #'notes'               => $ldesc,
                'display_name'        => "Compressors available, busy, out of service and overrun",
                '_inst'               => $id,
                '_dstemplate'         => "alcatel-dspRess",               
@@ -291,7 +294,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "cac",
-#               'notes'               => $ldesc,
+               #'notes'               => $ldesc,
                'display_name'        => "External communications allowed, used and overrun",
                '_inst'               => $id,
                '_dstemplate'         => "alcatel-cac",               
