@@ -233,7 +233,8 @@ sub discover {
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
-        $opts->{chassistriggergroup} = 'chassis_OS6860';
+        $opts->{chassistriggergroup} = 'chassis_OS6860';        
+        $opts->{chassistriggergroup} = 'chassis_OS6860_VC' if $vcsize ne '';
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
