@@ -806,6 +806,13 @@ $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opt
 my $dstemplates = 'SnmpBooster-host';
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
+my ($ldesc, $sdesc);
+$ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
+                                : ( $opts{sysDescr} );
+$ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
+$ldesc .= "<BR>sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
+$ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
+
 if ($opts{parents} ne "") {
     push (@options, 'parents', $opts{parents});
 }
@@ -815,7 +822,7 @@ $file->writetarget("host {", '', # FIXME Move static or macro definitions to tem
     'alias'             => $opts{alias},
     'address'           => $opts{ip},
     '_sys_location'     => $opts{sysLocation},
-    'notes'             => '',
+    'notes'             => $ldesc,
     'use'               => $dstemplates,
     @options,
     );
