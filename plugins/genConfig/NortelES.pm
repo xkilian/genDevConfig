@@ -139,6 +139,7 @@ sub discover {
     $opts->{class} = 'es470';
     $opts->{chassisinst} = "0";
     ($opts->{vendor_soft_ver}) = get('rcSysVersion');
+    $opts->{vendor_soft_ver} = 'software version: unknown' unless defined $opts->{vendor_soft_ver};
     $opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
  
