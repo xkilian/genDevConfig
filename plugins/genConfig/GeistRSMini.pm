@@ -141,7 +141,7 @@ sub discover {
     
     $opts->{model} = $opts->{sysDescr};
     
-    # Default options for all passport class devices
+    # Default options for all Geist RSMINI devices
     $opts->{class} = 'Geist RSMINI';
     $opts->{chassisinst} = "0";
     $opts->{vendor_soft_ver} = get('productVersion');
