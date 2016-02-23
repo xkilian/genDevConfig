@@ -187,6 +187,7 @@ sub discover {
     
     my $vcrole;
     my $vcsize;
+    my $sysNotes;
     
     $opts->{model} = $opts->{sysDescr};
     
@@ -230,6 +231,7 @@ sub discover {
         $chassispowersupply = 1;
         $chassisfan = 0;
         $chassisospf = 1;
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members';
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
@@ -241,6 +243,8 @@ sub discover {
         $chassispowersupply = 1;
         $chassisfan = 0;
         $chassisospf = 1;
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members';
+
     } elsif ($opts->{model} =~ /6450/) {
         $opts->{chassisttype} = 'Alcatel-OS6450';
         $opts->{chassisname} = 'chassis.Alcatel-OS6450';
@@ -248,6 +252,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.';
         $chassispowersupply_aos = 1;
         $chassisfan = 0;
         $chassisospf = 0;
