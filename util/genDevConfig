@@ -306,6 +306,7 @@ my %opts = (
     'vendor_soft_ver'  => '', ### Vendor specific software version (IOS, CatOS, etc..)
     'vendor_soft_oid'  => '', ### Vendor specific software version (IOS, CatOS, etc..)
     'devicename'           => '', ### Device name taken from the command-line
+    'sysNotes'         => '', ### Describes the supervised variables and their impacts
 
     ###
     ### Non-Sticky variables. 
@@ -839,8 +840,7 @@ if ($opts{chassisstats}) {
     $ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
                                 : ( $opts{sysDescr} );
     $ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
-    $ldesc .= "<BR>sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
-    $ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
+    $ldesc .= "<BR>Notes: $opts{sysNotes}" if ($opts{sysNotes});
     $sdesc = "$opts{chassisname} - $opts{model}";
 
     $inst = $opts{chassisinst} if ($opts{chassisinst});
