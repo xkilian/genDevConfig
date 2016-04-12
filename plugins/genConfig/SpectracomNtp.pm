@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-package SpectromNtp;
+package SpectracomNtp;
 
 use strict;
 
@@ -43,7 +43,7 @@ my $VERSION = 1.02;
 my %OIDS = (
 
       'productVersion' => '1.3.6.1.4.1.18837.3.2.2.1.11.0',
-      'rcSpectromNtp' => '1.3.6.1.4.1.18837',
+      'rcSpectracomNtp' => '1.3.6.1.4.1.18837',
       
       'OidssSysStaPowerAC' => '1.3.6.1.4.1.18837.3.2.2.1.1.0',
       'OidssSysStaPowerDC' => '1.3.6.1.4.1.18837.3.2.2.1.2.0',   
@@ -71,7 +71,7 @@ my %OIDS = (
 ## the names should be contained in the sysdescr string
 ## returned by the devices. The name is a regular expression.
 ################################################################################
-my @types = ( "$OIDS{'rcSpectromNtp'}",
+my @types = ( "$OIDS{'rcSpectracomNtp'}",
             );
 
 
@@ -80,8 +80,8 @@ my @types = ( "$OIDS{'rcSpectromNtp'}",
 ###############################################################################
 
 my $snmp;
-my $script = "Spectrom Ntp genDevConfig Module";
-my $module = "SpectromNtp";
+my $script = "Spectracom Ntp genDevConfig Module";
+my $module = "SpectracomNtp";
 
 ###############################################################################
 ###############################################################################
@@ -152,7 +152,7 @@ sub discover {
     $opts->{model} = $opts->{sysDescr};
     
     # Default options for all passport class devices
-    $opts->{class} = 'Spectrom Ntp';
+    $opts->{class} = 'Spectracom Ntp';
     $opts->{chassisinst} = "0";
     $opts->{vendor_soft_ver} = get('productVersion');
     $opts->{vendor_descr_oid} = "ifName";
@@ -212,8 +212,8 @@ sub custom_targets {
                'notes'               => "This indicates whether this GPS reference has can provide valid time. (1:valid, 2:invalid)",
                'display_name'        => "GPS valid time " . $id,
                '_inst'               => $id,
-               '_dstemplate'         => "spectrom-gps-time",
-               '_triggergroup'       => "Spectrom_Gps_Time",
+               '_dstemplate'         => "spectracom-gps-time",
+               '_triggergroup'       => "Spectracom_Gps_Time",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -227,8 +227,8 @@ sub custom_targets {
                'notes'               => "This indicates whether this GPS reference has can provide valid 1PPS.(1:valid, 2:invalid) ",
                'display_name'        => "GPS valid 1pps " . $id,
                '_inst'               => $id,
-               '_dstemplate'         => "spectrom-gps-1pps",
-               '_triggergroup'       => "Spectrom_Gps_1pps",
+               '_dstemplate'         => "spectracom-gps-1pps",
+               '_triggergroup'       => "Spectracom_Gps_1pps",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -242,7 +242,7 @@ sub custom_targets {
                'notes'               => " This is the number of satellites currently used in position and time fix calculations.",
                'display_name'        => "GPS satellites number " . $id,
                '_inst'               => $id,
-               '_dstemplate'         => "spectrom-gps-sats",
+               '_dstemplate'         => "spectracom-gps-sats",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -256,8 +256,8 @@ sub custom_targets {
                'notes'               => "This indicates the current GPS reference antenna state. (1:ok, 2:short, 3:open, 4:unknown)",
                'display_name'        => "GPS antenna state " . $id,
                '_inst'               => $id,
-               '_dstemplate'         => "spectrom-gps-antenna",
-               '_triggergroup'       => "Spectrom_Gps_Antenna",
+               '_dstemplate'         => "spectracom-gps-antenna",
+               '_triggergroup'       => "Spectracom_Gps_Antenna",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -271,8 +271,8 @@ sub custom_targets {
             'notes'               => "General status of the AC power input.(1:ok,2:alarm,3:none)",
 	    'display_name'        => "Power AC ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-system-powerAC",
-	    '_triggergroup'       => "Spectrom_Power_AC",
+	    '_dstemplate'         => "spectracom-system-powerAC",
+	    '_triggergroup'       => "Spectracom_Power_AC",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -284,8 +284,8 @@ sub custom_targets {
             'notes'               => "General status of the DC power input.(1:ok,2:alarm,3:none)",
 	    'display_name'        => "Power DC ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-system-powerDC",
-	   '_triggergroup'        => "Spectrom_Power_DC",
+	    '_dstemplate'         => "spectracom-system-powerDC",
+	   '_triggergroup'        => "Spectracom_Power_DC",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -297,8 +297,8 @@ sub custom_targets {
             'notes'               => "Status of the unit's syncronization with its time/1pps references. (1:sync,2:nosync)",
 	    'display_name'        => "Synchronization state ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-system-sync",
-	    '_triggergroup'       => "Spectrom_System_Sync",
+	    '_dstemplate'         => "spectracom-system-sync",
+	    '_triggergroup'       => "Spectracom_System_Sync",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -312,7 +312,7 @@ sub custom_targets {
 	    within specifications.",
 	    'display_name'        => "Holdover state ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-system-holdover",
+	    '_dstemplate'         => "spectracom-system-holdover",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -341,8 +341,8 @@ sub custom_targets {
 	    15:ETE >  10000 sec",
 	    'display_name'        => "Tfom ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-system-tfom",
-	    '_triggergroup'       => "Spectrom_System_Tfom",
+	    '_dstemplate'         => "spectracom-system-tfom",
+	    '_triggergroup'       => "Spectracom_System_Tfom",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -356,8 +356,8 @@ sub custom_targets {
 	    is pending resolution. (1:pending, 2:clear)",
 	    'display_name'        => "Minor Alarm ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-state-minor",
-	    '_triggergroup'       => "Spectrom_Alarm_Minor",
+	    '_dstemplate'         => "spectracom-state-minor",
+	    '_triggergroup'       => "Spectracom_Alarm_Minor",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -371,8 +371,8 @@ sub custom_targets {
 	    is pending resolution.(1:pending, 2:clear)",
 	    'display_name'        => "Major alarm ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-state-major",
-	    '_triggergroup'       => "Spectrom_Alarm_Major",
+	    '_dstemplate'         => "spectracom-state-major",
+	    '_triggergroup'       => "Spectracom_Alarm_Major",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -384,8 +384,8 @@ sub custom_targets {
             'notes'               => "Current Status of the NTP application. (1:unknown,2:notRuniing,3:notSynchronized,4:synchronized)",
 	    'display_name'        => "NTP current mode ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-ntp-mode",
-	    '_triggergroup'       => "Spectrom_State_Mode",
+	    '_dstemplate'         => "spectracom-ntp-mode",
+	    '_triggergroup'       => "Spectracom_State_Mode",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -397,7 +397,7 @@ sub custom_targets {
             'notes'               => "Current stratum of the NTP application.",
 	    'display_name'        => "NTP stratum ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-ntp-stratum",
+	    '_dstemplate'         => "spectracom-ntp-stratum",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -410,7 +410,7 @@ sub custom_targets {
             internal 1PPS with respect to the selected 1pps reference.",
 	    'display_name'        => "Phase error ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-ntp-phase",
+	    '_dstemplate'         => "spectracom-ntp-phase",
 	    'use'                 => $opts->{dtemplate},
 	);
 
@@ -424,7 +424,7 @@ sub custom_targets {
             reference.",
 	    'display_name'        => "Frequence error ",
 	    '_inst'               => "0",
-	    '_dstemplate'         => "spectrom-ntp-freq",
+	    '_dstemplate'         => "spectracom-ntp-freq",
 	    'use'                 => $opts->{dtemplate},
 	);
 
