@@ -855,9 +855,9 @@ sub custom_interfaces {
 
         push(@config, 
 		    '_dstemplate' => 'cisco-interface' . $nu . $hc);
-	Info ("Triggers enabled : $opts->{triggers}, ifclass : $opts->{triggerifclass}");
+	Info ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
 	if ($opts->{triggers}) {
-	     	push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts->{triggerifclass} ne "");
+	    	push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus} . $nu . $hc);
 	}
 
         $match = 1;

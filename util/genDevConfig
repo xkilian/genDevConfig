@@ -200,11 +200,6 @@ my %triggergroup = (
     'uptime'            => 'uptime',
 );
 
-my %triggerifclass = (
-    'interface-status'     => 1,
-    'interface'            => 1,
-);
-
 my %opts = (
     'savedargs'         => join(" ", @ARGV),
     'community'         => "public",
@@ -225,7 +220,7 @@ my %opts = (
     'nucast'           => 0,
     'gigonly'           => 0,
     'triggers'          => 0,
-    'triggerifclass'  => '',
+    'triggerifstatus'  => '',
     'triggertemplateclass'       => 'access',
     'refinfo'           => {},
     'pingparents'        => 0,  # ping parents if defined by default
@@ -393,7 +388,7 @@ GetOptions(
   "ospf"                  => \$opts{ospfruns},
   "mcast"                 => \$opts{mcastroutes},
   "triggers"            => \$opts{triggers},
-  "triggerifclass|m=s"   => sub {$opts{triggerifclass} = getTriggerIfClass($_[1]);},
+  "triggerifstatus"      => sub {$opts{triggerifstatus} = '-st'},
   "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
   "nodns|n"               => \$opts{nodns},
   "showunused"            => sub {$opts{nounused} = 0;},
@@ -1366,8 +1361,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
              push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
 	}
 	if ($opts{triggers}) {
-	    push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts{triggerifclass} eq "");
-	    push(@config, '_triggergroup' => $opts{triggerifclass}) if ($opts{triggerifclass} ne "");
+	    push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $nu . $hc);
 	}
     } else {
 	
@@ -1377,11 +1371,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         #my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggerifclass});
         #Info ("Trigger to apply : $trigger");
         #push(@config, '_triggergroup' => $trigger,) if ($trigger ne "");
-	Info ("Triggers enabled : $opts{triggers}, ifclass : $opts{triggerifclass}");
-	if ($opts{triggers}) {
-	    push(@config, '_triggergroup' => $opts{triggerifclass}) if ($opts{triggerifclass} ne "");
-	}
-
     }
     
 
@@ -1687,15 +1676,7 @@ sub getTriggerTemplate {
         return "";
     }
 }
-sub getTriggerIfClass {
-    my ($ifclass) = @_;
-    if (exists $triggerifclass{$ifclass}) {
-        return $ifclass;
-    } else {
-	Warn ("Invalid triggerifclass, skipping option : $_");
-        return "";
-    }
-}
+
 sub getOutputDir {
     return ($opts{output_dir});
 }

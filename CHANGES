@@ -20,6 +20,12 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
+# Version 3_0_9
+
+# - New plugin Spectracom Securesync NTP Server
+# - Added operstatus and admin status to cisco device specific interfaces
+# - Added new option --triggerifstatus to add up/check critical trigger to interfaces
+
 # Version 3_0_8
 
 # - New plugin for Alcatel OXE Call server nodes
