@@ -183,6 +183,7 @@ my %triggergroup = (
     'access'            => 'interface',
     'distribution'      => 'interface',
     'core'              => 'interface',
+    'status'            => 'interface-status',
     'access-nu'            => 'interface-nu',
     'distribution-nu'      => 'interface-nu',
     'core-nu'              => 'interface-nu',
@@ -197,6 +198,11 @@ my %triggergroup = (
     'saa'               => 'saa',
     'chassis'           => 'chassis',
     'uptime'            => 'uptime',
+);
+
+my %triggerifclass = (
+    'interface-status'     => 1,
+    'interface'            => 1,
 );
 
 my %opts = (
@@ -219,6 +225,7 @@ my %opts = (
     'nucast'           => 0,
     'gigonly'           => 0,
     'triggers'          => 0,
+    'triggerifclass'  => '',
     'triggertemplateclass'       => 'access',
     'refinfo'           => {},
     'pingparents'        => 0,  # ping parents if defined by default
@@ -385,8 +392,9 @@ GetOptions(
   "modular|mod"           => \$opts{req_modular},
   "ospf"                  => \$opts{ospfruns},
   "mcast"                 => \$opts{mcastroutes},
-  "triggers|m"            => \$opts{triggers},
-  "interfacetriggers=s"   => \$opts{triggertemplateclass},
+  "triggers"            => \$opts{triggers},
+  "triggerifclass|m=s"   => sub {$opts{triggerifclass} = getTriggerIfClass($_[1]);},
+  "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
   "nodns|n"               => \$opts{nodns},
   "showunused"            => sub {$opts{nounused} = 0;},
   "nospeedcheck"          => \$opts{force_nospeedcheck},
@@ -1357,17 +1365,22 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 	} else {
              push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
 	}
-	push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts{triggers});
+	if ($opts{triggers}) {
+	    push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts{triggerifclass} eq "");
+	    push(@config, '_triggergroup' => $opts{triggerifclass}) if ($opts{triggerifclass} ne "");
+	}
     } else {
 	
-        ### Add the trigger templates for the selected type of interface
+        ### Override interface triggergroups for the selected type of interface
         #
         #my %tmpconfig = @config;
-        #my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggertemplateclass});
+        #my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggerifclass});
         #Info ("Trigger to apply : $trigger");
         #push(@config, '_triggergroup' => $trigger,) if ($trigger ne "");
-        Info ("Trigger to apply : $opts{triggers}");
-        push(@config, '_triggergroup' => $opts{triggers},) if ($opts{triggers} ne "");
+	Info ("Triggers enabled : $opts{triggers}, ifclass : $opts{triggerifclass}");
+	if ($opts{triggers}) {
+	    push(@config, '_triggergroup' => $opts{triggerifclass}) if ($opts{triggerifclass} ne "");
+	}
 
     }
     
@@ -1674,6 +1687,15 @@ sub getTriggerTemplate {
         return "";
     }
 }
+sub getTriggerIfClass {
+    my ($ifclass) = @_;
+    if (exists $triggerifclass{$ifclass}) {
+        return $ifclass;
+    } else {
+	Warn ("Invalid triggerifclass, skipping option : $_");
+        return "";
+    }
+}
 sub getOutputDir {
     return ($opts{output_dir});
 }
@@ -1868,6 +1890,10 @@ You just won't get the hierarchical layout of the interfaces.
 Enable threshold monitoring on the target.
 Configure templates in config Defaults.
 
+=item B<-m>, B<--triggerifclass>
+
+-m interface-status Enable status change when interface state changes from up to down. Overrides any default values.
+
 =item B<-n>, B<--nodns>
 
 Disable Address to Name instance mapping
@@ -1953,7 +1979,6 @@ Display version information
 
 =item B<--vendorint>
 
-UNSUPPORTED WITH SHINKEN AT THIS TIME
 Get extra interface stats from proprietary MIB (For Cisco IOS and CatOS) or
 MIB-II (for all others). This uses more data sources in the resulting RRD.
 Support for Cisco, Foundry, and rfc1643 Etherlike.

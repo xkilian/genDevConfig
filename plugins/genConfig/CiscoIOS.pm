@@ -854,7 +854,12 @@ sub custom_interfaces {
         my ($nu) = $opts->{nustats} ? '-nu' : '';
 
         push(@config, 
-		    '_dstemplate' => 'cisco-interface' . $nu . $hc,);
+		    '_dstemplate' => 'cisco-interface' . $nu . $hc);
+	Info ("Triggers enabled : $opts->{triggers}, ifclass : $opts->{triggerifclass}");
+	if ($opts->{triggers}) {
+	     	push(@config, '_triggergroup' => 'interface' . $nu . $hc) if ($opts->{triggerifclass} ne "");
+	}
+
         $match = 1;
     }
 
