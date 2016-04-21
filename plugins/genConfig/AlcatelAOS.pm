@@ -231,7 +231,7 @@ sub discover {
         $chassispowersupply = 1;
         $chassisfan = 0;
         $chassisospf = 1;
-        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members';
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
@@ -243,7 +243,7 @@ sub discover {
         $chassispowersupply = 1;
         $chassisfan = 0;
         $chassisospf = 1;
-        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members';
+        $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). Note :Temperature is internal temp, not external, threshold is ';
 
     } elsif ($opts->{model} =~ /6450/) {
         $opts->{chassisttype} = 'Alcatel-OS6450';
@@ -252,7 +252,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.';
+        $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_aos = 1;
         $chassisfan = 0;
         $chassisospf = 0;
@@ -260,6 +260,8 @@ sub discover {
         $opts->{chassisttype} = 'Alcatel-Generic';
         $opts->{chassisname} = 'chassis.Alcatel-Generic';
         $opts->{class} = 'alcatel';
+        $opts->{sysNotes} = 'Alcatel Generic Chassis. General supervised statistics, alarms should be treated in priority.';
+      
         $chassispowersupply = 0;
         $chassisfan = 0;
         $chassisospf = 0;
