@@ -21,8 +21,6 @@ Installation
 
 The included INSTALL file has all the installation and setup information necessary to use the tool.
 
-A debian/Ubuntu package is in the works for SnmpBooster and genDevConfig which should make it really easy to install!
-
 =============
 Documentation
 =============
@@ -30,7 +28,7 @@ Documentation
 The documentation file is maintained in a Microsoft word format at www.acktomic.com and contains references for :
 
 * genDevConfig execution workflow (diagram and explanations)
-* genDevConifg -h (runtime help options explained)
+* genDevConfig -h (some runtime help options are explained)
 * How to add a new plugin (very easy, step by step explanation and example)
 * Troubleshooting
 
@@ -79,13 +77,17 @@ __ http://www.shinken-monitoring.org/
 __ http://shinken.readthedocs.org/projects/shinken-module-snmp-booster/en/latest/
 __ http://shinken.readthedocs.org/projects/shinken-module-snmp-booster/en/latest/
 
-============
-Known issues
-============
+===================
+Desig specification
+===================
 
 The `design specification`__ tracks implemented features.
 
 __ http://shinken.readthedocs.org/projects/shinken-module-snmp-booster/en/latest/snmpbooster_design_specification.html
+
+============
+Known issues
+============
 
 There are a number of known issues at this time :
 
@@ -100,3 +102,5 @@ today, option-3 Same as option-2, but also permit static instance mapping keys s
 * Some plugins have not been tested against the actual equipement, consult the design specification to know which ones. Feedback and pull requests are welcome.
 
 * In case of suspected problems, run genDevConfig with loglevel set to debug. genDevConfig -h for syntax.
+
+* Be extra careful with the syntax when declaring OIDs. There is a leading dot, there are no quotes, etc. Small problems will block startup of the snmp booster module, which is bad. :-(
