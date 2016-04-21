@@ -25,6 +25,7 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - New plugin Spectracom Securesync NTP Server
 # - Added operstatus and admin status to cisco device specific interfaces
 # - Added new option --triggerifstatus to add up/check critical trigger to interfaces
+# - Fix: Logic bug in --gigonly
 
 # Version 3_0_8
 

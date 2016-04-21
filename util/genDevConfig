@@ -4,7 +4,7 @@
 # genDevConfig - Generate template config tree for various networked devices.
 #
 #    Copyright (C) 2000 Mike Fisher and Tech Data Corporation
-#    Copyright (C) 2002-2014 Francois Mikus "fmikus" domain "acktomic.com"
+#    Copyright (C) 2002-2016 Francois Mikus "fmikus" domain "acktomic.com"
 #   
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ my %ifType_d = ();
 }
 
 
-my $VERSION = 'genDevConfig 3.0.8';
+my $VERSION = 'genDevConfig 3.0.9';
 
 ###############################################################################
 sub version {
@@ -1466,10 +1466,10 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $header .= "\n### - Use '--voip' to enable stats.\n";
         $c="# ";
         Debug (" Voip & No --voip");
-   } elsif ($opts{gigonly} && (int($ifspeed{$index}) >= 1000000000) ) {
+   } elsif ($opts{gigonly} && (int($ifspeed{$index}) < 1000000000) ) {
         $header .= "\n### - Filtered at user request: '--gigonly'.\n";
         $c="# ";
-        Debug (" Skipping < 1000Mbit interfaces, do not use --gigonly to see them.");
+        Debug (" Skipping " . int($ifspeed{$index}) . " < 1000Mbit interface, do not use --gigonly to see them.");
    } elsif ((!defined($speed) || $speed == 0) && !$opts{nospeedcheck}) {
         $header .= "\n### - Has zero or insane speed.\n";
         $c="# ";
