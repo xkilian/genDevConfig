@@ -85,7 +85,7 @@ Known issues
 
 The `design specification`__ tracks implemented features.
 
-__ http://www.shinken-monitoring.org/wiki/snmpbooster_design_specification
+__ http://shinken.readthedocs.org/projects/shinken-module-snmp-booster/en/latest/snmpbooster_design_specification.html
 
 There are a number of known issues at this time :
 
