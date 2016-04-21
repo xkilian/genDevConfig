@@ -298,7 +298,11 @@ my %opts = (
     'ospfruns'      => 0,
     'req_mcastroutes'  => 0,
     'mcastroutes'      => 0,
-    'usestaticindex' => 0,
+    'usestaticindex'   => 0,
+    'req_fanstatus'     => 1,
+    'fanstatus'         => 0,
+    'req_supplystatus'  => 1,
+    'supplystatus'      => 0,
     
     ###
     ### Informational variables

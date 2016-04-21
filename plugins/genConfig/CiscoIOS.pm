@@ -151,7 +151,14 @@ my %OIDS = (
        ###      dialCtlPeer.dialCtlPeerCfgTable.dialCtlPeerCfgEntry.
        'dialCtlPeerCfgOriginateAddress' => '1.3.6.1.2.1.10.21.1.2.1.1.4',
        'dialCtlPeerCfgIfType' => '1.3.6.1.2.1.10.21.1.2.1.1.2',
-
+       
+       ### from Cisco-EnvMon-MIB
+       'ciscoEnvMonFanState' => '1.3.6.1.4.1.9.9.13.1.4.1.3',
+       'ciscoEnvMonFanStatusDescr' => '1.3.6.1.4.1.9.9.13.1.4.1.2',
+       
+        'ciscoEnvMonSupplyState' => '1.3.6.1.4.1.9.9.13.1.5.1.3',
+       'ciscoEnvMonSupplyStatusDescr' => '1.3.6.1.4.1.9.9.13.1.5.1.2',
+       
       );
 
 ###############################################################################
@@ -160,6 +167,8 @@ my %OIDS = (
 
 my (%frCircuitState, %cfrExtCircuitSubifIndex);
 my (%PeerCfgOrigAddr, %PeerCfgIfType);
+my (%ciscoEnvMonFanState, %ciscoEnvMonFanStatusDescr);
+my (%ciscoEnvMonSupplyState, %ciscoEnvMonSupplyStatusDescr);
 my $peerid;
 my $snmp;
 my $customfile;
@@ -268,6 +277,8 @@ sub discover {
     $opts->{voip} = 1        if ($opts->{req_voip});
     $opts->{vipstats} = 1    if ($opts->{req_vipstats});
     $opts->{ciscoslotport} = 1    if ($opts->{req_ciscoslotport});
+    $opts->{fanstatus} = 1    if ($opts->{req_fanstatus});
+    $opts->{supplystatus} = 1    if ($opts->{req_supplystatus});
     $opts->{class} = 'cisco';
 
     if  ($opts->{model} eq 'C3500XL' || $opts->{model} eq 'C2900XL') {
@@ -433,6 +444,13 @@ sub custom_targets {
     if ($opts->{framestats}) {
         %frCircuitState          =         gettable('frCircuitState');
         %cfrExtCircuitSubifIndex = reverse gettable('cfrExtCircuitSubifIndex');
+    }
+
+    ### Get fan status table
+
+    if ($opts->{fanstatus}) {
+        %ciscoEnvMonFanState         =         gettable('ciscoEnvMonFanState');
+        %ciscoEnvMonFanStatusDescr        =         gettable('ciscoEnvMonFanStatusDescr');
     }
 
     ### Get VoIP dial peer info if needed.
@@ -735,6 +753,57 @@ if ($opts->{voip} && %PeerCfgOrigAddr) {
 
 } else {
     $opts->{voip} = 0;
+}
+
+### Build the fan stats
+
+if ($opts->{fanstatus} && %ciscoEnvMonFanState) {
+    foreach my $key (keys %ciscoEnvMonFanState) {
+
+        my ($ldesc, $sdesc);
+	$ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+	$sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
+        my ($name, $fan, $rest) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
+        my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
+
+           $file->writetarget("service {", '',
+	    'host_name'           => $opts->{devicename},
+            'service_description'        => $targetname,
+            '_inst'        => $key,
+            '_display_order'       => $opts->{order},
+            'display_name' => $targetname,
+            'notes'        => $ldesc,
+            '_dstemplate'          => 'cisco-fan-state',
+	    'use'                 => $opts->{dtemplate},
+        );
+        $opts->{order} -= 1;
+    }
+}
+
+### Build the supply stats
+
+if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
+    foreach my $key (keys %ciscoEnvMonSupplyState) {
+
+        my ($ldesc, $sdesc);
+	$ldesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key} . '. Status normal(1). On degraded status, replace powersupply or switch.';
+	$sdesc = 'Cisco Fan State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
+        my ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
+	my ($ps, $junk) = split(/\s+/,$rest);
+        my ($targetname) = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps);
+
+           $file->writetarget("service {", '',
+	    'host_name'           => $opts->{devicename},
+            'service_description'        => $targetname,
+            '_inst'        => $key,
+            '_display_order'       => $opts->{order},
+            'display_name' => $targetname,
+            'notes'        => $ldesc,
+            '_dstemplate'          => 'cisco-supply-state',
+	    'use'                 => $opts->{dtemplate},
+        );
+        $opts->{order} -= 1;
+    }
 }
 
     # Saving local copies of runtime data
