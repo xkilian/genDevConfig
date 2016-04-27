@@ -229,7 +229,7 @@ my %opts = (
     'maxoidrequest'      => '64',
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
-    'htemplates'         => '', # host templates added to discovered templates
+    'htemplates'         => 'SnmpBooster-host', # host templates added to discovered templates
     #'itemplates'         => '', # interface templates added to discovered templates
     'nodns'             => 0,
     'vpntunnels'        => 0,
@@ -811,7 +811,7 @@ push (@options, '_MAXOIDREQUEST', $opts{maxoidrequest});
 
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
-my $dstemplates = 'SnmpBooster-host';
+my $dstemplates;
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
 my ($ldesc, $sdesc);

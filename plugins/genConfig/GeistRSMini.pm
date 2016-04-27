@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.02;
+my $VERSION = 1.03;
 
 ### End package init
 
@@ -42,8 +42,8 @@ my $VERSION = 1.02;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-      'productVersion' => '1.3.6.1.4.1.21239.2.1.2',
-      'rcRsMini'       => '1.3.6.1.4.1.21239.2.0',
+      'productVersion' => '1.3.6.1.4.1.21239.2.1.2.0',
+      'rcRsMini'       => '1.3.6.1.4.1.21239.2',
 
       'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
       'OidclimateHumidity' => '1.3.6.1.4.1.21239.2.2.1.7',
@@ -144,14 +144,15 @@ sub discover {
     # Default options for all Geist RSMINI devices
     $opts->{class} = 'Geist RSMINI';
     $opts->{chassisinst} = "0";
-    $opts->{vendor_soft_ver} = get('productVersion');
+    ($opts->{vendor_soft_ver}) = get('productVersion');
     $opts->{vendor_descr_oid} = "ifName";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
  
     Debug("$module Model : " . $opts->{model});
     
     $opts->{usev2c} = 1;
-    $opts->{dtemplate} = "generic-snmp-template";
+    $opts->{dtemplate} = "generic-co-env-mdg-service";
+    $opts->{htemplates} = "SnmpBooster-host-MDG";
     return;
 }
 
@@ -193,6 +194,7 @@ sub custom_targets {
                '_inst'               => $id,
                '_dstemplate'         => "geist-sensor-temperature",
                '_triggergroup'       => "RSMini_Temp_Complex",
+               '_timeout'            => "15",
                'use'                 => $opts->{dtemplate},
             );
 
@@ -208,6 +210,7 @@ sub custom_targets {
                'display_name'         => "Airflow humidity " . $id,
                '_inst'                => $id,
                '_dstemplate'          => "geist-airflow-humidity",
+               '_timeout'            => "15",
               # '_triggergroup'       => "RSMini_Temp",
                'use'                  => $opts->{dtemplate},
             );
@@ -223,6 +226,7 @@ sub custom_targets {
                'display_name'        => "Airflow airflow " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-airflow",
+               '_timeout'            => "15",
               #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
@@ -237,6 +241,7 @@ sub custom_targets {
                'display_name'        => "Airflow Dew Point " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-dewpoint",
+               '_timeout'            => "15",
               #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
@@ -251,6 +256,7 @@ sub custom_targets {
                'display_name'        => "Airflow Temperature " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-temperature",
+               '_timeout'            => "15",
               #'_triggergroup'       => "RSMini_Temp",
                'use'                 => $opts->{dtemplate},
             );
