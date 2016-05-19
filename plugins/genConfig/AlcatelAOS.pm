@@ -74,6 +74,8 @@ my %OIDS = (
       'AlcatelddmTxOutputPower'                => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.16',
       'AosddmPortTemperature'                  => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.1',
       'AosddmPortTxOutputPower'                => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.16',
+      'AlcatelQoSAppliedRuleCondition'         => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.5',
+      'AlcatelQoSAppliedRuleAction'            => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.6',
     );
 
 ###############################################################################
@@ -109,7 +111,8 @@ my @types = ( "$OIDS{'OS6900X20'}",
 
 my $snmp;
 my $chassispowersupply = 0;
-my $chassispowersupply_aos = 0;
+my $chassispowersupply_alcatel = 0;
+my $chassisfilter = 0;
 my $chassisospf = 0;
 my $chassisfan = 0;
 my $script = "Alcatel AOS Omniswitch genDevConfig Module";
@@ -117,7 +120,7 @@ my %alcatelddmtemperaturetable;
 my %alcatelddmtxmtable;
 my %aosddmtemperaturetable;
 my %aosddmtxmtable;
-
+my $vcsize;
 
 ###############################################################################
 ###############################################################################
@@ -186,7 +189,7 @@ sub discover {
     ### MIBs are supported.
     
     my $vcrole;
-    my $vcsize;
+
     my $sysNotes;
     
     $opts->{model} = $opts->{sysDescr};
@@ -204,6 +207,16 @@ sub discover {
     if ($opts->{model} =~ /6900/ || $opts->{model} =~ /6860/){
         if (keys(%vcroles) eq 8) {
             $vcsize = '-VC8';
+        } elsif (keys(%vcroles) eq 7) {
+            $vcsize = '-VC7';
+        } elsif (keys(%vcroles) eq 6) {
+            $vcsize = '-VC6';
+        } elsif (keys(%vcroles) eq 5) {
+            $vcsize = '-VC5';
+        } elsif (keys(%vcroles) eq 4) {
+            $vcsize = '-VC4';
+        } elsif (keys(%vcroles) eq 3) {
+            $vcsize = '-VC3';
         } else {
             if (keys(%vcroles) eq 2) {
                 $vcsize = '-VC2';
@@ -224,7 +237,7 @@ sub discover {
     if ($opts->{model} =~ /6900/) {
         $opts->{chassisttype} = 'Alcatel-OS6900' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6900';
-        #$opts->{chassistriggergroup} = 'chassis_OS6900';
+        $opts->{chassistriggergroup} = 'chassis_OS6900';
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
@@ -236,7 +249,7 @@ sub discover {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
         $opts->{chassistriggergroup} = 'chassis_OS6860';        
-        $opts->{chassistriggergroup} = 'chassis_OS6860_VC' if $vcsize ne '';
+        #$opts->{chassistriggergroup} = 'chassis_OS6860' . $vcsize if $vcsize ne '';
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
@@ -246,23 +259,39 @@ sub discover {
         $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). Note :Temperature is internal temp, not external, threshold is ';
 
     } elsif ($opts->{model} =~ /6450/) {
+        # AOS 6.x 6250, 6450, etc.
         $opts->{chassisttype} = 'Alcatel-OS6450';
         $opts->{chassisname} = 'chassis.Alcatel-OS6450';
-        #$opts->{chassistriggergroup} = 'chassis_OS6450';
+        $opts->{chassistriggergroup} = 'chassis_OS6450';
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
         $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
-        $chassispowersupply_aos = 1;
+        $chassispowersupply_alcatel = 1;
+        $chassisfilter = 1;
+        $chassisfan = 0;
+        $chassisospf = 0;
+    } elsif ($opts->{model} =~ /6250/) {
+        # AOS 6.x 6250, 6450, etc.
+        $opts->{chassisttype} = 'Alcatel-OS6250';
+        $opts->{chassisname} = 'chassis.Alcatel-OS6250';
+        #$opts->{chassistriggergroup} = 'chassis_OS6250';
+        $opts->{class} = 'alcatel';
+        $opts->{chassisinst} = "0";
+        $opts->{dtemplate} = "default-snmp-template";
+        $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
+        $chassispowersupply_alcatel = 1;
+        $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 0;
     } else {
+        # Default to AOS 6.x
         $opts->{chassisttype} = 'Alcatel-Generic';
         $opts->{chassisname} = 'chassis.Alcatel-Generic';
         $opts->{class} = 'alcatel';
         $opts->{sysNotes} = 'Alcatel Generic Chassis. General supervised statistics, alarms should be treated in priority.';
       
-        $chassispowersupply = 0;
+        $chassispowersupply_alcatel = 0;
         $chassisfan = 0;
         $chassisospf = 0;
         $opts->{req_ddm} = 0;
@@ -312,52 +341,126 @@ sub custom_targets {
     # OSPF number of routes
     my $OspfRouteNumber;
     
+    # QoS Filters on the switch
+    my %AlcatelQoSAppliedRuleConditiontable     = gettable('AlcatelQoSAppliedRuleCondition');
+    my %AlcatelQoSAppliedRuleActiontable        = gettable('AlcatelQoSAppliedRuleAction');
+
+
     # Fan status
     my %FanId;
     my $ldesc;
     my $sdesc;
-   
+    
+    ### Build OSPF status for AOS 7.x 8.x
     if ($chassisospf){
         ($OspfRouteNumber) =              get('OidAosalaOspfRouteNumber');
-        next if (!defined ($OspfRouteNumber));
-        $ldesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
-        $sdesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
-        my ($targetname) = 'ospf';
-        $file->writetarget("service {", '',
-            'host_name'           => $opts->{devicename},
-            'service_description' => "chassis." . $targetname,
-            'notes'               => $ldesc,
-            'display_name'        => $sdesc,
-            '_inst'               => 0,
-            '_display_order'              => $opts->{order},
-            '_dstemplate'                 => "Alcatel-Chassis-OSPF",
-            #'_triggergroup'               => "Alcatel-Chassis-OSPF",
-            'use'                 => $opts->{dtemplate},
-        );
-        # If using custom Alcatel OPSF metrics, do not use MIB-II OSPF runs
-        $opts->{req_ospfruns} = 0;    
-        $opts->{order} -= 1;
+        if (defined ($OspfRouteNumber)); {
+            Debug ("Building chassis OSPF target...");
+            $ldesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
+            $sdesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
+            my ($targetname) = 'ospf';
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "chassis." . $targetname,
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => 0,
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "Alcatel-Chassis-OSPF",
+                #'_triggergroup'               => "Alcatel-Chassis-OSPF",
+                'use'                 => $opts->{dtemplate},
+            );
+            # If using custom Alcatel OPSF metrics, do not use MIB-II OSPF runs
+            $opts->{req_ospfruns} = 0;    
+            $opts->{order} -= 1;
+            
+        }
+
        
     }
     if ($chassisfan){
 
     }
-    ### Build powersupply status
-    if ($chassispowersupply_aos) {
-        my %typehash = ('0' => "notApplicable",
-                        '1' => "off",
-                         '2' => "greenOn",
-                         '3' => "greenBlink",
-                         '4' => "amberOn",
-                         '5' => "amberBlink",
-                         );
-        #foreach  my $id (keys %idtable) {
-            # Skip it in case the power supply table is not supported
-        #    next if (!defined($detailId{$id}));            
-        #    $opts->{order} -= 1;
-        #}
+    ### Build powersupply status for AOS 6.x
+    if ($chassispowersupply_alcatel) {
+            $ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            $sdesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            Debug ("Building chassis power supply target AOS 6.x...");
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "chassis.powersupply",
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => "",
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "Alcatel-OS6450-Powersupply",
+                '_triggergroup'               => "Chassis_OS6450_Powersupply",
+                'use'                 => $opts->{dtemplate},
+            );
+
+        $opts->{order} -= 1;
+
     }
     
+        ### Build powersupply status for AOS 7.x 8.x
+    if ($chassispowersupply) {
+            $ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            $sdesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            Debug ("Building chassis power supply target AOS 7.x...");
+            
+            my $dstemplate = "Alcatel-OS6860-Powersupply";
+            $dstemplate = "Alcatel-OS6860-Powersupply" . $vcsize if $vcsize ne '';
+            my $triggertemplate = "Chassis_OS6860_Powersupply";
+            $triggertemplate = "Chassis_OS6860_Powersupply" . $vcsize if $vcsize ne '';
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "chassis.powersupply",
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => 0,
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => $dstemplate,
+                '_triggergroup'               => $triggertemplate,
+                'use'                 => $opts->{dtemplate},
+            );
+
+        $opts->{order} -= 1;
+
+    }
+    
+    ### Build filter status for AOS 6.x
+    if ($chassisfilter){
+        foreach  my $id (keys %AlcatelQoSAppliedRuleConditiontable) {
+            # Skip it in case the power supply table is not supported
+            Info("id: " . $id);
+            next if (!defined($AlcatelQoSAppliedRuleConditiontable{$id}));
+            # Customize the ID of the filter(s) you wish to supervise.
+            next unless ($id eq "10.114.73.67.77.80.116.121.112.101.51");
+            Debug ("Building chassis filter target...");           
+            Debug ("Qos Rule condition :" . $AlcatelQoSAppliedRuleConditiontable{$id});
+            Debug ("Qos Rule action : " . $AlcatelQoSAppliedRuleActiontable{$id});
+            my ($targetname) = $AlcatelQoSAppliedRuleConditiontable{$id};
+            $ldesc = "Number of matches for the filter rule rICMPtype3. Action required.";
+            $sdesc = "Number of matches for the filter rule rICMPtype3. Action required.";
+
+            
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "rulematch." . $targetname,
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => "10.114.73.67.77.80.116.121.112.101.51",
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "Alcatel-QoS-Filter",
+                '_triggergroup'               => "rulematch_AOS6",
+                'use'                 => $opts->{dtemplate},
+            );
+
+        $opts->{order} -= 1;
+        }
+    }
+        
+        
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###
