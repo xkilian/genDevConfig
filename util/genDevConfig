@@ -1440,6 +1440,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my $maxoctets = defined($max) ? int($max/8) : undef;
     if ($opts{show_max} == 1 && defined($max)) {
 	push(@config,
+        '_maximisedatasource'             => 'ifHCInOctets,ifHCOutOctets',
+        '_maximisedatasourcevalue'             => "$max,$max",
         '_ds_max'             => $max,
         '_ds_max_octets'      => $maxoctets,
 	);
