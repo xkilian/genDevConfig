@@ -74,6 +74,8 @@ my %OIDS = (
       'AlcatelddmTxOutputPower'                => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.16',
       'AosddmPortTemperature'                  => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.1',
       'AosddmPortTxOutputPower'                => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.16',
+      'AosQoSAppliedRuleCondition'             => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.5',
+      'AosQoSAppliedRuleAction'                => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.6',
       'AlcatelQoSAppliedRuleCondition'         => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.5',
       'AlcatelQoSAppliedRuleAction'            => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.6',
     );
@@ -113,6 +115,7 @@ my $snmp;
 my $chassispowersupply = 0;
 my $chassispowersupply_alcatel = 0;
 my $chassisfilter = 0;
+my $chassisfilter_alcatel = 0;
 my $chassisospf = 0;
 my $chassisfan = 0;
 my $script = "Alcatel AOS Omniswitch genDevConfig Module";
@@ -242,6 +245,7 @@ sub discover {
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
         $chassispowersupply = 1;
+        $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
         $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
@@ -254,6 +258,7 @@ sub discover {
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
         $chassispowersupply = 1;
+        $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
         $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). Note :Temperature is internal temp, not external, threshold is ';
@@ -268,7 +273,7 @@ sub discover {
         $opts->{dtemplate} = "default-snmp-template";
         $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
-        $chassisfilter = 1;
+        $chassisfilter_alcatel = 1;
         $chassisfan = 0;
         $chassisospf = 0;
     } elsif ($opts->{model} =~ /6250/) {
@@ -281,7 +286,7 @@ sub discover {
         $opts->{dtemplate} = "default-snmp-template";
         $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
-        $chassisfilter = 1;
+        $chassisfilter_alcatel = 1;
         $chassisfan = 0;
         $chassisospf = 0;
     } else {
@@ -344,6 +349,8 @@ sub custom_targets {
     # QoS Filters on the switch
     my %AlcatelQoSAppliedRuleConditiontable     = gettable('AlcatelQoSAppliedRuleCondition');
     my %AlcatelQoSAppliedRuleActiontable        = gettable('AlcatelQoSAppliedRuleAction');
+    my %AosQoSAppliedRuleConditiontable     = gettable('AosQoSAppliedRuleCondition');
+    my %AosQoSAppliedRuleActiontable        = gettable('AosQoSAppliedRuleAction');
 
 
     # Fan status
@@ -354,7 +361,7 @@ sub custom_targets {
     ### Build OSPF status for AOS 7.x 8.x
     if ($chassisospf){
         ($OspfRouteNumber) =              get('OidAosalaOspfRouteNumber');
-        if (defined ($OspfRouteNumber)); {
+        if (defined ($OspfRouteNumber)) {
             Debug ("Building chassis OSPF target...");
             $ldesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
             $sdesc = "Number of OSPF neighbors and routes. Variations in these metrics is a sign of instability.";
@@ -391,10 +398,10 @@ sub custom_targets {
                 'service_description' => "chassis.powersupply",
                 'notes'               => $ldesc,
                 'display_name'        => $sdesc,
-                '_inst'               => "",
+                '_inst'               => 0,
                 '_display_order'              => $opts->{order},
-                '_dstemplate'                 => "Alcatel-OS6450-Powersupply",
-                '_triggergroup'               => "Chassis_OS6450_Powersupply",
+                '_dstemplate'                 => "Alcatel-OS6450-Powersupply-1",
+                '_triggergroup'               => "Chassis_OS6450_Powersupply-1",
                 'use'                 => $opts->{dtemplate},
             );
 
@@ -429,7 +436,7 @@ sub custom_targets {
     }
     
     ### Build filter status for AOS 6.x
-    if ($chassisfilter){
+    if ($chassisfilter_alcatel){
         foreach  my $id (keys %AlcatelQoSAppliedRuleConditiontable) {
             # Skip it in case the power supply table is not supported
             Info("id: " . $id);
@@ -446,13 +453,13 @@ sub custom_targets {
             
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "rulematch." . $targetname,
+                'service_description' => "chassis.rulematch." . $targetname,
                 'notes'               => $ldesc,
                 'display_name'        => $sdesc,
                 '_inst'               => "10.114.73.67.77.80.116.121.112.101.51",
                 '_display_order'              => $opts->{order},
-                '_dstemplate'                 => "Alcatel-QoS-Filter",
-                '_triggergroup'               => "rulematch_AOS6",
+                '_dstemplate'                 => "Alcatel-AOS6-QoS-Filter",
+                '_triggergroup'               => "AOS6_rulematch",
                 'use'                 => $opts->{dtemplate},
             );
 
@@ -460,7 +467,40 @@ sub custom_targets {
         }
     }
         
-        
+       
+
+  ### Build filter status for AOS 8.x                                                                                                                                                     
+    if ($chassisfilter){                                                                                                                                                                    
+        foreach  my $id (keys %AosQoSAppliedRuleConditiontable) {                                                                                                                       
+            # Skip it in case the power supply table is not supported                                                                                                                       
+            Info("id: " . $id);                                                                                                                                                             
+            next if (!defined($AosQoSAppliedRuleConditiontable{$id}));                                                                                                                  
+            # Customize the ID of the filter(s) you wish to supervise.                                                                                                                      
+            next unless ($id eq "10.114.73.67.77.80.116.121.112.101.51");                                                                                                                   
+            Debug ("Building chassis filter target...");                                                                                                                                    
+            Debug ("Qos Rule condition :" . $AosQoSAppliedRuleConditiontable{$id});                                                                                                     
+            Debug ("Qos Rule action : " . $AosQoSAppliedRuleActiontable{$id});                                                                                                          
+            my ($targetname) = $AosQoSAppliedRuleConditiontable{$id};                                                                                                                   
+            $ldesc = "Number of matches for the filter rule rICMPtype3. Action required.";                                                                                                  
+            $sdesc = "Number of matches for the filter rule rICMPtype3. Action required.";                                                                                                  
+                                                                                                                                                                                            
+                                                                                                                                                                                            
+            $file->writetarget("service {", '',                                                                                                                                             
+                'host_name'           => $opts->{devicename},                                                                                                                               
+                'service_description' => "chassis.rulematch." . $targetname,                                                                                                                        
+                'notes'               => $ldesc,                                                                                                                                            
+                'display_name'        => $sdesc,                                                                                                                                            
+                '_inst'               => "10.114.73.67.77.80.116.121.112.101.51",                                                                                                           
+                '_display_order'              => $opts->{order},                                                                                                                            
+                '_dstemplate'                 => "Alcatel-AOS8-QoS-Filter",                                                                                                                      
+                '_triggergroup'               => "AOS8_rulematch",                                                                                                                          
+                'use'                 => $opts->{dtemplate},                                                                                                                                
+            );                                                                                                                                                                              
+                                                                                                                                                                                            
+        $opts->{order} -= 1;                                                                                                                                                                
+        }                                                                                                                                                                                   
+    }                                          
+ 
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###
