@@ -78,6 +78,7 @@ my %OIDS = (
       'AosQoSAppliedRuleAction'                => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.6',
       'AlcatelQoSAppliedRuleCondition'         => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.5',
       'AlcatelQoSAppliedRuleAction'            => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.6',
+      'AlcatelSspHelperStatus'                 => '1.3.6.1.4.1.6486.801.1.2.1.24.1.1.9.1.0',
     );
 
 ###############################################################################
@@ -103,6 +104,8 @@ my @types = ( "$OIDS{'OS6900X20'}",
               "$OIDS{'OS645024'}",
               "$OIDS{'OS645024L'}",
               "$OIDS{'OS6450P24L'}",
+              "$OIDS{'OS6450P48L'}",
+              "$OIDS{'OS645048L'}",
               "$OIDS{'OS625024'}",
             );
 
@@ -118,6 +121,8 @@ my $chassisfilter = 0;
 my $chassisfilter_alcatel = 0;
 my $chassisospf = 0;
 my $chassisfan = 0;
+my $chassishelper = 0;
+my $chassisconfig = 0;
 my $script = "Alcatel AOS Omniswitch genDevConfig Module";
 my %alcatelddmtemperaturetable;
 my %alcatelddmtxmtable;
@@ -248,6 +253,7 @@ sub discover {
         $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
+        $chassisconfig = 1;
         $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
@@ -261,6 +267,7 @@ sub discover {
         $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
+        $chassisconfig = 1;
         $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). Note :Temperature is internal temp, not external, threshold is ';
 
     } elsif ($opts->{model} =~ /6450/) {
@@ -276,6 +283,7 @@ sub discover {
         $chassisfilter_alcatel = 1;
         $chassisfan = 0;
         $chassisospf = 0;
+        $chassishelper = 1;
     } elsif ($opts->{model} =~ /6250/) {
         # AOS 6.x 6250, 6450, etc.
         $opts->{chassisttype} = 'Alcatel-OS6250';
@@ -289,6 +297,7 @@ sub discover {
         $chassisfilter_alcatel = 1;
         $chassisfan = 0;
         $chassisospf = 0;
+        $ chassishelper = 1;
     } else {
         # Default to AOS 6.x
         $opts->{chassisttype} = 'Alcatel-Generic';
@@ -466,7 +475,35 @@ sub custom_targets {
         $opts->{order} -= 1;
         }
     }
-        
+
+
+    ### Build chassis helper status for AOS 6.x
+    if ($chassishelper){
+            my ($helperstatus) = get('AlcatelSspHelperStatus');
+            # Skip it in case the helper status is not enabled
+            Info("id: " . $id);
+            next if (!defined($helperstatus));
+
+            Debug ("Building chassis helper status target...");
+            $ldesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2). If disabled, check Virtual chassis VCSP status and helper switch configruation and status.";
+            $sdesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2)";
+
+
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "chassis.helper.status",
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => "0",
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "Alcatel-AOS6-HelperStatus",
+                '_triggergroup'               => "AOS6_helper",
+                'use'                 => $opts->{dtemplate},
+            );
+
+        $opts->{order} -= 1;
+
+    }
        
 
   ### Build filter status for AOS 8.x                                                                                                                                                     
@@ -499,7 +536,32 @@ sub custom_targets {
                                                                                                                                                                                             
         $opts->{order} -= 1;                                                                                                                                                                
         }                                                                                                                                                                                   
-    }                                          
+    }
+
+
+    ### Build config and synch status for AOS 8.x
+    if ($chassisconfig){
+
+            Debug ("Building chassis config and synch status");
+            $ldesc = "Configuration status and synchronisation status for chassis 1. If synchronisation and config status OID .1.3.6.1.4.1.6486.801.1.1.1.3.1.1.1.1.6 are missing, chassis 1 may be down.";
+            $sdesc = "Configuration status and synchronisation status for chassis 1. If OID missing, chassis 1 may be down.";
+
+
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "chassis.config.status",
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => "0",
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "Alcatel-AOS8-Config",
+                '_triggergroup'               => "AOS8_config",
+                'use'                 => $opts->{dtemplate},
+            );
+
+        $opts->{order} -= 1;
+        }
+    }
  
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
