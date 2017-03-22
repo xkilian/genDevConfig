@@ -104,6 +104,7 @@ my @types = ( "$OIDS{'OS6900X20'}",
               "$OIDS{'OS645024L'}",
               "$OIDS{'OS6450P24L'}",
               "$OIDS{'OS625024'}",
+              "$OIDS{'OS685514'}",
             );
 
 
@@ -560,22 +561,26 @@ sub custom_interfaces {
     
             if ($opts->{class} eq 'alcatel' && defined ($alcatelddmtxmtable{$index . ".1"}) && $alcatelddmtxmtable{$index . ".1"} eq -200) {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddmDAC');
+                push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an alcatelddmDAC interface: " . $alcatelddmtxmtable{$index . ".1"});
                 Debug ("Found an alcatelddmDAC interface.temp:" . $alcatelddmtemperaturetable{$index . ".1"});
 
                 $match = 1;
             } elsif ($opts->{class} eq 'aos' && defined ($aosddmtxmtable{$index . ".1"}) && $aosddmtxmtable{$index . ".1"} eq -200 ) {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddmDAC');
+                push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an aosddmDAC interface.tx:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddmDAC interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
                 $match = 1;
             } elsif ($opts->{class} eq 'aos') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddm');
+                push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an aosddm interface.:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddm interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
                 $match = 1;
             } elsif ($opts->{class} eq 'alcatel') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddm');
+                push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an alcatelddm interface.:" . $alcatelddmtxmtable{$index . ".1"});
                 Debug ("Found an alcatelddm interface.temp:" . $alcatelddmtemperaturetable{$index . ".1"});
                 $match = 1;
