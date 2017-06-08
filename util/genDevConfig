@@ -341,6 +341,7 @@ my %opts = (
     'sysContact'       => '', ### MIB-II SNMP Contact output
     'sysName'          => '', ### MIB-II SNMP System name output
     'sysLocation'      => '', ### MIB-II SNMP Location output
+    'alias'            => '', ### System alias name for Shinken
     'chassisPhysicalDescr' => '', ### MIB-II SNMP Chassis serial output
 
     'thresholds'       => {}, ### Thresholds for automatic application
@@ -814,6 +815,8 @@ $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opt
 my $dstemplates;
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
+$opts{alias} = $opts{devicename};
+
 my ($ldesc, $sdesc);
 $ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
                                 : ( $opts{sysDescr} );
@@ -824,7 +827,7 @@ $ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
 if ($opts{parents} ne "") {
     push (@options, 'parents', $opts{parents});
 }
-$file->writetarget("host {", '', # FIXME Move static or macro definitions to templates.
+$file->writetarget("host {", '',
     'host_name'         => $opts{devicename},
     'display_name'      => $displayname,
     'alias'             => $opts{alias},
