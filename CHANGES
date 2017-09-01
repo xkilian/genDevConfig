@@ -20,12 +20,16 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
-# Version 3_0_9
+# Version 3_0_9 - Current master branch - unreleased
 
+# - New plugin PaloAlto Firewalls
+# - New plugin Peavey NioN hardware
 # - New plugin Spectracom Securesync NTP Server
 # - Added operstatus and admin status to cisco device specific interfaces
 # - Added new option --triggerifstatus to add up/check critical trigger to interfaces
 # - Fix: Logic bug in --gigonly
+# - Added alias to Shinken config output
+
 
 # Version 3_0_8
 
