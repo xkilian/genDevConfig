@@ -259,7 +259,7 @@ sub discover {
         $chassisfan = 0;
         $chassisospf = 1;
         $chassisconfig = 1;
-        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
@@ -273,7 +273,7 @@ sub discover {
         $chassisfan = 0;
         $chassisospf = 1;
         $chassisconfig = 1;
-        $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members. Control status notSynchronized(3),synchronized(4). Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). Note :Temperature is internal temp, not external, threshold is ';
+        $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). <BR> Note :Temperature is internal temp, not external, threshold is ';
 
     } elsif ($opts->{model} =~ /6450/) {
         # AOS 6.x 6250, 6450, etc.
@@ -283,7 +283,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
+        $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
         $chassisfan = 0;
@@ -297,7 +297,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
+        $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
         $chassisfan = 0;
@@ -490,7 +490,7 @@ sub custom_targets {
             next if (!defined($helperstatus));
 
             Debug ("Building chassis helper status target...");
-            $ldesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2). If disabled, check Virtual chassis VCSP status and helper switch configruation and status.";
+            $ldesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2).<BR>If disabled, check Virtual chassis VCSP status and helper switch configruation and status.";
             $sdesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2)";
 
 
@@ -548,8 +548,8 @@ sub custom_targets {
     if ($chassisconfig){
 
             Debug ("Building chassis config and synch status");
-            $ldesc = "Configuration status and synchronisation status for chassis 1. If synchronisation and config status OID .1.3.6.1.4.1.6486.801.1.1.1.3.1.1.1.1.6 are missing, chassis 1 may be down.";
-            $sdesc = "Configuration status and synchronisation status for chassis 1. If OID missing, chassis 1 may be down.";
+            $ldesc = "Configuration status and synchronisation status for chassis 1. <BR>If synchronisation and config status OID .1.3.6.1.4.1.6486.801.1.1.1.3.1.1.1.1.6 are missing, chassis 1 may be down.";
+            $sdesc = "Configuration status and synchronisation status for chassis 1. <BR>If OID missing, chassis 1 may be down.";
 
 
             $file->writetarget("service {", '',

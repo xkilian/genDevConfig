@@ -175,7 +175,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "health_statistic_" . $id,
-               'notes'               => "IBM IMM Health Stats",
+               'notes'               => "IBM IMM Health Stats.<BR>Error indicates hardware problem, action required on the server.",
                'display_name'        => "Health statistic " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "ibm-system-health-stat",
