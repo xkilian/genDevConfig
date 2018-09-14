@@ -111,7 +111,7 @@ my @types = ( "$OIDS{'OS6900X20'}",
               "$OIDS{'OS6450P48'}",
               "$OIDS{'OS645048'}",
               "$OIDS{'OS625024'}",
-              "$OIDS{'OS685514'}",
+#              "$OIDS{'OS685514'}",
             );
 
 
@@ -254,12 +254,13 @@ sub discover {
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
+        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $chassispowersupply = 1;
         $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
         $chassisconfig = 1;
-        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
+        $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as failed VC members.<BR>Control status notSynchronized(3),synchronized(4).';
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
@@ -268,12 +269,13 @@ sub discover {
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
+        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $chassispowersupply = 1;
         $chassisfilter = 1;
         $chassisfan = 0;
         $chassisospf = 1;
         $chassisconfig = 1;
-        $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply or failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5). <BR> Note :Temperature is internal temp, not external, threshold is ';
+        $opts->{sysNotes} = 'Alcatel OS6860 Chassis. General supervised statistics, alarms should be treated in priority, such as failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR> Note :Temperature is internal temp, not external, threshold is ';
 
     } elsif ($opts->{model} =~ /6450/) {
         # AOS 6.x 6250, 6450, etc.
@@ -283,6 +285,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
+        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
@@ -297,6 +300,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
+        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
@@ -486,7 +490,6 @@ sub custom_targets {
     if ($chassishelper){
             my ($helperstatus) = get('AlcatelSspHelperStatus');
             # Skip it in case the helper status is not enabled
-            Info("id: " . $id);
             next if (!defined($helperstatus));
 
             Debug ("Building chassis helper status target...");
@@ -565,9 +568,8 @@ sub custom_targets {
             );
 
         $opts->{order} -= 1;
-        }
     }
- 
+
     ###
     ### END DEVICE CUSTOM CONFIG SECTION
     ###

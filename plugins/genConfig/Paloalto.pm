@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.00;
+my $VERSION = 1.01;
 
 ### End package init
 
@@ -43,7 +43,11 @@ my $VERSION = 1.00;
 my %OIDS = (
 
       'productVersion'                  => '1.3.6.1.2.1.47.1.1.1.1.2.1',
-      'rcPaloAlto'                      => '1.3.6.1.4.1.25461.2.3.4',
+      'rcPaloAlto2020'                      => '1.3.6.1.4.1.25461.2.3.4',
+      'rcPaloAlto500'                      => '1.3.6.1.4.1.25461.2.3.6',
+      'rcPaloAltoPanorama'                      => '1.3.6.1.4.1.25461.2.3.7',
+      'rcPaloAlto3020'                      => '1.3.6.1.4.1.25461.2.3.18',
+      'rcPaloAlto3050'                      => '1.3.6.1.4.1.25461.2.3.17',
 
       'OidhrSystemUptime'               => '1.3.6.1.2.1.25.1.1.0',
       'OidhrProcessorLoad1'             => '1.3.6.1.2.1.25.3.3.1.2.1',
@@ -60,8 +64,13 @@ my %OIDS = (
 ## the names should be contained in the sysdescr string
 ## returned by the devices. The name is a regular expression.
 ################################################################################
-my @types = ( "$OIDS{'rcPaloAlto'}",
+my @types = ( "$OIDS{'rcPaloAlto2020'}",
+              "$OIDS{'rcPaloAlto500'}",
+              "$OIDS{'rcPaloAltoPanorama'}",
+              "$OIDS{'rcPaloAlto3020'}",
+              "$OIDS{'rcPaloAlto3050'}"
             );
+
 
 
 ###############################################################################
@@ -299,7 +308,7 @@ sub custom_interfaces {
     # Set a non-sticky interface setting for invalid speed in nortel MIBs
 
     ###Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
-    push(@config, '_dstemplate' => 'standard-interface-no-outqlen');
+    push(@config, '_dstemplate' => 'standard-interface-noql');
     $match = 1;
     ###
     ### END INTERFACE CUSTOM CONFIG SECTION

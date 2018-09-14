@@ -201,7 +201,7 @@ sub custom_targets {
         Debug("Accedian table key: " . $key);
      
         my ($servicename) = "PAA_" . $Name;
-        my ($ldesc) = "Metronid: $servicename Mtu: $Mtu Peer: $Peer<BR>Values in microseconds. 1000us = 1ms";
+        my ($ldesc) = "Metronid: $servicename Mtu: $Mtu Peer: $Peer <BR>Values in microseconds. 1000us = 1ms<BR>Alerte lorsque le delais est plus que 50000us ou de la perte de paquet.";
         $file->writetarget("service {", '',
             'service_description'  => $servicename,
             'display_name'         => $servicename,

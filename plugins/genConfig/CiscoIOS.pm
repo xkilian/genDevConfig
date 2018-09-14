@@ -47,6 +47,45 @@ my @types = ( 'IOS ',
               'Cisco Systems Catalyst'
             );
 
+
+###############################################################################
+# These are the type and scale of sensor data
+###############################################################################
+
+my(%SensorDataType)=('1'  =>  'other',
+                  '2'   =>  'unknown',
+                  '3'   =>  'voltsAC',
+                  '4'   =>  'voltsDC',
+                  '5'   =>  'amperes',
+                  '6'   =>  'watts',
+                  '7'   =>  'hertz',
+                  '8'   =>  'celsius',
+                  '9'   =>  'percentRH',
+                  '10'  =>  'rpm',
+                  '11'  =>  'cmm',
+                  '12'  =>  'truthvalue',
+                  '13'  =>  'specialEnum',
+                  '14'  =>  'dBm',
+                );
+my(%SensorDataScale)=('1'  =>  'yocto',
+                  '2'   =>  'zepto',
+                  '3'   =>  'atto',
+                  '4'   =>  'femto',
+                  '5'   =>  'pico',
+                  '6'   =>  'nano',
+                  '7'   =>  'micro',
+                  '8'   =>  'milli',
+                  '9'   =>  'units',
+                  '10'  =>  'kilo',
+                  '11'  =>  'mega',
+                  '12'  =>  'giga',
+                  '13'  =>  'tera',
+                  '14'  =>  'exa',
+                  '15'  =>  'peta',
+                  '16'  =>  'zetta',
+                  '17'  =>  'yotta',
+                );
+
 ###############################################################################
 ### SAA RTR Agent type definitions.
 ###############################################################################
@@ -158,6 +197,11 @@ my %OIDS = (
        
         'ciscoEnvMonSupplyState' => '1.3.6.1.4.1.9.9.13.1.5.1.3',
        'ciscoEnvMonSupplyStatusDescr' => '1.3.6.1.4.1.9.9.13.1.5.1.2',
+
+       'entSensorDataType'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.1',
+       'entSensorDataScale'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.2',
+       'entSensorPrecision'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.3',
+       'entSensorValue'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.4',
        
       );
 
@@ -236,6 +280,10 @@ sub discover {
         $opts->{req_vlans} = 0 if ($opts->{req_vlans} && $opts->{sysDescr} =~ / C\d\d\d0 / && $opts->{vendor_soft_ver} lt "12.0");
         $opts->{req_vlans} = 0 if ($opts->{req_vlans} && $opts->{sysDescr} !~ / C\d\d\d0 |Catalyst 4000/ && $opts->{vendor_soft_ver} lt "12.2");
 
+    } elsif ($opts->{sysDescr} =~ /IOS-XE Software/) {
+        $opts->{vendor_descr_oid} = "ifAlias";
+        $opts->{noql} = 1;
+        Debug ("interface description : ifAlias");
     } elsif ($opts->{sysDescr} =~ m/Cisco Systems Catalyst/) {
         $opts->{vendor_descr_oid} = "swPortName";
     } else { ### Maybe it's a Micro Switch...
@@ -280,6 +328,8 @@ sub discover {
     $opts->{fanstatus} = 1    if ($opts->{req_fanstatus});
     $opts->{supplystatus} = 1    if ($opts->{req_supplystatus});
     $opts->{class} = 'cisco';
+    $opts->{cbqos} = 1    if ($opts->{req_cbqos});
+    $opts->{noql} = 1    if ($opts->{req_noql});
 
     if  ($opts->{model} eq 'C3500XL' || $opts->{model} eq 'C2900XL') {
         $opts->{chassisttype} = 'Catalyst-XL-Switch';
@@ -364,7 +414,10 @@ sub discover {
     } elsif ($opts->{model} =~ /RSP/) {
         $opts->{chassisttype} = 'Cisco-7500-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
+    } elsif ($opts->{model} =~ /IOS-XE/) {
+        $opts->{chassisttype} = 'Cisco-Generic-Router';
+        $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+        $opts->{maxoidrequest} = "32";
     } elsif ($opts->{ciscobox}) {   # Default Cisco config
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
@@ -500,11 +553,59 @@ sub custom_targets {
 
     my %cisco_cbwfq_obj; # Object
     my %cisco_cbwfq_pol; # Policy
-    if ($opts->{ciscobox}) {
+    if ($opts->{ciscobox} && $opts->{cbqos} ) {
         %cisco_cbwfq_obj = gettable('cbwfqObject');
         %cisco_cbwfq_pol = gettable('cbwfqPolicy');
     }
+    ### Walk  1.3.6.1.4.1.9.9.91.1.1.1.1.4 if this is a cisco IOS router
+    ### Traffic shaping counters based on Class Based Weighted Fair Queued QoS
 
+    my %cisco_entSensorDataType; #  Integer { other(1), unknown(2), voltsAC(3), voltsDC(4), amperes(5), watts(6), hertz(7), celsius(8), percentRH(9), rpm(10), cmm(11), truthvalue(12), specialEnum(13), dBm(14) }
+    my %cisco_entSensorDataScale; # Integer { yocto(1), zepto(2), atto(3), femto(4), pico(5), nano(6), micro(7), milli(8), units(9), kilo(10), mega(11), giga(12), tera(13), exa(14), peta(15), zetta(16), yotta(17) }
+    my %cisco_entSensorPrecision; # This variable indicates the number of decimal places of precision in fixed-point sensor values reported by entSensorValue.
+    my %cisco_entSensorValue; # The value
+    my %entPhysicalName; # The value
+    my %entPhysicalModel; # The value
+    if ($opts->{ciscobox}) {
+        %cisco_entSensorDataType  = gettable('entSensorDataType');
+        %cisco_entSensorDataScale = gettable('entSensorDataScale');
+        %cisco_entSensorPrecision = gettable('entSensorPrecision');
+        %cisco_entSensorValue     = gettable('entSensorValue');
+        %entPhysicalName         = gettable('entPhysicalName');
+        %entPhysicalModel         = gettable('entPhysicalModelName');
+    }
+
+    ### Build Sensor supervision data for Optical Interfaces
+
+    if ($opts->{ciscobox} && %entPhysicalName) {
+        foreach my $sensor (keys %entPhysicalName) {
+            if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor|Receive Power Sensor/ && defined($entSensorValue{$sensor})) {
+                Debug("Sensor $sensor description: " . $entPhysicalName{$sensor});
+                my $target = $entPhysicalName{$sensor};
+                my $ldesc = $entPhysicalName{$sensor};
+                $ldesc .= "<BR> Type  : " . $SensorDataType{$cisco_entSensorDataType{$sensor}};
+                $ldesc .= "<BR> Scale : " . $SensorDataScale{$cisco_entSensorDataScale{$sensor}};
+                $ldesc .= "<BR> Precision : " . $cisco_entSensorPrecision{$sensor};
+                #$ldesc .= "<BR> Model : " . $entPhysicalModel{$sensor};
+
+                my $triggertemplate = "chassis_cisco_ddm";
+
+                $file->writetarget("service {", '',
+                        'host_name'           => $opts->{devicename},
+                        'service_description' => $target,
+                        'notes'               => $ldesc,
+                        'display_name'        => $target,
+                        '_inst'               => $sensor,
+                        '_display_order'      => $opts->{order},
+                        '_dstemplate'         => "cisco-sensor-ddm",
+                        '_triggergroup'       => $triggertemplate,
+                        'use'                 => "generic-sensor-service",
+                );
+
+            $opts->{order} -= 1; 
+            }
+        }
+    }
     ### Building CPU VIP Stats for Cisco 7500, 12000 series routers
 
     if ($opts->{vipstats}) {
@@ -535,6 +636,7 @@ sub custom_targets {
                     '_inst'               => $cpu,
                     '_display_order'              => $opts->{order},
                     '_dstemplate'                 => "cisco-vip-cpu",
+                            	    'use'                 => $opts->{dtemplate},
             );
 
             $opts->{order} -= 1;
@@ -553,7 +655,7 @@ sub custom_targets {
 
     ### Build the Class Based Weighted Fair Queued QoS Statistics
     ### Cisco Only
-    if (%cisco_cbwfq_obj && %cisco_cbwfq_pol) {
+    if ($opts->{cbqos} && %cisco_cbwfq_obj && %cisco_cbwfq_pol) {
         my %servicepolicy;
         my $qostype = 'cisco-cbwfq-qos';
 
@@ -594,7 +696,7 @@ sub custom_targets {
                     $ifdescr = $ifdescr{$ifindex} . "." . $ifindex;
                     $ifacedescr = $ifdescr;
                     $ifacedescr =~ s/[\/\s:,\.]/\_/g;
-                    $instance = "\'$pol_id_cell.$obj_id_cell\'";
+                    $instance = "$pol_id_cell.$obj_id_cell";
                     $ldesc = "CBWFQ QoS for $ifdescr\[$policydirection\]: $name_cell";
                     $sdesc = "QoS $ifdescr\[$policydirection\]: $name_cell";
                     $targetdesc = "QoS_$ifdescr\_$policydirection\_$name_cell";
@@ -610,6 +712,7 @@ sub custom_targets {
                         '_inst'          => $instance,
                         '_hide'          => 'true',
                         '_display_order'          => $opts->{order},
+                        'use'                 => $opts->{dtemplate},
                     );
                     $opts->{order} -= 1;
     
@@ -622,35 +725,7 @@ sub custom_targets {
                 }
             }
         }
-        foreach my $key (keys %servicepolicy) {
-            my $targetname;
-            my $targetdesc;
-            my ($ldesc, $sdesc);
-            my $policydirection;
-            my $ifdescr;
-            my $ifacedescr;
-    
-            ($ifdescr, $policydirection)= split(/\,/,$key);
-            $ifacedescr = $ifdescr;
-            $ifacedescr =~ s/[\/\s:,\.]/\_/g;
-            $ldesc = "CBWFQ QoS for $ifdescr\[$policydirection\]";
-            $sdesc = "QoS $ifdescr\[$policydirection\]";
-            $targetdesc = "QoS_$ifdescr\_$policydirection";
-            $targetname = "qos_$ifacedescr\_$policydirection";
-    
-    
-            $file->writetarget("service {", '',
-		'host_name'           => $opts->{devicename},
-                'service_description'=> $targetname,
-                '_interface-name'=> $targetdesc,
-                'notes' => $ldesc,
-                'display_name'    => $targetname,
-                '_dstemplate'   => $qostype,
-                '_mtargets'  => "$servicepolicy{$key}", # FIXME to convert to reference a pnp or graphite mtarget equivalent
-                '_display_order'         => $opts->{order},
-            );
-                    $opts->{order} -= 1;
-        }
+
     }
 
 ### Build Cisco Traffic shaping based on CAR
@@ -688,7 +763,8 @@ if ($opts->{ciscobox} && keys(%cisco_car)) {
             '_display_order'              =>  $opts->{order},
             'notes'               =>  $ldesc . " " . $rest,
             'display_name'        =>  $ifdescr{$ifindex},
-            '_dstemplate'                 =>  'rate-limit'
+            '_dstemplate'                 =>  'rate-limit',
+            'use'                 => $opts->{dtemplate},
         );
         $file->writetarget("service {", '', @config);
 
@@ -757,13 +833,18 @@ if ($opts->{voip} && %PeerCfgOrigAddr) {
 
 ### Build the fan stats
 
-if ($opts->{fanstatus} && %ciscoEnvMonFanState) {
+if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} !~ /IOS-XE/)) {
     foreach my $key (keys %ciscoEnvMonFanState) {
 
         my ($ldesc, $sdesc);
 	$ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
 	$sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
+        $ldesc =~ tr/,/ /;
+        $sdesc =~ tr/,/ /;
+
         my ($name, $fan, $rest) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
+        Debug("$name $fan $ldesc");
+
         my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
 
            $file->writetarget("service {", '',
@@ -773,6 +854,42 @@ if ($opts->{fanstatus} && %ciscoEnvMonFanState) {
             '_display_order'       => $opts->{order},
             'display_name' => $targetname,
             'notes'        => $ldesc,
+               '_triggergroup'   => 'chassis_cisco_fan_state',
+            '_dstemplate'          => 'cisco-fan-state',
+	    'use'                 => $opts->{dtemplate},
+        );
+        $opts->{order} -= 1;
+    }
+}
+
+    ### Build the fan stats for IOS-XE
+
+if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} =~ /IOS-XE/)) {
+    foreach my $key (keys %ciscoEnvMonFanState) {
+
+        my ($ldesc, $sdesc, $swid);
+        my ($name, $fanid, $rest);
+        my ($description) = $ciscoEnvMonFanStatusDescr{$key};
+        $description =~ tr/ /_/;
+        $description =~ tr/,//;
+
+        if ($key < 8 ){
+            $swid = 1;
+        } else {
+            $swid = 2;
+        }
+	    $ldesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+	    $sdesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key};
+        my ($targetname) = 'CiscoFan_state_for_switch_' . $swid . "_" . $description;
+
+           $file->writetarget("service {", '',
+	    'host_name'           => $opts->{devicename},
+            'service_description'        => $targetname,
+            '_inst'        => $key,
+            '_display_order'       => $opts->{order},
+            'display_name' => $targetname,
+            'notes'        => $ldesc,
+               '_triggergroup'   => 'chassis_cisco_fan_state',
             '_dstemplate'          => 'cisco-fan-state',
 	    'use'                 => $opts->{dtemplate},
         );
@@ -792,6 +909,7 @@ if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
 	my ($ps, $junk) = split(/\s+/,$rest);
         my ($targetname) = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps);
 
+
            $file->writetarget("service {", '',
 	    'host_name'           => $opts->{devicename},
             'service_description'        => $targetname,
@@ -799,6 +917,7 @@ if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
             '_display_order'       => $opts->{order},
             'display_name' => $targetname,
             'notes'        => $ldesc,
+               '_triggergroup'   => 'chassis_cisco_power_state',
             '_dstemplate'          => 'cisco-supply-state',
 	    'use'                 => $opts->{dtemplate},
         );
@@ -859,7 +978,9 @@ sub custom_interfaces {
             push(@config,
 			'_peerid' => $peerid,
                         'notes' => 'Dial Peer Stats',
-                        '_dstemplate'    => 'dial-peer');
+                        '_dstemplate'    => 'dial-peer',
+                        	    'use'                 => $opts->{dtemplate});
+
             $customfile = $opts->{dpfile}; # Select the file to store configs
             $customsdesc .= $PeerCfgOrigAddr{$peerid.'.'.$index}; 
             $customldesc = "Call Address: $PeerCfgOrigAddr{$peerid.'.'.$index}";
@@ -900,14 +1021,17 @@ sub custom_interfaces {
 
             push(@config,      '_dlci'           => $dlci,
                                'notes       '    => "$opts->{devicename} $dspname",
-                               '_dstemplate'             => 'frame-interface');
+                               '_dstemplate'             => 'frame-interface',
+                                'use'                 => $opts->{dtemplate});
 
             $match = 1;
 
         } else {
 
             push(@config, 
-		    '_dstemplate' => 'sub-interface' . $hc);
+		        '_dstemplate' => 'sub-interface' . $hc,
+                'use'                 => $opts->{dtemplate});
+
             $match = 1;
         }
         $opts->{nomtucheck} = 1;
@@ -923,7 +1047,9 @@ sub custom_interfaces {
         my ($nu) = $opts->{nustats} ? '-nu' : '';
 
         push(@config, 
-		    '_dstemplate' => 'cisco-interface' . $nu . $hc);
+		    '_dstemplate' => 'cisco-interface' . $nu . $hc,
+                    'use'                 => $opts->{dtemplate});
+
 	Info ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
 	if ($opts->{triggers}) {
 	    	push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus} . $nu . $hc);
@@ -989,3 +1115,4 @@ sub custom_files {
 }
 
 1;
+

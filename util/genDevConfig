@@ -226,7 +226,7 @@ my %opts = (
     'pingparents'        => 0,  # ping parents if defined by default
     'parents'            => '', # parent dependancies
     'noconcurrency'      => '0',
-    'maxoidrequest'      => '64',
+    'maxoidrequest'      => '16',
     'dtemplate'          => 'default-snmp-template', # default snmp template
     'ctemplates'         => '', # chassis templates added to discovered templates
     'htemplates'         => 'SnmpBooster-host', # host templates added to discovered templates
@@ -274,7 +274,7 @@ my %opts = (
     'req_getconfig' => 0,
     'getconfig'     => 0,
     'req_usev2c'    => 0,
-    'usev2c'        => 1,
+    'usev2c'        => 0,
     'usev2cbulk'    => 1,
     'req_voip'      => 0,
     'voip'          => 0,
@@ -303,7 +303,11 @@ my %opts = (
     'fanstatus'         => 0,
     'req_supplystatus'  => 1,
     'supplystatus'      => 0,
-    
+    'req_cbrqs'         => 0,
+    'cbqos'             => 0,
+    'req_noql'          => 0,
+    'noql'              => 0,
+
     ###
     ### Informational variables
     ###
@@ -388,6 +392,7 @@ GetOptions(
   "nodupwarn"             => \$opts{nodupwarn},
   "nounused"              => \&deprecatedoption,
   "collectoperdown"      => \$opts{collectoperdown},
+    "cbqos"        => \$opts{req_cbrqs},
   "vlans"                 => \$opts{req_vlans},
   "modular|mod"           => \$opts{req_modular},
   "ospf"                  => \$opts{ospfruns},
@@ -396,6 +401,7 @@ GetOptions(
   "triggerifstatus"      => sub {$opts{triggerifstatus} = '-st'},
   "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
   "nodns|n"               => \$opts{nodns},
+  "noql"               => \$opts{noql},
   "showunused"            => sub {$opts{nounused} = 0;},
   "nospeedcheck"          => \$opts{force_nospeedcheck},
   "nomtucheck"            => \$opts{force_nomtucheck},
@@ -409,7 +415,7 @@ GetOptions(
   "info|i=s"              => \%Common::global::service_vars,
   "ip=s"                  => \$opts{ip},
   "sortby=s"              => \$opts{sortby},
-  "rtragents!"            => \$opts{rtragents},
+  "rtragents"            => \$opts{rtragents},
   "nucast"                => \$opts{nucast},
   "gigonly"               => \$opts{gigonly},
   "core"                  => \$opts{coreint},
@@ -812,7 +818,7 @@ push (@options, '_MAXOIDREQUEST', $opts{maxoidrequest});
 
 my $displayname = $opts{devicename};
 $displayname = $opts{devicename} . " " . $opts{ip} if ($opts{devicename} ne $opts{ip});
-my $dstemplates;
+my $dstemplates = "";
 $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "");
 
 $opts{alias} = $opts{devicename};
@@ -823,6 +829,9 @@ $ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr
 $ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
 $ldesc .= "<BR>sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
 $ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
+
+push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if ($opts{class});
+push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-generic" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if (!$opts{class});
 
 if ($opts{parents} ne "") {
     push (@options, 'parents', $opts{parents});
@@ -1354,6 +1363,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 	    $ifHighSpeed{$index} > 0) ? int(1000000*$ifHighSpeed{$index}/$b) :
                 int($ifspeed{$index} / $b); # bits to bytes
     my $speed_str = ($speed) ? fmi($speed, $opts{units}) : '';
+    my $noql = ($opts{noql}) ? "-noql" : '';
+
 
     if (!$match) {
 
@@ -1365,10 +1376,10 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         if($opts{extendedint}) {
 	     push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
 	} else {
-             push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc);
+             push(@config, '_dstemplate' => 'standard-interface' . $noql . $nu . $hc);
 	}
 	if ($opts{triggers}) {
-	    push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $nu . $hc);
+	    push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $noql . $nu . $hc);
 	}
     } else {
 	
@@ -1379,7 +1390,9 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         #Info ("Trigger to apply : $trigger");
         #push(@config, '_triggergroup' => $trigger,) if ($trigger ne "");
     }
-    
+
+    # Strip out disallowed caracters from descriptions
+    $ifdescr{$index} =~ tr/\\\"//;
 
     ### Deal with non-unique interface descriptions by hard coding the
     ### instance number.  Append the numeric interface type to
@@ -1441,13 +1454,20 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 		    int($ifspeed{$index});
     
     my $maxoctets = defined($max) ? int($max/8) : undef;
-    if ($opts{show_max} == 1 && defined($max)) {
+    if ($opts{show_max} == 1 && defined($max) && ($hc eq '-hc')) {
 	push(@config,
         '_maximisedatasource'             => 'ifHCInOctets,ifHCOutOctets',
         '_maximisedatasourcevalue'             => "$max,$max",
         '_ds_max'             => $max,
         '_ds_max_octets'      => $maxoctets,
 	);
+    } elsif ($opts{show_max} == 1 && defined($max) && ($hc ne '-hc')) {
+        push(@config,
+            '_maximisedatasource'      => 'ifInOctets,ifOutOctets',
+            '_maximisedatasourcevalue' => "$max,$max",
+            '_ds_max'                  => $max,
+            '_ds_max_octets'           => $maxoctets,
+        );
     }
 
     ### Generate a comment containing the interface index and type.
