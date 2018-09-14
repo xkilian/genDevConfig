@@ -254,7 +254,7 @@ sub discover {
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
+        #$opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $chassispowersupply = 1;
         $chassisfilter = 1;
         $chassisfan = 0;
@@ -269,7 +269,7 @@ sub discover {
         $opts->{class} = 'aos';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
+        #$opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $chassispowersupply = 1;
         $chassisfilter = 1;
         $chassisfan = 0;
@@ -285,7 +285,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
+        #$opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $opts->{sysNotes} = 'Alcatel OS6450 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
@@ -300,7 +300,7 @@ sub discover {
         $opts->{class} = 'alcatel';
         $opts->{chassisinst} = "0";
         $opts->{dtemplate} = "default-snmp-template";
-        $opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
+        #$opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
         $opts->{sysNotes} = 'Alcatel OS6250 Chassis. General supervised statistics, alarms should be treated in priority, such as power failed powersupply.<BR>Powersupply notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5).';
         $chassispowersupply_alcatel = 1;
         $chassisfilter_alcatel = 1;
