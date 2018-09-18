@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.01;
+my $VERSION = 1.02;
 
 ### End package init
 
@@ -153,7 +153,7 @@ sub discover {
     $opts->{class} = 'PaloAlto';
     $opts->{chassisinst} = "0";
     $opts->{vendor_soft_ver} = get('productVersion');
-    $opts->{vendor_descr_oid} = "ifName";
+    $opts->{vendor_descr_oid} = "ifNamePaloAlto";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation};
 
     Debug("$module Model : " . $opts->{model});
