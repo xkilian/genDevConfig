@@ -53,6 +53,8 @@ Open the URL in firefox and download SNMP_Session. tar xvfz SNMP_Session-xxxx.ta
 Date::Parse        CPAN: by-authors/id/GBARR/TimeDate-*.tar.gz
 MD5                CPAN: by-authors/id/GAAS/Digest-MD5-*.tar.gz
 
+BER  Version 1.05
+
 Use CPAN to install the twp modules. Install cpan if you do not have it. 
 
 ### Step 0 
