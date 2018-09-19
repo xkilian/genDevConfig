@@ -48,14 +48,12 @@ Module             From
 --------------------------------------------------------------------
 SNMP_Session       http://code.google.com/p/snmp-session/downloads/detail?name=SNMP_Session-1.13.tar.gz&can=2&q=
 
-Open the URL in firefox and download SNMP_Session. tar xvfz SNMP_Session-xxxx.tar.gz, cd directory, perl Makefile.pl, make, make install.
+Open the URL in firefox and download SNMP_Session. tar xvfz SNMP_Session-xxxx.tar.gz, cd directory, perl Makefile.pl, make, make install. This package contains Perl 5 modules SNMP_Session.pm and BER.pm. Which should NOT be confused with Encoding::BER.
 
 Date::Parse        CPAN: by-authors/id/GBARR/TimeDate-*.tar.gz
 MD5                CPAN: by-authors/id/GAAS/Digest-MD5-*.tar.gz
 
-BER  Version 1.05
-
-Use CPAN to install the twp modules. Install cpan if you do not have it. 
+Use CPAN to install the LAST two modules. Install cpan if you do not have it. 
 
 ### Step 0 
 
