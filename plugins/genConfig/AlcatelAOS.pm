@@ -44,44 +44,49 @@ my %OIDS = (
 
       ### Alctale Omniswitch
       ### Undefined MIB
-      'OidSoftwareRev'                            => '1.3.6.1.2.1.47.1.1.1.1.10.1',
-      'OidSerialNum'                            => '1.3.6.1.2.1.47.1.1.1.1.11.1',
-      'OidchasEntPhysOperStatus'                     => '1.3.6.1.4.1.6486.801.1.1.1.1.1.1.1.2',
-      'OidAosalaOspfRouteNumber'                     => '1.3.6.1.4.1.6486.801.1.2.1.10.4.1.1.1.7.0',
-      'OS6900X20'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.1',
-      'OS6900X40'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.2',
-      'OS6900T20'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.3',
-      'OS6900T40'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.4',
-      'OS6900Q32'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.3',
-      'OS6900X72'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.4',
-      'OS686024'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.1',
-      'OS6860P24'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.2',
-      'OS686048'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.3',
-      'OS6860P48'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.4',
-      'OS6860E24'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.5',
-      'OS6860EP24'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.6',
-      'OS6860E48'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.7',
-      'OS6860EP48'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.8',
-      'OS6860EU28'                            => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.9',
-      'OS645024'                            => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.5',
-      'OS645024L'                            => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.10',
-      'OS6450P24L'                            => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.11',
-      'OS625024'                             => '1.3.6.1.4.1.6486.800.1.1.2.1.11.2.1',
-      'OS645048'                              => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.8',
-      'OS6450P48'                              => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.9',
-      'OS6450P48L'                              => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.13',
-      'virtualChassisRole'                    => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3',
-      'virtualChassisRole2'                    => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3.2',
-      'virtualChassisRole8'                    => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3.8.9',
-      'AlcatelddmTemperature'                  => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.1',
-      'AlcatelddmTxOutputPower'                => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.16',
-      'AosddmPortTemperature'                  => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.1',
-      'AosddmPortTxOutputPower'                => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.16',
-      'AosQoSAppliedRuleCondition'             => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.5',
-      'AosQoSAppliedRuleAction'                => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.6',
-      'AlcatelQoSAppliedRuleCondition'         => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.5',
-      'AlcatelQoSAppliedRuleAction'            => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.6',
-      'AlcatelSspHelperStatus'                 => '1.3.6.1.4.1.6486.801.1.2.1.24.1.1.9.1.0',
+    'OidSoftwareRev'                 => '1.3.6.1.2.1.47.1.1.1.1.10.1',
+    'OidSerialNum'                   => '1.3.6.1.2.1.47.1.1.1.1.11.1',
+    'OidchasEntPhysOperStatus'       => '1.3.6.1.4.1.6486.801.1.1.1.1.1.1.1.2',
+    'OidAosalaOspfRouteNumber'       => '1.3.6.1.4.1.6486.801.1.2.1.10.4.1.1.1.7.0',
+    'OS6900X20'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.1',
+    'OS6900X40'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.2',
+    'OS6900T20'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.3',
+    'OS6900T40'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.4',
+    'OS6900Q32'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.3',
+    'OS6900X72'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.4',
+    'OS686024'                       => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.1',
+    'OS6860P24'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.2',
+    'OS686048'                       => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.3',
+    'OS6860P48'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.4',
+    'OS6860E24'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.5',
+    'OS6860EP24'                     => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.6',
+    'OS6860E48'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.7',
+    'OS6860EP48'                     => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.8',
+    'OS6860EU28'                     => '1.3.6.1.4.1.6486.801.1.1.2.1.11.1.9',
+    'OS645024'                       => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.5',
+    'OS645024L'                      => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.10',
+    'OS6450P24L'                     => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.11',
+    'OS625024'                       => '1.3.6.1.4.1.6486.800.1.1.2.1.11.2.1',
+    'OS645048'                       => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.8',
+    'OS6450P48'                      => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.9',
+    'OS6450P48L'                     => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.13',
+    'virtualChassisRole'             => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3',
+    'virtualChassisRole2'            => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3.2',
+    'virtualChassisRole8'            => '1.3.6.1.4.1.6486.801.1.2.1.69.1.1.2.1.3.8.9',
+    'AlcatelddmTemperature'          => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.1',
+    'AlcatelddmTxOutputPower'        => '1.3.6.1.4.1.6486.800.1.2.1.5.1.1.2.5.1.16',
+    'AosddmPortTemperature'          => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.1',
+    'AosddmPortTxOutputPower'        => '1.3.6.1.4.1.6486.801.1.2.1.5.1.1.2.6.1.16',
+    'entPhysicalSerialNum'           => '1.3.6.1.2.1.47.1.1.1.1.11',
+    'entPhysicalModelName'           => '1.3.6.1.2.1.47.1.1.1.1.13',
+    'AosQoSAppliedRuleCondition'     => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.5',
+    'AosQoSAppliedRuleAction'        => '1.3.6.1.4.1.6486.801.1.2.1.22.1.1.2.1.6',
+    'AlcatelQoSAppliedRuleCondition' => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.5',
+    'AlcatelQoSAppliedRuleAction'    => '1.3.6.1.4.1.6486.800.1.2.1.22.1.1.2.1.6',
+    'AlcatelSspHelperStatus'         => '1.3.6.1.4.1.6486.801.1.2.1.24.1.1.9.1.0',
+    'PhysicalSFPType1'               => '1.3.6.1.2.1.47.1.1.1.1.13',
+    'PhysicalSFPType2'               => '1.3.6.1.2.1.47.1.1.1.1.12',
+    'FullIntefaceDescription'        => '1.3.6.1.2.1.47.1.1.1.1'
     );
 
 ###############################################################################
@@ -118,6 +123,13 @@ my @types = ( "$OIDS{'OS6900X20'}",
 ###############################################################################
 ### Private variables
 ###############################################################################
+
+my %SFPMap1;
+my %SFPMap2;
+my %GTable;
+my @SFPMap1Index;
+my @SFPMap2Index;
+
 
 my $snmp;
 my $chassispowersupply = 0;
@@ -240,7 +252,17 @@ sub discover {
     }
  
     Debug("Model : " . $opts->{model});
-    
+
+
+    %SFPMap1     =  gettable('PhysicalSFPType1');
+    %SFPMap2     =  gettable('PhysicalSFPType2');
+    %GTable      =  gettable('FullIntefaceDescription');
+
+    @SFPMap1Index = (keys %SFPMap1);
+    @SFPMap2Index = (keys %SFPMap2);
+    Debug("Loaded the SFP Interface and descriptions");
+
+
     # class is used for rancid integration
     # chassis type is used to map to a Shinken SNMPBooster DS template
     # trigger group is used to map to a Shinken SNMPBooster Trigger group (thresholds)
@@ -360,7 +382,11 @@ sub custom_targets {
     
     # Power Supply
     my %idtable;
-    
+
+    #Powersupply info
+    my %entPhysicalSerialNum = gettable('entPhysicalSerialNum');
+    my %entPhysicalModelName = gettable('entPhysicalModelName');
+
     # OSPF number of routes
     my $OspfRouteNumber;
     
@@ -427,10 +453,53 @@ sub custom_targets {
 
     }
     
-        ### Build powersupply status for AOS 7.x 8.x
+    ### Build powersupply status for AOS 7.x 8.x
     if ($chassispowersupply) {
-            $ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
-            $sdesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+        my @myarray = ();
+        #---------------------begin modification------------------
+        # 20-SEP-2019: Modified SFL (Felix Sidokhine)
+        # This is to get the power supply model and serial number in the chassis
+        my $header = "up=3,down=3,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
+
+        my %mydata = (
+            275,"S1PS1",
+            276,"S1PS2",
+            278,"S2PS1",
+            279,"S2PS2",
+            281,"S3PS1",
+            282,"S3PS2",
+            287,"S4PS1",
+            288,"S4PS2",
+            290,"S5PS1",
+            291,"S5PS2",
+            293,"S6PS1",
+            294,"S6PS2",
+            296,"S7P1",
+            297,"S7P2",
+            299,"S8P1",
+            300,"S8P2"
+        );
+        my @validIds = keys %mydata;
+        foreach  my $id (sort keys %entPhysicalSerialNum){
+            if($id ~~ @validIds) {
+                my $dinfo = $entPhysicalModelName{$id} ." (". $mydata{$id} .")" . " (S/N: " . $entPhysicalSerialNum{$id} .")";
+                push(@myarray,$dinfo);
+            }
+        }
+        my $i = 0;
+        $ldesc = "";
+        while(my $element = shift(@myarray)){
+            if($i == 0){
+                $ldesc = $ldesc . $header .$element;
+                $i=$i+1;
+            }
+            else {
+                $ldesc = $ldesc . "," . $element;
+            }
+        }
+        #--------------------end  modification-------------------
+            ##$ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            $sdesc = "Powersupply status";
             Debug ("Building chassis power supply target AOS 7.x...");
             
             my $dstemplate = "Alcatel-OS6860-Powersupply";
@@ -440,11 +509,11 @@ sub custom_targets {
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
                 'service_description' => "chassis.powersupply",
-                'notes'               => $ldesc,
+                'notes'               => $ldesc,  #Ajouter numero de serie
                 'display_name'        => $sdesc,
                 '_inst'               => 0,
                 '_display_order'              => $opts->{order},
-                '_dstemplate'                 => $dstemplate,
+                '_dstemplate'                 => $dstemplate, #modifier.
                 '_triggergroup'               => $triggertemplate,
                 'use'                 => $opts->{dtemplate},
             );
@@ -518,7 +587,7 @@ sub custom_targets {
     if ($chassisfilter){                                                                                                                                                                    
         foreach  my $id (keys %AosQoSAppliedRuleConditiontable) {                                                                                                                       
             # Skip it in case the power supply table is not supported                                                                                                                       
-            Info("id: " . $id);                                                                                                                                                             
+            #Info("id: " . $id);
             next if (!defined($AosQoSAppliedRuleConditiontable{$id}));                                                                                                                  
             # Customize the ID of the filter(s) you wish to supervise.                                                                                                                      
             next unless ($id eq "10.114.73.67.77.80.116.121.112.101.51");                                                                                                                   
@@ -593,6 +662,46 @@ sub custom_targets {
 # OUT: N/A
 #-------------------------------------------------------------------------------
 
+sub IdentifySFP {
+    # get total number of arguments passed.
+    my $inputdata = $_[0];
+    my @input =  split ' ' , $inputdata;
+    my @pieces = split /\// , pop @input;
+    my $realId = "";
+    my $i = 0;
+    while(my $element = shift(@pieces)){
+        if ($i == 0) {
+            $realId = $realId . $element;
+        }
+        if ($i == 1) {
+            $realId = $realId . "/SLOT-" . $element . " TRANSCEIVER-";
+        }
+        if ($i == 2) {
+            $realId = $realId . $element;
+        }
+        $i++;
+    }
+    #reverse look-up to fetch the real device ID from the table.
+    my $rid;
+    foreach  my $id (keys %GTable) {
+        if($GTable{$id} eq $realId){
+            $rid = $id;
+        }
+    }
+    #Info($rid);
+    $rid = "".$rid;
+    my @fields = split(/\./, $rid);
+    my $descfield = "";
+    if($fields[1] ~~ @SFPMap1Index){
+        $descfield = $SFPMap1{$fields[1]};
+    }
+    if($fields[1] ~~ @SFPMap2Index){
+        $descfield = $SFPMap2{$fields[1]};
+    }
+    $descfield =~ s/^\s+|\s+$//g;
+    return $descfield;
+}
+
 sub custom_interfaces {
     my ($self,$index,$data,$opts) = @_;
 
@@ -613,12 +722,25 @@ sub custom_interfaces {
     my $c          = $data->{c};
     my $target = $data->{target};
 
+
+    #my %SFPMap1     =  gettable('PhysicalSFPType1');
+    #my %SFPMap2     =  gettable('PhysicalSFPType2');
+    #my %lookUpTable = gettable('FullIntefaceDescription');
+
+    #foreach  my $id (keys %lookUpTable){
+    #    Info ($id . " - " . $lookUpTable{$id});
+    #}
+
+    #my @arr1 = (keys %SFPMap1);
+    #my @arr2 = (keys %SFPMap2);
+
     ###
     ### START DEVICE CUSTOM INTERFACE CONFIG SECTION
     ###
 
     # Add DDM statistics if required
-    
+
+
     CONDITION1:
     {
         if ($target =~ /Alcatel-Lucent_/) {
@@ -632,19 +754,22 @@ sub custom_interfaces {
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an alcatelddmDAC interface: " . $alcatelddmtxmtable{$index . ".1"});
                 Debug ("Found an alcatelddmDAC interface.temp:" . $alcatelddmtemperaturetable{$index . ".1"});
-
                 $match = 1;
             } elsif ($opts->{class} eq 'aos' && defined ($aosddmtxmtable{$index . ".1"}) && $aosddmtxmtable{$index . ".1"} eq -200 ) {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddmDAC');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an aosddmDAC interface.tx:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddmDAC interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
+                #Over-ride the notes to include the SFP type information
+                $intdescr{$index} = $intdescr{$index} . " (" . IdentifySFP($ifdescr{$index}) .")";
                 $match = 1;
             } elsif ($opts->{class} eq 'aos') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddm');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
                 Debug ("Found an aosddm interface.:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddm interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
+                #Over-ride the notes to include the SFP type information
+                $intdescr{$index} = $intdescr{$index} . "(". IdentifySFP($ifdescr{$index}) .")";
                 $match = 1;
             } elsif ($opts->{class} eq 'alcatel') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddm');
