@@ -17,6 +17,10 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+# To test this configuration use GenDev with the following params:
+#./genDevConfig --snmpv2c --community geist-avec-capteur-eau2 --nodns  127.0.0.1 --loglevel INFO
+#
+
 package GeistRSMini;
 
 use strict;
@@ -42,18 +46,21 @@ my $VERSION = 1.03;
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-      'productVersion' => '1.3.6.1.4.1.21239.2.1.2.0',
-      'rcRsMini'       => '1.3.6.1.4.1.21239.2',
+    'productVersion'            => '1.3.6.1.4.1.21239.2.1.2.0',
+    'rcRsMini'                  => '1.3.6.1.4.1.21239.2',
 
-      'OidtempSensorTempC' => '1.3.6.1.4.1.21239.2.4.1.5',
-      'OidclimateHumidity' => '1.3.6.1.4.1.21239.2.2.1.7',
-      'OidclimateAirflow'  => '1.3.6.1.4.1.21239.2.2.1.9',
+    'OidtempSensorTempC'        => '1.3.6.1.4.1.21239.2.4.1.5',
+    'OidclimateHumidity'        => '1.3.6.1.4.1.21239.2.2.1.7', #Not sure what this does or why this was here.
+    'OidclimateAirflow'         => '1.3.6.1.4.1.21239.2.2.1.9',
 
-      'OidairFlowSensorTempC'       => '1.3.6.1.4.1.21239.2.5.1.5',
-      'OidairFlowSensorFlow'        => '1.3.6.1.4.1.21239.2.5.1.7',
-      'OidairFlowSensorHumidity'    => '1.3.6.1.4.1.21239.2.5.1.8',
-      'OidairFlowSensorDewPointC'   => '1.3.6.1.4.1.21239.2.5.1.9',
+    'OidairFlowSensorTempC'     => '1.3.6.1.4.1.21239.2.5.1.5',
+    'OidairFlowSensorFlow'      => '1.3.6.1.4.1.21239.2.5.1.7',
+    'OidairFlowSensorHumidity'  => '1.3.6.1.4.1.21239.2.5.1.8',
+    'OidairFlowSensorDewPointC' => '1.3.6.1.4.1.21239.2.5.1.9',
 
+    'climateIO1'                => '1.3.6.1.4.1.21239.2.2.1.11',
+    'climateIO2'                => '1.3.6.1.4.1.21239.2.2.1.12',
+    'climateIO3'                => '1.3.6.1.4.1.21239.2.2.1.13'
     );
 
 ###############################################################################
@@ -189,7 +196,7 @@ sub custom_targets {
     $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "temperature_sensor_" . $id,
-               'notes'               => "Temperature sensor when in alarm, check for progression and raise an issue.",
+               'notes'               => "(Degrees Celsius) Temperature sensor when in alarm, check for progression and raise an issue.",
                'display_name'        => "Temperature sensor " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-sensor-temperature",
@@ -197,16 +204,15 @@ sub custom_targets {
                '_timeout'            => "15",
                'use'                 => $opts->{dtemplate},
             );
-
     }
-    
+
     foreach my $id (0..15) {
     	($idtableSH) = get("OidairFlowSensorHumidity.$id");
  	next if (!defined ($idtableSH));
     	$file->writetarget("service {", '',
                	'host_name'           => $opts->{devicename},
                	'service_description' => "airflow_humidity_" . $id,
-#               'notes'               => $ldesc,
+               'notes'               => "(Percentage)",
                'display_name'         => "Airflow humidity " . $id,
                '_inst'                => $id,
                '_dstemplate'          => "geist-airflow-humidity",
@@ -214,7 +220,6 @@ sub custom_targets {
               # '_triggergroup'       => "RSMini_Temp",
                'use'                  => $opts->{dtemplate},
             );
-
     }
     foreach my $id (0..15) {
     	($idtableSF) = get("OidairFlowSensorFlow.$id");
@@ -237,7 +242,7 @@ sub custom_targets {
     	 $file->writetarget("service {", '',
                'host_name'           => $opts->{devicename},
                'service_description' => "airflow_dewpoint_" . $id,
-               'notes'               => "Airflow sensor.",
+               'notes'               => "(Degrees Celsius) Airflow sensor.",
                'display_name'        => "Airflow Dew Point " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-dewpoint",
@@ -261,6 +266,36 @@ sub custom_targets {
                'use'                 => $opts->{dtemplate},
             );
     }
+
+    foreach my $id (11..13){
+        my $state;
+        if($id == 11) {
+            my %map = gettable('climateIO1');
+            $state = $map{1};
+        }
+        if($id == 12) {
+            my %map = gettable('climateIO2');
+            $state = $map{1};
+        }
+        if($id == 13) {
+            my %map = gettable('climateIO3');
+            $state = $map{1};
+        }
+        if($state != 99){
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description' => "External analog humidity sensor (climateIO" . ($id % 10) . ")",
+                'notes'               => "Externally attached analog humidity sensor",
+                'display_name'        => "Humidity status " . $id,
+                '_inst'               => $id,
+                '_dstemplate'         => "geist-analog-external-humidity",
+                '_timeout'            => "15",
+                #'_triggergroup'       => "RSMini_Temp",
+                'use'                 => $opts->{dtemplate},
+            );
+        }
+    }
+
 
 
     ###
