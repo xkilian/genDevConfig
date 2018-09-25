@@ -45,7 +45,6 @@ my $VERSION = 1.03;
 # the OIDS should only be those necessary for index mapping or
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
-
     'productVersion'            => '1.3.6.1.4.1.21239.2.1.2.0',
     'rcRsMini'                  => '1.3.6.1.4.1.21239.2',
 
@@ -60,8 +59,19 @@ my %OIDS = (
 
     'climateIO1'                => '1.3.6.1.4.1.21239.2.2.1.11',
     'climateIO2'                => '1.3.6.1.4.1.21239.2.2.1.12',
-    'climateIO3'                => '1.3.6.1.4.1.21239.2.2.1.13'
+    'climateIO3'                => '1.3.6.1.4.1.21239.2.2.1.13',
+
+    #This section concerns the Geist Watchdog 15 devices.
+    'rcW15productVersion'       => '1.3.6.1.4.1.21239.5.1.1.2.0',
+    'rcW15connectorBase'        => '1.3.6.1.4.1.21239.5.1',
+    'rcW15'                     => '1.3.6.1.4.1.21239.5',
+    'rcW15TempSensorSerial'     => '1.3.6.1.4.1.21239.5.1.4.1.2',
+    'rcW15TempSensorStatus'     => '1.3.6.1.4.1.21239.5.1.4.1.4.1',
+    'rcW15TempReading'          => '1.3.6.1.4.1.21239.5.1.4.1.5',
+    'rcW15TempUnits'            => '1.3.6.1.4.1.21239.5.1.1.7.0',
+    'rcW15tempSensorGroup'      => '1.3.6.1.4.1.21239.5.1'
     );
+
 
 ###############################################################################
 ## These are device types we can handle in this plugin
@@ -69,6 +79,7 @@ my %OIDS = (
 ## returned by the devices. The name is a regular expression.
 ################################################################################
 my @types = ( "$OIDS{'rcRsMini'}",
+              "$OIDS{'rcW15'}"
             );
 
 
@@ -267,8 +278,11 @@ sub custom_targets {
             );
     }
 
+    #Here we have an override for the case when we have the new WatchDog 15.
+
+
     foreach my $id (11..13){
-        my $state;
+        my $state = -1;
         if($id == 11) {
             my %map = gettable('climateIO1');
             $state = $map{1};
@@ -281,18 +295,87 @@ sub custom_targets {
             my %map = gettable('climateIO3');
             $state = $map{1};
         }
-        if($state != 99){
+        if(defined($state)){
+            if ($state != 99) {
+                $file->writetarget("service {", '',
+                    'host_name'           => $opts->{devicename},
+                    'service_description' => "External analog humidity sensor (climateIO" . ($id % 10) . ")",
+                    'notes'               => "Externally attached analog humidity sensor",
+                    'display_name'        => "Humidity status " . $id,
+                    '_inst'               => $id,
+                    '_dstemplate'         => "geist-analog-external-humidity",
+                    '_timeout'            => "15",
+                    #'_triggergroup'       => "RSMini_Temp",
+                    'use'                 => $opts->{dtemplate},
+                );
+            }
+        }
+    }
+
+
+    #We add a custom service in case we are in the case of the WatchDog 15
+    if($opts->{model} eq 'Watchdog 15'){
+        #Get the temperature unit.
+        my $unit = get('rcW15TempUnits');
+        if($unit eq '1'){
+            $unit = 'C';
+        }
+        else{
+            $unit = 'F';
+        }
+
+
+        my @instances;
+        my %sensors = gettable('rcW15tempSensorGroup');
+        foreach my $idx (keys %sensors){
+            if(defined($idx)) {
+                my @arr = (split /\./, $idx);
+                if (scalar @arr == 4) {
+                    if( !(grep (/^@arr[0]$/, @instances))){
+                        push(@instances,@arr[0]);
+                    }
+                }
+            }
+        }
+
+        Debug(@instances);
+        Debug("Discovered the following instances: ". length @instances);
+
+        my %tbl = gettable('rcW15connectorBase');
+
+        #Read the first number from the OID:
+        my @sortedKeys = sort (keys % tbl);
+        foreach my $instance (@instances){
+            foreach my $idx (@sortedKeys)
+            {
+                my $instaceId = substr($idx,0,1);
+                #This means this is really a temperature sensor.
+                if($instaceId == $instance){
+                    Debug("ID=".$idx);
+                    Debug("Data=".$tbl{$idx});
+                }
+            }
+            #Now we write these as services into the file.
+            my $auxdesc = '';
+            if($instance eq '2'){
+                $auxdesc = "Internal temperature sensor"
+            }
+            else{
+                $auxdesc = "External temperature sensor";
+            }
+
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "External analog humidity sensor (climateIO" . ($id % 10) . ")",
-                'notes'               => "Externally attached analog humidity sensor",
-                'display_name'        => "Humidity status " . $id,
-                '_inst'               => $id,
-                '_dstemplate'         => "geist-analog-external-humidity",
+                'service_description' => $auxdesc,
+                'notes'               => "(1/10 Degrees " .$unit. ") Description: ". $tbl{$instance.'.1.3.1'} . " (Serial number: " . $tbl{$instance.'.1.2.1'} . ")",
+                'display_name'        => $auxdesc,
+                '_inst'               => $instance,
+                '_dstemplate'         => "geist-new-external-temperature",
                 '_timeout'            => "15",
                 #'_triggergroup'       => "RSMini_Temp",
                 'use'                 => $opts->{dtemplate},
             );
+
         }
     }
 
