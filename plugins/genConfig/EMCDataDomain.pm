@@ -159,8 +159,8 @@ sub discover {
     
     $opts->{usev2c} = 1;
     #TODO: dtemplate should probably also be different.
-    $opts->{dtemplate} = "generic-co-env-mdg-service";
-    $opts->{htemplates} = "SnmpBooster-host-MDG";
+    $opts->{dtemplate} = "default-snmp-template";
+    $opts->{htemplates} = "SnmpBooster-host";
     return;
 }
 
@@ -233,7 +233,7 @@ sub custom_targets {
             my $displayName = "Group ".$idx."-Supply ".$_;
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "Power supply group ".$idx,
+                'service_description' => $displayName,
                 'notes'               => $ldesc." ".$auxdesc,
                 'display_name'        => $displayName,
                 '_inst'               => $idx.".".$_,
@@ -270,7 +270,7 @@ sub custom_targets {
             my $displayName = "Group ".$idx."-Temperature Monitor ".$_;
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "Temperature group ".$idx,
+                'service_description' => $displayName,
                 'notes'               => $ldesc." ".$auxdesc,
                 'display_name'        => $displayName,
                 '_inst'               => $idx.".".$_,
@@ -306,7 +306,7 @@ sub custom_targets {
             my $displayName = "Group ".$idx."-Fan ".$_;
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "Fan group ".$idx,
+                'service_description' => $displayName,
                 'notes'               => $ldesc." ".$auxdesc,
                 'display_name'        => $displayName,
                 '_inst'               => $idx.".".$_,
@@ -344,7 +344,7 @@ sub custom_targets {
             my $displayName = "Group ".$idx."-Disk ".$_;
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
-                'service_description' => "Disk group ".$idx,
+                'service_description' => $displayName,
                 'notes'               => $ldesc." ".$auxdesc,
                 'display_name'        => $displayName,
                 '_inst'               => $idx.".".$_,
