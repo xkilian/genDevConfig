@@ -761,7 +761,9 @@ sub custom_interfaces {
                 Debug ("Found an aosddmDAC interface.tx:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddmDAC interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
                 #Over-ride the notes to include the SFP type information
-                $intdescr{$index} = $intdescr{$index} . " (" . IdentifySFP($ifdescr{$index}) .")";
+                if( defined($intdescr{$index}) && defined($ifdescr{$index})){
+                    $intdescr{$index} = $intdescr{$index} . " (" . IdentifySFP($ifdescr{$index}) . ")";
+                }
                 $match = 1;
             } elsif ($opts->{class} eq 'aos') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddm');
@@ -769,7 +771,9 @@ sub custom_interfaces {
                 Debug ("Found an aosddm interface.:" . $aosddmtxmtable{$index . ".1"});
                 Debug ("Found an aosddm interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
                 #Over-ride the notes to include the SFP type information
-                $intdescr{$index} = $intdescr{$index} . "(". IdentifySFP($ifdescr{$index}) .")";
+                if( defined($intdescr{$index}) && defined($ifdescr{$index})){
+                    $intdescr{$index} = $intdescr{$index} . "(" . IdentifySFP($ifdescr{$index}) . ")";
+                }
                 $match = 1;
             } elsif ($opts->{class} eq 'alcatel') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddm');
