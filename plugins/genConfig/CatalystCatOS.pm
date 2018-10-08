@@ -163,47 +163,44 @@ sub custom_targets {
     my %iftype     = %{$data->{iftype}};
     my %ifmtu      = %{$data->{ifmtu}};
     my %slotPortMapping   = %{$data->{slotPortMapping}};
-    my %slotPortList      = %{$data->{slotPortList}};
-    my %slotNameList      = %{$data->{slotNameList}};
-    my %slotList          = %{$data->{slotList}};
 
     ###
     ### DEVICE CUSTOM CONFIG SECTION
     ###
 
     ### Build a Slot/Port Mapping that is vendor independant
-
-    my %portifindex = reverse gettable('portIfIndex');
-
-    my %portAdminSpeed = gettable('portAdminSpeed');
-
-    my %portDuplex = gettable('portDuplex');
-
-    foreach my $index (keys %portifindex) {
-        ### This is "module.port".
-        my ($s, $p) = split (/\./,$portifindex{$index});
-        ### Map the port/slot to standard format slot/port
-        $slotPortMapping{$index} = "$s/$p";
-        ### Rename the interface description to something useful
-        $ifdescr{$index} = "port$s\_$p";
-
-	Debug("XXX: $index $portifindex{$index} ");
-	
-	Debug("XXX: Admin Speed $portAdminSpeed{$portifindex{$index}}");
-	Debug("XXX: Duplex $portDuplex{$portifindex{$index}}");
-
-        ### Build a mapping between the portName and the ifIndex index.
-        $intdescr{$index} = $intdescr{$portifindex{$index}};
-        $intdescr{$index} .= "<BR>Admin Speed $SpeedTable{$portAdminSpeed{$portifindex{$index}}}<BR>Duplex $DuplexTable[$portDuplex{$portifindex{$index}}-1]($portDuplex{$portifindex{$index}})<BR>";
-        ### Build a mapping between the ifDescr and its associated Slot.
-	Debug("XXX: \$slotPortList{$ifdescr{$index}} = $s;");
-        $slotPortList{$ifdescr{$index}} = $s;
-        ### Build a mapping between the Slot number and its name.
-	Debug(qq(XXX: \$slotNameList{$s} = "Slot_$s";));
-        $slotNameList{$s} = "Slot_$s";
-        ### Build a list of existing slots.
-        $slotList{$s}++;
-    }
+    #
+    #my %portifindex = reverse gettable('portIfIndex');
+    #
+    #my %portAdminSpeed = gettable('portAdminSpeed');
+    #
+    #my %portDuplex = gettable('portDuplex');
+    #
+    #foreach my $index (keys %portifindex) {
+    #    ### This is "module.port".
+    #    my ($s, $p) = split (/\./,$portifindex{$index});
+    #    ### Map the port/slot to standard format slot/port
+    #    $slotPortMapping{$index} = "$s/$p";
+    #    ### Rename the interface description to something useful
+    #    $ifdescr{$index} = "port$s\_$p";
+    #
+#	Debug("XXX: $index $portifindex{$index} ");
+#	
+#	Debug("XXX: Admin Speed $portAdminSpeed{$portifindex{$index}}");
+#	Debug("XXX: Duplex $portDuplex{$portifindex{$index}}");
+    #
+    #    ### Build a mapping between the portName and the ifIndex index.
+    #    $intdescr{$index} = $intdescr{$portifindex{$index}};
+    #    $intdescr{$index} .= "<BR>Admin Speed $SpeedTable{$portAdminSpeed{$portifindex{$index}}}<BR>Duplex $DuplexTable[$portDuplex{$portifindex{$index}}-1]($portDuplex{$portifindex{$index}})<BR>";
+    #    ### Build a mapping between the ifDescr and its associated Slot.
+#	Debug("XXX: \$slotPortList{$ifdescr{$index}} = $s;");
+#        $slotPortList{$ifdescr{$index}} = $s;
+#        ### Build a mapping between the Slot number and its name.
+#	Debug(qq(XXX: \$slotNameList{$s} = "Slot_$s";));
+#        $slotNameList{$s} = "Slot_$s";
+#        ### Build a list of existing slots.
+#        $slotList{$s}++;
+#    }
 
     ### Try and get layer 2 switch engine stats.
 
@@ -287,9 +284,6 @@ sub custom_targets {
     %{$data->{iftype}} = %iftype;
     %{$data->{ifmtu}} = %ifmtu;
     %{$data->{slotPortMapping}} = %slotPortMapping;
-    %{$data->{slotPortList}}    = %slotPortList;
-    %{$data->{slotNameList}}    = %slotNameList;
-    %{$data->{slotList}}        = %slotList;
     return;
 }
 

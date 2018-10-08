@@ -104,6 +104,10 @@ sub version {
 
 my @DONTCOLLECT = (1, 18, 19, 24, 30, 37, 53, 59, 60, 61, 63, 74, 75, 76, 81, 94, 124, 134, 135, 136, 161, 162);
 
+# List of interfaces that will be exclusively collected. 
+# Any other interfaces will NOT be collected.
+
+my @COLLECTLIST=();
 
 # Exceptions to the above.
 # 1: Cisco tunnel interfaces return type 0
@@ -180,8 +184,8 @@ my($script) = $0 =~ /\/([^\/]+)$/;
 $script = $VERSION if !($script);
 
 my $file;
-
-my %collectable = ();
+my %slotPortMapping = ();
+my @collectableuplinks = ();
 my %triggergroup = (
     'access'            => 'interface',
     'distribution'      => 'interface',
@@ -222,6 +226,7 @@ my %opts = (
     'coreint'           => 0,
     'nucast'           => 0,
     'gigonly'           => 0,
+    'access'           => 0,
     'triggers'          => 0,
     'triggerifstatus'  => '',
     'triggertemplateclass'       => 'access',
@@ -272,10 +277,9 @@ my %opts = (
     'alcatelbox'      => 0,
     'req_contivitytunnels' => 1,
     'contivitytunnels' => 0,
-    'req_ciscoslotport' => 1,
-    'ciscoslotport' => 0,
     'req_getconfig' => 0,
     'getconfig'     => 0,
+    'req_modular'    => 0,
     'req_usev2c'    => 0,
     'usev2c'        => 0,
     'usev2cbulk'    => 1,
@@ -295,8 +299,6 @@ my %opts = (
     'vipstats'      => 0,
     'req_vlans'     => 0,
     'vlans'         => 0,
-    'req_modular'   => 0,
-    'modular'       => 0,  ### Create a hierarchical output for chassis based devices
     'req_ospfruns'  => 1,
     'ospfruns'      => 0,
     'req_mcastroutes'  => 0,
@@ -394,23 +396,24 @@ GetOptions(
   "namedonly"             => \$opts{req_namedonly},
   "nodupwarn"             => \$opts{nodupwarn},
   "nounused"              => \&deprecatedoption,
-  "collectoperdown"      => \$opts{collectoperdown},
-    "cbqos"        => \$opts{req_cbrqs},
+  "collectoperdown"       => \$opts{collectoperdown},
+  "cbqos"                 => \$opts{req_cbrqs},
   "vlans"                 => \$opts{req_vlans},
-  "modular|mod"           => \$opts{req_modular},
   "ospf"                  => \$opts{ospfruns},
   "mcast"                 => \$opts{mcastroutes},
-  "triggers"            => \$opts{triggers},
-  "triggerifstatus"      => sub {$opts{triggerifstatus} = '-st'},
+  "modular"                 => \$opts{req_modular},
+  "triggers"              => \$opts{triggers},
+  "triggerifstatus"       => sub {$opts{triggerifstatus} = '-st'},
   "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
   "nodns|n"               => \$opts{nodns},
-  "noql"               => \$opts{noql},
+  "noql"                  => \$opts{noql},
   "showunused"            => sub {$opts{nounused} = 0;},
   "nospeedcheck"          => \$opts{force_nospeedcheck},
   "nomtucheck"            => \$opts{force_nomtucheck},
   "outputdir|o=s"         => \&setOutputDir,
   "parents=s"             => \&parentlist,
   "ports|p=s"             => \&portlist,
+  "portspulinks=s"        => \&portuplinklist,
   "ctemplates=s"          => \&template,
 #  "itemplates=s"         => \&template,
   "htemplates=s"          => \&template,
@@ -418,16 +421,17 @@ GetOptions(
   "info|i=s"              => \%Common::global::service_vars,
   "ip=s"                  => \$opts{ip},
   "sortby=s"              => \$opts{sortby},
-  "rtragents"            => \$opts{rtragents},
+  "rtragents"             => \$opts{rtragents},
   "nucast"                => \$opts{nucast},
   "gigonly"               => \$opts{gigonly},
+  "access"                => \$opts{access},
   "core"                  => \$opts{coreint},
   "version"               => \&version,
   "loglevel=s"            => \$opts{logLevel},
   "voip"                  => \$opts{req_voip},
   "snmpv2c|2"             => \$opts{req_usev2c},
   "forceplugin=s"         => \$opts{plugin},
-  "staticinstance"           => \$opts{staticinstance},
+  "staticinstance"        => \$opts{staticinstance},
 #  "P:s"                   => \&pluginflags,
 );
 
@@ -751,10 +755,6 @@ if ($opts{chassisstats} && $opts{chassisdependency}) {
 ### Create vendor specific Port/Slot Mapping variables
 
 # Global Mapping Hash
-my %slotPortMapping;
-my %slotPortList;
-my %slotNameList;
-my %slotList;
 
 ### MIB-II Switch traffic statistics
 
@@ -941,10 +941,7 @@ foreach my $plugin (@plugins) {
                 'intdescr'   => \%intdescr,
                 'iftype'     => \%iftype,
                 'ifmtu'      => \%ifmtu,
-                'slotPortMapping'   => \%slotPortMapping,
-                'slotPortList'      => \%slotPortList,
-                'slotNameList'      => \%slotNameList,
-                'slotList'          => \%slotList
+		'slotPortMapping' => \%slotPortMapping,
     );
 
     $plugin->custom_targets(\%data,\%opts);
@@ -954,10 +951,7 @@ foreach my $plugin (@plugins) {
     %intdescr   = %{$data{intdescr}};
     %iftype     = %{$data{iftype}};
     %ifmtu      = %{$data{ifmtu}};
-    %slotPortMapping   = %{$data{slotPortMapping}};
-    %slotPortList      = %{$data{slotPortList}};
-    %slotNameList      = %{$data{slotNameList}};
-    %slotList          = %{$data{slotList}}
+    %slotPortMapping = %{$data{slotPortMapping}};
 }
 
 ### Build Altiga VPN statistics
@@ -1096,20 +1090,6 @@ my %collect;
 
 foreach $index (keys %ifdescr) {
 
-    ## Slot/Port Collection Mapping. If a slot/port is in the user defined
-    ## %collectable hash then enable it in the %collect hash. If it is not defined
-    ## In the %collectable hash, then disable it in the %collect hash. The %collect
-    ## hash is only a mapping between the %collectable hash and the %ifIndex global
-    ## interfaces reference table.
-
-    if ( !$opts{collectall} ) {
-        if (defined $slotPortMapping{$index}) {
-        $collect{$index} = 1 if $collectable{$slotPortMapping{$index}};
-        } else {
-            $collect{$index} = 0;
-        }
-    }
-
     ### Figure out whether the interface description is unique or not.
     ### (if not, we'll add explicit inst numbers later...)
 
@@ -1143,23 +1123,6 @@ EOD
 #    </TABLE>
 #EOD
 }
-Info ("......................... [DONE]");
-Info ("Processing Pre-Process modular output");
-
-if ($opts{req_modular}) {
-    $slotList{chassis} = $file;
-    foreach my $slot (sort keys %slotList) {
-        next if ($slot eq 'chassis');
-        Debug(" modular:\$slot = $slot");
-        Debug(" modular:\$opts{devicename} = $opts{devicename}");
-        Debug(" modular:\$slotNameList{$slot} = $slotNameList{$slot}");
-        my $_dir  = subdir($opts{outputdir} . "$opts{devicename}/$slotNameList{$slot}", $opts{lowercase});
-        my $_file = new genConfig::File("$_dir/ports");
-        $slotList{$slot} = $_file;
-    }
-    $opts{modular} = 1;
-}
-
 Info ("......................... [DONE]");
 
 ### Write out the interface targets.
@@ -1198,26 +1161,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $opts{extendedint} = 0;
     }
 
-
-    # Assign the interface to the right subdir/target file for --modular
-    # devices.
-    if ($opts{modular}) {
-
-        ### Debugging information
-        Debug(" Modular:\$index = $index");
-        Debug(" Modular:\$ifdescr{$index} = $ifdescr{$index}");
-        Debug(" Modular:\$slotPortList{$ifdescr{$index}} = $slotPortList{$ifdescr{$index}}") if exists $slotPortList{$ifdescr{$index}};
-        Debug(" Modular:\$slotList{$slotPortList{$ifdescr{$index}}} = $slotList{$slotPortList{$ifdescr{$index}}}") if exists $slotPortList{$ifdescr{$index}};
-	### End Debugging information
-
-        my $_file = $slotList{$slotPortList{$ifdescr{$index}}} if exists $slotPortList{$ifdescr{$index}};
-        if ($_file) {
-          $file = $_file;
-        } else {
-          $file = $slotList{chassis};
-        }
-    }
-    
     ### Set the snmpv2c identifier for interfaces that support HC counters
     ### Support is defined as:
     ###  - Global snmpv2c $opts{usev2c} variable is non-zero
@@ -1262,19 +1205,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     
     my $b = ($opts{units} eq "bytes") ? 8 : 1;
     
-    ###
-    ### Add slot/port mapping if present and only if it is required by
-    ### the device. This would mean it has a special inst mapping
-    ### based on the slot/port mapping instance definition
-    ###
-
-    if (defined $slotPortMapping{$index} && $opts{inst}) {
-        my ($slot, $port) = split (/\//,$slotPortMapping{$index});
-        push(@config, '_module-number' => $slot,
-                      '_port-number'   => $port,
-                      '_inst'          => $opts{inst});
-    }
-
     ###
     ### Pre-process intdescr{} to remove characters that may cause
     ### problems in config or during HTML processing.
@@ -1321,7 +1251,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
                     'ifmtu'    => \%ifmtu,
                     'ifoperstatus'    => \%ifoperstatus,
                     'ifadminstatus'   => \%ifadminstatus,
-                    'slotPortMapping' => \%slotPortMapping,
+		    'slotPortMapping' => \%slotPortMapping,
                     'config'   => \@config,
                     'hc'       => $hc,
                     'nu'       => $nu,
@@ -1346,7 +1276,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         %ifmtu      = %{$data{ifmtu}};
         %ifoperstatus      = %{$data{ifoperstatus}},
         %ifadminstatus     = %{$data{ifadminstatus}},
-        %slotPortMapping   = %{$data{slotPortMapping}};
+	%slotPortMapping   = %{$data{slotPortMapping}},
         @config     = @{$data{config}};
         $hc         = $data{hc};
         $nu         = $data{nu};
@@ -1374,7 +1304,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         # If there is no special interface match
         # include the default type of standard-interface for each target
 	# unless extended mib-ii are supported.
-	
+        # FIXME Add processing for access interfaces that have sdesc variables that are not part of the uplink list	
 
         if($opts{extendedint}) {
 	     push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
@@ -1407,9 +1337,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $ifdescr{$index} .= " I$index";
 	$opts{staticinstance} = 1;
 
-        #push(@config,
-        #     'display_name' => "$target <FONT COLOR=RED>*</FONT>"
-        #     ) if (!$opts{nodupwarn});
     }
 
     ### Build the interface target description strings and add them in the config.
@@ -1534,7 +1461,11 @@ $c="# ";
         Debug (" Invalid or dynamic interface");
     } elsif ($opts{logLevel} eq 'debug') {
         Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " Speed: $speed_str mtu: $ifmtu{$index} OK");
-    }
+    } elsif (!grep(/^$ldesc$/,@COLLECTLIST) && !override($index)) {
+        $header .= "\n### - Interface that is not collected based on a description command-line filter.\n";
+        $c="# ";
+        Debug (" Speed: $speed_str mtu: $ifmtu{$index} ldesc: $ldesc not in portsuplinks list");
+	 
 
     ### Skip all targets that are not used. To show all interfaces
     ### use the --showunused option in calling the script.
@@ -1575,8 +1506,10 @@ $c="# ";
         }
         Debug " Config: @config";
 
-
-	push(@config, 'service_description'  => "if." . $target);
+        my $ifprefix = "if.";
+	ifprefix = "if_5min." if ((scalar @collectableuplinks > 0) && !grep(/^$ldesc$/,@collectableuplinks) && !override($index)) {
+ 
+	push(@config, 'service_description'  => $ifprefix . $target);
 	
 	if ($opts{staticinstance}) {
 	    unshift (@config, '_inst' => $index);
@@ -1587,6 +1520,7 @@ $c="# ";
 	        
 	unshift(@config,
         'host_name'            => $opts{devicename},
+	$opts{dtemplate} .= "_5min" if ((scalar @collectableuplinks > 0) && !grep(/^$ldesc$/,@collectableuplinks) && !override($index)) {
         'use'              => $opts{dtemplate});
 
         $file->writetarget("service {", $c, @config);
@@ -1595,13 +1529,8 @@ $c="# ";
 Info ("......................... [DONE]");
 Info ("Closing filehandles                 ");
 
-if ($opts{modular}) {
-    for (keys %slotList) {
-        $slotList{$_}->close();
-    }
-} else {
-    $file->close();
-}
+$file->close();
+
 Info ("......................... [DONE]");
 
 exit;
@@ -1652,44 +1581,19 @@ sub override {
 
 ###############################################################################
 
-sub portlist2array {
+sub portlist2list {
     my($plist) = @_;
 
-    my($chunk, $port, %plist);
+    my @plist();
 
     if ($plist eq "none") {
-        return %plist;
+        return @plist;
     }
    
     foreach $chunk (split(/,/, $plist)) {
-        if ($chunk =~ /^[a-zA-Z]+\d+$/) {
-            $plist{$chunk} = 1;
-            next;
-        }
-        my($module,$ports) = split(/\//,$chunk,2);
-
-        if (($module !~ /^\d+$/) || ($module !~ /^[a-zA-Z]+\d+$/)) {
-            Warn ("Invalid port specification: $chunk");
-            next;
-        }
-
-        if ($ports eq "*") {
-            foreach $port (1..48) {
-                $plist{"$module/$port"} = 1;
-            }
-        } elsif ($ports =~ /^(\d+)-(\d+)$/) {
-            foreach $port ($1..$2) {
-                $plist{"$module/$port"} = 1;
-            }
-        } elsif ($ports =~ /^\d+$/) {
-            $plist{"$module/$ports"} = 1;
-        } elsif ($ports =~ /^\d+\/\d+$/) {
-            $plist{"$module/$ports"} = 1;
-        } else {
-            Warn ("Invalid port specification: $chunk\n");
-        }
+            push (@plist,$chunk);
     }
-    return %plist;
+    return @plist;
 }
 
 ###############################################################################
@@ -1720,7 +1624,13 @@ sub deprecatedoption {
 }
 sub portlist {
     my($opt,$value) = @_;
-    %collectable = portlist2array($value);
+    @COLLECTLIST = portlist2list($value);
+    $opts{collectall} = 0;
+}
+
+sub portuplinklist {
+    my($opt,$value) = @_;
+    @collectableuplinks = portlist2list($value);
     $opts{collectall} = 0;
 }
 
@@ -1890,14 +1800,6 @@ Default level is "warn".
 
 Force all subdirectory names to lowercase.
 
-=item B<--modular>
-
-UNSUPPORTED WITH SHINKEN
-Treat the device as a modular device; that is, generate subdirectories for each
-module and place that module's interfaces or ports inside. Note that not
-including this option when processing a modular device will work just fine.
-You just won't get the hierarchical layout of the interfaces.
-
 =item B<-m>, B<--triggers>
 
 Enable threshold monitoring on the target.
@@ -1961,9 +1863,14 @@ This is a special case of the "-P <option>" syntax.
 
 =item B<-p <portlist>>, B<--ports <portlist>>
 
-Collect data for the listed ports only. Do not forget to double quote the list. This feature is only available for CiscoIOS and CatOS devices that support the OLD-CHASSIS-MIB. Matching is case sensitive.
+Collect data for the listed ports only. Do not forget to double quote the list. This feature will match against the data found in the info variable in the UI or Shinken. Matching is case sensitive.
+Example to get all ports with a description of XFI or uplink : --ports "uplink,XFI"
 
-Example: --ports "0/*,1/5-7,4/6,FastEthernet0/*,FastEthernet2"
+=item B<--portsuplinks <portlist>>
+
+Changes the interface collection interval to 5 minutes, except for the listed ports. The listed ports will be collected with triggers and default collection interval. All interfaces collected with 5 minutes intervals will also have a different interface name, if_5min. , instead of, if. , for regex matching with timeseries database (Graphite). Do not forget to double quote the list.  Matching is case sensitive. This would be typically used to collect access switches.
+
+Example: --portsuplinks "SuperUplink,Stacking,XFI"
 
 =item B<--forceplugin <name>>
 

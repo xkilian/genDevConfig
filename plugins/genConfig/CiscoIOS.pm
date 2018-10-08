@@ -442,55 +442,52 @@ sub custom_targets {
     my %iftype     = %{$data->{iftype}};
     my %ifmtu      = %{$data->{ifmtu}};
     my %slotPortMapping   = %{$data->{slotPortMapping}};
-    my %slotPortList      = %{$data->{slotPortList}};
-    my %slotNameList      = %{$data->{slotNameList}};
-    my %slotList          = %{$data->{slotList}};
     my $file = $opts->{file};
 
     ###
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
 
-    ### Cisco Specific Slot/Port mapping tables
-
-    my %cardIfSlotNumber;
-    my %cardIfPortNumber;
-    if ($opts->{ciscoslotport}) {
-        %cardIfSlotNumber = gettable('cardIfSlotNumber');
-        %cardIfPortNumber = gettable('cardIfPortNumber');
-
-        # Build a Cisco specific Slot/Port Mapping using deprecated MIB
-        foreach my $index (keys %cardIfSlotNumber) {
-            if (defined($cardIfPortNumber{$index})){
-            next if $cardIfSlotNumber{$index} eq "-1"; # Bug fix for invalid slots numbers
-                $slotPortMapping{$index} = "$cardIfSlotNumber{$index}/$cardIfPortNumber{$index}";
-            } else {
-		$slotPortMapping{$index} = "$cardIfSlotNumber{$index}/0";
-            }
-        }
-    }
-    # Build generic two level Slot/Port mapping for Cisco devices.
-    foreach my $index (keys %ifdescr) {
-        if ($ifdescr{$index} =~ /([a-zA-Z]+)(\d+)$/) {
-            next if (%cardIfSlotNumber && %cardIfPortNumber);
-            ### Fudge the slot/port mapping to the ifdescr for Cisco devices
-            $slotPortMapping{$index} = "$1$2";
-        }
-        next unless $ifdescr{$index} =~ m(([a-zA-Z]+)(\d+)/(\d+)(/?)(\d*));
-        ### Build a mapping between the ifDescr and its associated Slot.
-        $slotPortList{$ifdescr{$index}} = $2;
-        ### Build a mapping between the Slot number and its name.
-        $slotNameList{$2} = "$1_$2";
-        ### Build a list of existing slots. This will serve to store the 
-        $slotList{$2}++;
-        next if (%cardIfSlotNumber && %cardIfPortNumber);
-        if (!$4){
-                $slotPortMapping{$index} = "$1$2/$3";
-        }else{
-                $slotPortMapping{$index} = "$1$2/$3$4$5";
-        }
-
-    }
+#    ### Cisco Specific Slot/Port mapping tables
+    #
+    #my %cardIfSlotNumber;
+    #my %cardIfPortNumber;
+    #if ($opts->{ciscoslotport}) {
+    #    %cardIfSlotNumber = gettable('cardIfSlotNumber');
+    #    %cardIfPortNumber = gettable('cardIfPortNumber');
+    #
+    #    # Build a Cisco specific Slot/Port Mapping using deprecated MIB
+    #    foreach my $index (keys %cardIfSlotNumber) {
+    #        if (defined($cardIfPortNumber{$index})){
+    #        next if $cardIfSlotNumber{$index} eq "-1"; # Bug fix for invalid slots numbers
+    #            $slotPortMapping{$index} = "$cardIfSlotNumber{$index}/$cardIfPortNumber{$index}";
+    #        } else {
+#		$slotPortMapping{$index} = "$cardIfSlotNumber{$index}/0";
+#            }
+#        }
+#    }
+#    # Build generic two level Slot/Port mapping for Cisco devices.
+#    foreach my $index (keys %ifdescr) {
+#        if ($ifdescr{$index} =~ /([a-zA-Z]+)(\d+)$/) {
+#            next if (%cardIfSlotNumber && %cardIfPortNumber);
+#            ### Fudge the slot/port mapping to the ifdescr for Cisco devices
+#            $slotPortMapping{$index} = "$1$2";
+#        }
+#        next unless $ifdescr{$index} =~ m(([a-zA-Z]+)(\d+)/(\d+)(/?)(\d*));
+#        ### Build a mapping between the ifDescr and its associated Slot.
+#        $slotPortList{$ifdescr{$index}} = $2;
+#        ### Build a mapping between the Slot number and its name.
+#        $slotNameList{$2} = "$1_$2";
+#        ### Build a list of existing slots. This will serve to store the 
+#        $slotList{$2}++;
+#        next if (%cardIfSlotNumber && %cardIfPortNumber);
+#        if (!$4){
+#                $slotPortMapping{$index} = "$1$2/$3";
+#        }else{
+#                $slotPortMapping{$index} = "$1$2/$3$4$5";
+#        }
+    #
+    #}
 
     ### Get frame relay DLCI info if needed.
 
@@ -932,9 +929,6 @@ if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
     %{$data->{iftype}} = %iftype;
     %{$data->{ifmtu}} = %ifmtu;
     %{$data->{slotPortMapping}} = %slotPortMapping;
-    %{$data->{slotPortList}}    = %slotPortList;
-    %{$data->{slotNameList}}    = %slotNameList;
-    %{$data->{slotList}}        = %slotList;
     return;
 }
 
