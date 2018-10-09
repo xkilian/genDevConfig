@@ -312,6 +312,8 @@ my %opts = (
     'cbqos'             => 0,
     'req_noql'          => 0,
     'noql'              => 0,
+    'req_portlist'      => 0,
+    'req_portuplinklist' => 0,
 
     ###
     ### Informational variables
@@ -1461,11 +1463,11 @@ $c="# ";
         Debug (" Invalid or dynamic interface");
     } elsif ($opts{logLevel} eq 'debug') {
         Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " Speed: $speed_str mtu: $ifmtu{$index} OK");
-    } elsif (!grep(/^$ldesc$/,@COLLECTLIST) && !override($index)) {
+    } elsif ($opts{req_portlist} && !grep(/^$sdesc$/,@COLLECTLIST) && !override($index)) {
         $header .= "\n### - Interface that is not collected based on a description command-line filter.\n";
-        $c="# ";
+        $c = "# ";
         Debug (" Speed: $speed_str mtu: $ifmtu{$index} ldesc: $ldesc not in portsuplinks list");
-	 
+    }
 
     ### Skip all targets that are not used. To show all interfaces
     ### use the --showunused option in calling the script.
@@ -1494,7 +1496,7 @@ $c="# ";
                     );
             $plugin->custom_files(\%data, \%opts); 
             # $wmatch returned by reference in data hash reference
-	}
+	    }
     }
 
     if (!$wmatch) {
@@ -1507,7 +1509,7 @@ $c="# ";
         Debug " Config: @config";
 
         my $ifprefix = "if.";
-	ifprefix = "if_5min." if ((scalar @collectableuplinks > 0) && !grep(/^$ldesc$/,@collectableuplinks) && !override($index)) {
+	$ifprefix = "if_5min." if ((scalar @collectableuplinks > 0) && !grep(/^$sdesc$/,@collectableuplinks) && !override($index));
  
 	push(@config, 'service_description'  => $ifprefix . $target);
 	
@@ -1517,10 +1519,10 @@ $c="# ";
 	    unshift (@config, '_instname'      => $target_raw);
 	    unshift (@config, '_mapping'       => "interface-name");
 	}
-	        
+        $opts{dtemplate} = $opts{dtemplate} . "_5min" if ((scalar @collectableuplinks > 0) && !grep(/^$sdesc$/,@collectableuplinks) && !override($index));
+
 	unshift(@config,
         'host_name'            => $opts{devicename},
-	$opts{dtemplate} .= "_5min" if ((scalar @collectableuplinks > 0) && !grep(/^$ldesc$/,@collectableuplinks) && !override($index)) {
         'use'              => $opts{dtemplate});
 
         $file->writetarget("service {", $c, @config);
@@ -1583,13 +1585,13 @@ sub override {
 
 sub portlist2list {
     my($plist) = @_;
-
-    my @plist();
+    my $chunk;
+    my @plist = ();
 
     if ($plist eq "none") {
         return @plist;
     }
-   
+
     foreach $chunk (split(/,/, $plist)) {
             push (@plist,$chunk);
     }
@@ -1625,12 +1627,14 @@ sub deprecatedoption {
 sub portlist {
     my($opt,$value) = @_;
     @COLLECTLIST = portlist2list($value);
+    $opts{req_portlist} = 1 if (scalar @COLLECTLIST > 0);
     $opts{collectall} = 0;
 }
 
 sub portuplinklist {
     my($opt,$value) = @_;
     @collectableuplinks = portlist2list($value);
+    $opts{req_portuplinklist} = 1 if (scalar @collectableuplinks > 0);
     $opts{collectall} = 0;
 }
 
