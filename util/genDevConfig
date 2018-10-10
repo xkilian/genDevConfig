@@ -314,7 +314,6 @@ my %opts = (
     'noql'              => 0,
     'req_portlist'      => 0,
     'req_portuplinklist' => 0,
-
     ###
     ### Informational variables
     ###
@@ -415,7 +414,7 @@ GetOptions(
   "outputdir|o=s"         => \&setOutputDir,
   "parents=s"             => \&parentlist,
   "ports|p=s"             => \&portlist,
-  "portspulinks=s"        => \&portuplinklist,
+  "portsuplinks=s"        => \&portuplinklist,
   "ctemplates=s"          => \&template,
 #  "itemplates=s"         => \&template,
   "htemplates=s"          => \&template,
@@ -829,11 +828,12 @@ $dstemplates = $opts{htemplates} . "," . $dstemplates if ($opts{htemplates} ne "
 $opts{alias} = $opts{devicename};
 
 my ($ldesc, $sdesc);
-$ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
-                                : ( $opts{sysDescr} );
-$ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
-$ldesc .= "<BR>sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
-$ldesc .= "<BR>sysContact: $opts{sysContact}" if ($opts{sysContact});
+$ldesc = "Config generated: ". scalar(localtime(time));
+$ldesc .= "  sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
+$ldesc .= "  sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
+$ldesc .= "  sysContact: $opts{sysContact}" if ($opts{sysContact});
+$ldesc .= ($opts{chassisPhysicalDescr}) ? ( "  <BR>physDescr: $opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
+                                : ( "  <BR>: $opts{sysDescr}");
 
 push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if ($opts{class});
 push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-generic" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if (!$opts{class});
@@ -861,10 +861,12 @@ if ($opts{chassisstats}) {
     my ($ldesc, $sdesc);
     my ($inst) = 0;
  
-    $ldesc = ($opts{chassisPhysicalDescr}) ? ( "physDescr:$opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
-                                : ( $opts{sysDescr} );
-    $ldesc .= "<BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
-    $ldesc .= "<BR>Notes: $opts{sysNotes}" if ($opts{sysNotes});
+    $ldesc = "Config generated: ". scalar(localtime(time)). "  ";
+    $ldesc .= "Syslocation: " . $opts{sysLocation} . "  " if $opts{sysLocation};
+    $ldesc .= ($opts{chassisPhysicalDescr}) ? ( "  <BR>physDescr: $opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
+                                : ( "  <BR>$opts{sysDescr}" );
+    $ldesc .= "  <BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
+    $ldesc .= "  <BR>Notes: $opts{sysNotes}" if ($opts{sysNotes});
     $sdesc = "$opts{chassisname} - $opts{model}";
 
     $inst = $opts{chassisinst} if ($opts{chassisinst});
@@ -1463,11 +1465,11 @@ $c="# ";
         Debug (" Invalid or dynamic interface");
     } elsif ($opts{logLevel} eq 'debug') {
         Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " Speed: $speed_str mtu: $ifmtu{$index} OK");
-    } elsif ($opts{req_portlist} && !grep(/^$sdesc$/,@COLLECTLIST) && !override($index)) {
+    } elsif ($opts{req_portlist} && !inlist($sdesc,@COLLECTLIST)) {
         $header .= "\n### - Interface that is not collected based on a description command-line filter.\n";
-        $c = "# ";
-        Debug (" Speed: $speed_str mtu: $ifmtu{$index} ldesc: $ldesc not in portsuplinks list");
-    }
+        $c="# ";
+        Debug (" Speed: $speed_str mtu: $ifmtu{$index} sdesc: $sdesc not in ports list");
+    } 
 
     ### Skip all targets that are not used. To show all interfaces
     ### use the --showunused option in calling the script.
@@ -1496,7 +1498,7 @@ $c="# ";
                     );
             $plugin->custom_files(\%data, \%opts); 
             # $wmatch returned by reference in data hash reference
-	    }
+	}
     }
 
     if (!$wmatch) {
@@ -1509,7 +1511,7 @@ $c="# ";
         Debug " Config: @config";
 
         my $ifprefix = "if.";
-	$ifprefix = "if_5min." if ((scalar @collectableuplinks > 0) && !grep(/^$sdesc$/,@collectableuplinks) && !override($index));
+	$ifprefix = "if_5min." if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) );
  
 	push(@config, 'service_description'  => $ifprefix . $target);
 	
@@ -1519,11 +1521,16 @@ $c="# ";
 	    unshift (@config, '_instname'      => $target_raw);
 	    unshift (@config, '_mapping'       => "interface-name");
 	}
-        $opts{dtemplate} = $opts{dtemplate} . "_5min" if ((scalar @collectableuplinks > 0) && !grep(/^$sdesc$/,@collectableuplinks) && !override($index));
-
+	my $porttemplate;
+        if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) ){
+	    $porttemplate = $opts{dtemplate} . "_5min";
+        } else {
+            $porttemplate =  $opts{dtemplate};
+        }
+	        
 	unshift(@config,
         'host_name'            => $opts{devicename},
-        'use'              => $opts{dtemplate});
+        'use'              => $porttemplate);
 
         $file->writetarget("service {", $c, @config);
     }
@@ -1587,11 +1594,10 @@ sub portlist2list {
     my($plist) = @_;
     my $chunk;
     my @plist = ();
-
+   
     if ($plist eq "none") {
         return @plist;
     }
-
     foreach $chunk (split(/,/, $plist)) {
             push (@plist,$chunk);
     }
@@ -1628,14 +1634,14 @@ sub portlist {
     my($opt,$value) = @_;
     @COLLECTLIST = portlist2list($value);
     $opts{req_portlist} = 1 if (scalar @COLLECTLIST > 0);
-    $opts{collectall} = 0;
+    #$opts{collectall} = 0;
 }
 
 sub portuplinklist {
     my($opt,$value) = @_;
     @collectableuplinks = portlist2list($value);
     $opts{req_portuplinklist} = 1 if (scalar @collectableuplinks > 0);
-    $opts{collectall} = 0;
+    #$opts{collectall} = 0;
 }
 
 sub parentlist {
@@ -1661,6 +1667,14 @@ sub template {
     } else {
 	$opts{$opt} = join (",", $opts{$opt}, $value);
     }
+}
+
+sub inlist {
+    my ($string,@list) = @_;
+    foreach my $item (@list) {
+       return 1 if ($string =~ /$item/);
+    }
+    return 0;
 }
 
 sub chassisinfo {

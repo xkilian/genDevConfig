@@ -141,6 +141,7 @@ my $chassisfan = 0;
 my $chassishelper = 0;
 my $chassisconfig = 0;
 my $script = "Alcatel AOS Omniswitch genDevConfig Module";
+my $module = "AlcatelAOS";
 my %alcatelddmtemperaturetable;
 my %alcatelddmtxmtable;
 my %aosddmtemperaturetable;
@@ -181,12 +182,12 @@ sub device_types {
 sub can_handle {
     my($self, $opts) = @_;
     
-    Debug ("AlcatelAOS Trying to match sysObjectID : " . $opts->{sysObjectID});
+    Debug ("$module Trying to match sysObjectID : " . $opts->{sysObjectID});
     
     foreach my $type (@types) {
         $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
-        Debug ("Type : " . $type);
-        return 1 if ($opts->{sysObjectID} =~ m/$type/gi)
+        Debug ("$module Type : " . $type);
+        return 1 if ($opts->{sysObjectID} =~ m/$type/gi);
     }
     return 0;
 }

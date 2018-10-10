@@ -32,7 +32,7 @@ use genConfig::Plugin;
 
 our @ISA = qw(genConfig::Plugin);
 
-my $VERSION = 1.15;
+my $VERSION = 1.16;
 
 ### End package init
 
@@ -218,6 +218,7 @@ my $snmp;
 my $customfile;
 
 my $script = "CiscoIOS genDevConfig Module";
+my $module = "CiscoIOS";
 
 ###############################################################################
 ###############################################################################
@@ -242,10 +243,15 @@ sub plugin_name {
 sub can_handle {
     my($self, $opts) = @_;
 
-    # Validation is based on sysDescr, but could also be based
-    # on sysObject OIDs or other well referenced value.
-    return (grep { $opts->{sysDescr} =~ m/$_/gi } @types)
+    Debug ("$module Trying to match sysObjectID : " . $opts->{sysDescr});
 
+    #return (grep { $opts->{sysDescr} =~ m/$_/gi } @types)
+    foreach my $type (@types) {
+        $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
+        Debug ("$module Type : " . $type);
+        return 1 if ($opts->{sysDescr} =~ m/$type/gi)
+    }
+    return 0;
 }
 
 #-------------------------------------------------------------------------------
@@ -257,7 +263,7 @@ sub can_handle {
 sub discover {
     my($self, $opts) = @_;
 
-    ### Add our OIDs to the the global OID list
+    ### Add our OIDs to the global OID list
 
     register_oids(%OIDS);
 
@@ -334,29 +340,27 @@ sub discover {
     if  ($opts->{model} eq 'C3500XL' || $opts->{model} eq 'C2900XL') {
         $opts->{chassisttype} = 'Catalyst-XL-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C3550") {
         $opts->{chassisttype} = 'Catalyst-3550-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C2950") {
         $opts->{chassisttype} = 'Catalyst-2950-Switch';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
+    } elsif ($opts->{model} eq "C2960S") {
+        $opts->{chassisttype} = 'Catalyst-2960S-Switch';
+        $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+        $opts->{maxoidrequest} = "32";
     } elsif ($opts->{model} eq "1900") {
         $opts->{chassisttype} = 'Catalyst-1900-Switch';
     } elsif ($opts->{model} eq "7500") {
         $opts->{chassisttype} = 'Cisco-7500-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "7200") {
         $opts->{chassisttype} = 'Cisco-7200-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "7000") {
         $opts->{chassisttype} = 'Cisco-7000-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /4500/) {
         $opts->{chassisttype} = 'Cisco-4500-Router';
     } elsif ($opts->{model} =~ /3[789]00/) {
@@ -364,22 +368,17 @@ sub discover {
 	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /3600/) {
         $opts->{chassisttype} = 'Cisco-3600-Router';
-	$opts->{dtemplate} = "default-snmp-template-bulk";
    } elsif ($opts->{model} =~ /2[789]00/) {
         $opts->{chassisttype} = 'Cisco-2900-Router';
 	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} eq "C1200") {
         $opts->{chassisttype} = 'Cisco-1200-AP';
     } elsif ($opts->{model} =~ /2600/) {
         $opts->{chassisttype} = 'Cisco-2600-Router';
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1[89]00/) {
         $opts->{chassisttype} = 'Cisco-1800-Router';
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1700/) {
         $opts->{chassisttype} = 'Cisco-1700-Router';
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /1600/) {
         $opts->{chassisttype} = 'Cisco-1600-Router';
     } elsif ($opts->{model} =~ /3000/) {
@@ -393,15 +392,12 @@ sub discover {
     } elsif ($opts->{model} =~ /c6sup2_rp/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /WS-X5530/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /MSFC2/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
-	$opts->{dtemplate} = "default-snmp-template-bulk";
     } elsif ($opts->{model} =~ /LS1010/) {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
@@ -490,6 +486,7 @@ sub custom_targets {
     #}
 
     ### Get frame relay DLCI info if needed.
+    Debug("$module Getting data from device to use in building");
 
     if ($opts->{framestats}) {
         %frCircuitState          =         gettable('frCircuitState');
@@ -501,6 +498,11 @@ sub custom_targets {
     if ($opts->{fanstatus}) {
         %ciscoEnvMonFanState         =         gettable('ciscoEnvMonFanState');
         %ciscoEnvMonFanStatusDescr        =         gettable('ciscoEnvMonFanStatusDescr');
+    }
+
+    if ($opts->{supplystatus}) {
+        %ciscoEnvMonSupplyState         =         gettable('ciscoEnvMonSupplyState');
+        %ciscoEnvMonSupplyStatusDescr        =         gettable('ciscoEnvMonSupplyStatusDescr');
     }
 
     ### Get VoIP dial peer info if needed.
@@ -520,8 +522,7 @@ sub custom_targets {
         %rttMonEchoAdminTargetAddress =    gettable('rttMonEchoAdminTargetAddress');
     }
 
-    ### Walk cpu statistics for VIPs on Cisco 12000 and 7500s with RSPs
-    ### CPU Statistics per VIP
+    ### Get CPU stats
 
     my %cpu1min;
     my %physindex;
@@ -537,16 +538,14 @@ sub custom_targets {
         %cpumodels   =       gettable('entPhysicalModelName');
     }
 
-    ### Walk ccarStatSwitchedPkts if this is a cisco router
-    ### Traffic shaping counters based on CAR
+    ### get CAR rate shaping
 
     my %cisco_car;
     if ($opts->{ciscobox}) {
         %cisco_car = gettable('ccarConfigAccIdx');
     }
 
-    ### Walk  1.3.6.1.4.1.9.9.166.1.7.1.1.1 if this is a cisco router
-    ### Traffic shaping counters based on Class Based Weighted Fair Queued QoS
+    ### Get Class Based Qos statistics
 
     my %cisco_cbwfq_obj; # Object
     my %cisco_cbwfq_pol; # Policy
@@ -554,8 +553,8 @@ sub custom_targets {
         %cisco_cbwfq_obj = gettable('cbwfqObject');
         %cisco_cbwfq_pol = gettable('cbwfqPolicy');
     }
-    ### Walk  1.3.6.1.4.1.9.9.91.1.1.1.1.4 if this is a cisco IOS router
-    ### Traffic shaping counters based on Class Based Weighted Fair Queued QoS
+
+    ### Get sensor data, new style MIB for CPU, FAN, PS
 
     my %cisco_entSensorDataType; #  Integer { other(1), unknown(2), voltsAC(3), voltsDC(4), amperes(5), watts(6), hertz(7), celsius(8), percentRH(9), rpm(10), cmm(11), truthvalue(12), specialEnum(13), dBm(14) }
     my %cisco_entSensorDataScale; # Integer { yocto(1), zepto(2), atto(3), femto(4), pico(5), nano(6), micro(7), milli(8), units(9), kilo(10), mega(11), giga(12), tera(13), exa(14), peta(15), zetta(16), yotta(17) }
@@ -573,10 +572,11 @@ sub custom_targets {
     }
 
     ### Build Sensor supervision data for Optical Interfaces
+    Debug("$module Trying to build Optical interface info");
 
     if ($opts->{ciscobox} && %entPhysicalName) {
         foreach my $sensor (keys %entPhysicalName) {
-            if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor|Receive Power Sensor/ && defined($entSensorValue{$sensor})) {
+            if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor|Receive Power Sensor/ && defined($cisco_entSensorValue{$sensor})) {
                 Debug("Sensor $sensor description: " . $entPhysicalName{$sensor});
                 my $target = $entPhysicalName{$sensor};
                 my $ldesc = $entPhysicalName{$sensor};
@@ -604,6 +604,7 @@ sub custom_targets {
         }
     }
     ### Building CPU VIP Stats for Cisco 7500, 12000 series routers
+    Debug("$module Trying to build VIP stats");
 
     if ($opts->{vipstats}) {
 
@@ -641,6 +642,8 @@ sub custom_targets {
     }
 
     ### Build frame relay stats config if required.
+    Debug("$module Trying to build framerelay stats");
+
     my %dlcis;
     if ($opts->{framestats}) {
         foreach my $key (keys %frCircuitState) {
@@ -649,7 +652,7 @@ sub custom_targets {
             push(@{$dlcis{$ifdescr{$inst}}}, $dlci);
         }
     }
-
+    Debug("$module Trying to build CBQOS");
     ### Build the Class Based Weighted Fair Queued QoS Statistics
     ### Cisco Only
     if ($opts->{cbqos} && %cisco_cbwfq_obj && %cisco_cbwfq_pol) {
@@ -725,202 +728,209 @@ sub custom_targets {
 
     }
 
-### Build Cisco Traffic shaping based on CAR
+    ### Build Cisco Traffic shaping based on CAR
+    Debug("$module Trying to build CAR");
+    if ($opts->{ciscobox} && keys(%cisco_car)) {
+        my $key;
+        my ($ifindex,$direction,$rowindex,$rest);
+        my $ifname;
+        my $filename;
+        my ($sdesc,$ldesc);
+        my $acl;
+        foreach $key (keys(%cisco_car)) {
+            my @config = ();
+            ($ifindex,$direction,$rowindex)=split/\./,$key;
+            $ifname=$ifdescr{$ifindex};
+            $ifname =~ s/[\/\s:]/\_/g;
+            $rest=$direction.".".$rowindex;
+            if ($direction eq "1"){
+                $direction="input";
+            } else {
+                $direction="output"
+            }
+            if($cisco_car{$key}==0){
+                    $acl="ANY";
+            }else{
+                    $acl="ACL".$cisco_car{$key};
+            }
+     $ifname.="_".$acl."_".$direction."_ratelimit";
+            $sdesc="rate-limit $direction $ifdescr{$ifindex}  - $intdescr{$ifindex}";
+            $ldesc="$ifdescr{$ifindex} $acl $direction ratelimit  - $intdescr{$ifindex}";
 
-if ($opts->{ciscobox} && keys(%cisco_car)) {
-    my $key;
-    my ($ifindex,$direction,$rowindex,$rest);
-    my $ifname;
-    my $filename;
-    my ($sdesc,$ldesc);
-    my $acl;
-    foreach $key (keys(%cisco_car)) {
-        my @config = ();
-        ($ifindex,$direction,$rowindex)=split/\./,$key;
-        $ifname=$ifdescr{$ifindex};
-        $ifname =~ s/[\/\s:]/\_/g;
-        $rest=$direction.".".$rowindex;
-        if ($direction eq "1"){
-            $direction="input";
-        } else {
-            $direction="output"
-        }
-        if($cisco_car{$key}==0){
-                $acl="ANY";
-        }else{
-                $acl="ACL".$cisco_car{$key};
-        }
- $ifname.="_".$acl."_".$direction."_ratelimit";
-        $sdesc="rate-limit $direction $ifdescr{$ifindex}  - $intdescr{$ifindex}";
-        $ldesc="$ifdescr{$ifindex} $acl $direction ratelimit  - $intdescr{$ifindex}";
+            push(@config,
+            'host_name'           => $opts->{devicename},
+                'service_description' =>  "ifcar." . $ifname,
+                '_display_order'              =>  $opts->{order},
+                'notes'               =>  $ldesc . " " . $rest,
+                'display_name'        =>  $ifdescr{$ifindex},
+                '_dstemplate'                 =>  'rate-limit',
+                'use'                 => $opts->{dtemplate},
+            );
+            $file->writetarget("service {", '', @config);
 
-        push(@config,
-	    'host_name'           => $opts->{devicename},
-            'service_description' =>  "ifcar." . $ifname,
-            '_display_order'              =>  $opts->{order},
-            'notes'               =>  $ldesc . " " . $rest,
-            'display_name'        =>  $ifdescr{$ifindex},
-            '_dstemplate'                 =>  'rate-limit',
+            $opts->{order} -= 1;
+        }
+    }
+
+    ### Build the SAA(RTR) rtt agent stats for the specified instances
+    Debug("$module Trying to build rtragents");
+
+    if ($opts->{rtragents} && %rttMonCtrlOperState) {
+        foreach my $key (keys %rttMonCtrlOperState) {
+
+            my ($ldesc, $sdesc);
+
+            ### More verbose output
+            #Debug ("RtrOperStatus for rtr $key: $rttMonCtrlOperState{$key}\n");
+
+            ### Process only active agents
+            next if ($rttMonCtrlOperState{$key} != 6);
+
+            my ($protocol) = $rttprotocol{$rttMonEchoAdminProtocol{$key}};
+            next if ($key == 1); # Invalid protocol
+            my ($address) = translateRttTargetAddr($protocol, $rttMonEchoAdminTargetAddress{$key});
+            $ldesc = 'Cisco SLA (RTR) using ' . $protocol . ' for destination <B>'. $address . " - " . $rttMonCtrlAdminTag{$key} . '</B>';
+            #ICMP Operational values: <BR>Operational values: 1(Ok) 2(Disconnct) 4(Timeout) 5(Busy) 6(NoConnection) 7(LackIntRes) 8(BadSeqID) 9(BadData) 16(Error)' ;
+
+            $sdesc = 'Cisco SLA (RTR) using ' . $protocol .
+                     ' for destination ip: ' . $address . ' tag: ' . $rttMonCtrlAdminTag{$key};
+
+            #Debug ("Destination for $key tag: $rttMonCtrlAdminTag{$key} addr: $address\n");
+            my ($targetname) = 'SaaRtt_Agent_' . $key;
+
+               $file->writetarget("service {", '',
+            'host_name'           => $opts->{devicename},
+                'service_description'        => $targetname,
+                '_inst'        => $key,
+                '_display_order'       => $opts->{order},
+                'display_name' => $targetname,
+                'notes'        => $ldesc,
+            #'short-desc'   => $sdesc,
+                '_dstemplate'          => $protocol,
             'use'                 => $opts->{dtemplate},
-        );
-        $file->writetarget("service {", '', @config);
-
-        $opts->{order} -= 1;
-    }
-}
-
-### Build the SAA(RTR) rtt agent stats for the specified instances
-
-if ($opts->{rtragents} && %rttMonCtrlOperState) {
-    foreach my $key (keys %rttMonCtrlOperState) {
-
-        my ($ldesc, $sdesc);
-
-        ### More verbose output
-        #Debug ("RtrOperStatus for rtr $key: $rttMonCtrlOperState{$key}\n");
-
-        ### Process only active agents
-        next if ($rttMonCtrlOperState{$key} != 6);
-
-        my ($protocol) = $rttprotocol{$rttMonEchoAdminProtocol{$key}};
-        next if ($key == 1); # Invalid protocol
-        my ($address) = translateRttTargetAddr($protocol, $rttMonEchoAdminTargetAddress{$key});
-        $ldesc = 'Cisco SLA (RTR) using ' . $protocol . ' for destination <B>'. $address . " - " . $rttMonCtrlAdminTag{$key} . '</B>';
-        #ICMP Operational values: <BR>Operational values: 1(Ok) 2(Disconnct) 4(Timeout) 5(Busy) 6(NoConnection) 7(LackIntRes) 8(BadSeqID) 9(BadData) 16(Error)' ;
-
-        $sdesc = 'Cisco SLA (RTR) using ' . $protocol .
-                 ' for destination ip: ' . $address . ' tag: ' . $rttMonCtrlAdminTag{$key};
-
-        #Debug ("Destination for $key tag: $rttMonCtrlAdminTag{$key} addr: $address\n");
-        my ($targetname) = 'SaaRtt_Agent_' . $key;
-
-           $file->writetarget("service {", '',
-	    'host_name'           => $opts->{devicename},
-            'service_description'        => $targetname,
-            '_inst'        => $key,
-            '_display_order'       => $opts->{order},
-            'display_name' => $targetname,
-            'notes'        => $ldesc,
-	    #'short-desc'   => $sdesc,
-            '_dstemplate'          => $protocol,
-	    'use'                 => $opts->{dtemplate},
-        );
-        $opts->{order} -= 1;
-    }
-}
-
-## Avoids creating empty directory if no VOIP targets found.
-if ($opts->{voip} && %PeerCfgOrigAddr) {
-
-    my $customdir = subdir("$opts->{rdir}/dialpeers",$opts->{lowercase});
-
-    $customfile = $opts->{dpfile} = new genConfig::File("$customdir/targets");
-
-    genConfig::File::set_file_header("# Generated by $script\n".
-                 "# Args: $opts->{savedargs}\n".
-                 "# Date: ". scalar(localtime(time)). "\n\n");
-
-    foreach my $key (keys %PeerCfgOrigAddr) {
-      Debug ("PeerCfgOrigAddr for peer $key: $PeerCfgOrigAddr{$key}\n");
+            );
+            $opts->{order} -= 1;
+        }
     }
 
-} else {
-    $opts->{voip} = 0;
-}
+    ## Avoids creating empty directory if no VOIP targets found.
+    Debug("$module Trying to build dialpeer");
+    if ($opts->{voip} && %PeerCfgOrigAddr) {
 
-### Build the fan stats
+        my $customdir = subdir("$opts->{rdir}/dialpeers",$opts->{lowercase});
 
-if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} !~ /IOS-XE/)) {
-    foreach my $key (keys %ciscoEnvMonFanState) {
+        $customfile = $opts->{dpfile} = new genConfig::File("$customdir/targets");
 
-        my ($ldesc, $sdesc);
-	$ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
-	$sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
-        $ldesc =~ tr/,/ /;
-        $sdesc =~ tr/,/ /;
+        genConfig::File::set_file_header("# Generated by $script\n".
+                     "# Args: $opts->{savedargs}\n".
+                     "# Date: ". scalar(localtime(time)). "\n\n");
 
-        my ($name, $fan, $rest) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
-        Debug("$name $fan $ldesc");
+        foreach my $key (keys %PeerCfgOrigAddr) {
+          Debug ("PeerCfgOrigAddr for peer $key: $PeerCfgOrigAddr{$key}\n");
+        }
 
-        my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
-
-           $file->writetarget("service {", '',
-	    'host_name'           => $opts->{devicename},
-            'service_description'        => $targetname,
-            '_inst'        => $key,
-            '_display_order'       => $opts->{order},
-            'display_name' => $targetname,
-            'notes'        => $ldesc,
-               '_triggergroup'   => 'chassis_cisco_fan_state',
-            '_dstemplate'          => 'cisco-fan-state',
-	    'use'                 => $opts->{dtemplate},
-        );
-        $opts->{order} -= 1;
+    } else {
+        $opts->{voip} = 0;
     }
-}
+
+    ### Build the fan stats
+
+    Debug("$module Trying to build fan status for IOS");
+    if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} !~ /IOS-XE/)) {
+        foreach my $key (keys %ciscoEnvMonFanState) {
+
+            my ($ldesc, $sdesc);
+        $ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+        $sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
+            $ldesc =~ tr/,/ /;
+            $sdesc =~ tr/,/ /;
+
+            my ($name, $fan, $rest) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
+            Debug("$name $fan $ldesc");
+
+            my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
+
+               $file->writetarget("service {", '',
+            'host_name'           => $opts->{devicename},
+                'service_description'        => $targetname,
+                '_inst'        => $key,
+                '_display_order'       => $opts->{order},
+                'display_name' => $targetname,
+                'notes'        => $ldesc,
+                   '_triggergroup'   => 'chassis_cisco_fan_state',
+                '_dstemplate'          => 'cisco-fan-state',
+            'use'                 => $opts->{dtemplate},
+            );
+            $opts->{order} -= 1;
+        }
+    }
 
     ### Build the fan stats for IOS-XE
+    Debug("$module Trying to build fan status for IOS-XE");
 
-if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} =~ /IOS-XE/)) {
-    foreach my $key (keys %ciscoEnvMonFanState) {
+    if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} =~ /IOS-XE/)) {
+        foreach my $key (keys %ciscoEnvMonFanState) {
 
-        my ($ldesc, $sdesc, $swid);
-        my ($name, $fanid, $rest);
-        my ($description) = $ciscoEnvMonFanStatusDescr{$key};
-        $description =~ tr/ /_/;
-        $description =~ tr/,//;
+            my ($ldesc, $sdesc, $swid);
+            my ($name, $fanid, $rest);
+            my ($description) = $ciscoEnvMonFanStatusDescr{$key};
+            $description =~ tr/ /_/;
+            $description =~ tr/,//;
 
-        if ($key < 8 ){
-            $swid = 1;
-        } else {
-            $swid = 2;
+            if ($key < 8 ){
+                $swid = 1;
+            } else {
+                $swid = 2;
+            }
+            $ldesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+            $sdesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key};
+            my ($targetname) = 'CiscoFan_state_for_switch_' . $swid . "_" . $description;
+
+               $file->writetarget("service {", '',
+            'host_name'           => $opts->{devicename},
+                'service_description'        => $targetname,
+                '_inst'        => $key,
+                '_display_order'       => $opts->{order},
+                'display_name' => $targetname,
+                'notes'        => $ldesc,
+                   '_triggergroup'   => 'chassis_cisco_fan_state',
+                '_dstemplate'          => 'cisco-fan-state',
+            'use'                 => $opts->{dtemplate},
+            );
+            $opts->{order} -= 1;
         }
-	    $ldesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
-	    $sdesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key};
-        my ($targetname) = 'CiscoFan_state_for_switch_' . $swid . "_" . $description;
-
-           $file->writetarget("service {", '',
-	    'host_name'           => $opts->{devicename},
-            'service_description'        => $targetname,
-            '_inst'        => $key,
-            '_display_order'       => $opts->{order},
-            'display_name' => $targetname,
-            'notes'        => $ldesc,
-               '_triggergroup'   => 'chassis_cisco_fan_state',
-            '_dstemplate'          => 'cisco-fan-state',
-	    'use'                 => $opts->{dtemplate},
-        );
-        $opts->{order} -= 1;
     }
-}
 
-### Build the supply stats
+    ### Build the power supply stats
+    Debug("$module Trying to build power supply status");
 
-if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
-    foreach my $key (keys %ciscoEnvMonSupplyState) {
+    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
+        foreach my $key (keys %ciscoEnvMonSupplyState) {
 
-        my ($ldesc, $sdesc);
-	$ldesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key} . '. Status normal(1). On degraded status, replace powersupply or switch.';
-	$sdesc = 'Cisco Fan State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
-        my ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
-	my ($ps, $junk) = split(/\s+/,$rest);
-        my ($targetname) = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps);
+            my ($ldesc, $sdesc);
+            $ldesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key} . '. Status normal(1). On degraded status, replace powersupply or switch.';
+            $sdesc = 'Cisco Fan State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
+            my ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
+            Debug("$module Power supply description: $rest");
+
+            my ($ps, $junk) = split(/\s+/,$rest);
+            my ($targetname) = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps);
 
 
-           $file->writetarget("service {", '',
-	    'host_name'           => $opts->{devicename},
-            'service_description'        => $targetname,
-            '_inst'        => $key,
-            '_display_order'       => $opts->{order},
-            'display_name' => $targetname,
-            'notes'        => $ldesc,
-               '_triggergroup'   => 'chassis_cisco_power_state',
-            '_dstemplate'          => 'cisco-supply-state',
-	    'use'                 => $opts->{dtemplate},
-        );
-        $opts->{order} -= 1;
+               $file->writetarget("service {", '',
+            'host_name'           => $opts->{devicename},
+                'service_description'        => $targetname,
+                '_inst'        => $key,
+                '_display_order'       => $opts->{order},
+                'display_name' => $targetname,
+                'notes'        => $ldesc,
+                   '_triggergroup'   => 'chassis_cisco_power_state',
+                '_dstemplate'          => 'cisco-supply-state',
+            'use'                 => $opts->{dtemplate},
+            );
+            $opts->{order} -= 1;
+        }
     }
-}
 
     # Saving local copies of runtime data
     %{$data->{ifspeed}} = %ifspeed;
