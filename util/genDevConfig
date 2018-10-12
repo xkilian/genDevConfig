@@ -29,9 +29,9 @@ BEGIN { # Try to find the config; one level below $0 in ./etc, or in other likel
     eval q|require "$programdir/../etc/genDevConfig-conf.pl"|;
     for (qw|/usr/local/etc /etc|) {
         eval q(require "$_/genDevConfig-conf.pl")
-          unless $Common::global::gInstallRoot;
+            unless $Common::global::gInstallRoot;
         eval q(require "$_/genDevConfig/genDevConfig-conf.pl")
-          unless $Common::global::gInstallRoot;
+            unless $Common::global::gInstallRoot;
     }
     $Common::global::gInstallRoot ||= $programdir . "/..";
     #$Common::global::gConfigRoot = $programdir . "/util";
@@ -76,17 +76,17 @@ Common::Log::setFormat('minimal');
 # Variables to apply to all services
 %Common::global::service_vars = (
 
-       'business_impact' => '0',
+    'business_impact' => '0',
 );
 
 #
 # Get a copy of the ifType table.
 my %ifType_d = ();
 {
-  no warnings qw|once|; # Silence -w.
-  %ifType_d = %genConfig::Utils::ifType_d;
-  # Yes it is a copy, but I would rather avoid having -> dereferences or other
-  # stuff obfuscating the code.
+    no warnings qw|once|; # Silence -w.
+    %ifType_d = %genConfig::Utils::ifType_d;
+    # Yes it is a copy, but I would rather avoid having -> dereferences or other
+    # stuff obfuscating the code.
 }
 
 
@@ -122,60 +122,60 @@ my @EXCEPTIONS = ('Channel','Tunnel','ge-','fe-','fxp','at-');
 
 my %OID = (
 
-       ### from mib-2.system.
+    ### from mib-2.system.
 
-       'sysDescr'         => '1.3.6.1.2.1.1.1.0',
-       'sysObjectID'      => '1.3.6.1.2.1.1.2.0',
-       'sysContact'       => '1.3.6.1.2.1.1.4.0',
-       'sysName'          => '1.3.6.1.2.1.1.5.0',
-       'sysLocation'      => '1.3.6.1.2.1.1.6.0',
+    'sysDescr'         => '1.3.6.1.2.1.1.1.0',
+    'sysObjectID'      => '1.3.6.1.2.1.1.2.0',
+    'sysContact'       => '1.3.6.1.2.1.1.4.0',
+    'sysName'          => '1.3.6.1.2.1.1.5.0',
+    'sysLocation'      => '1.3.6.1.2.1.1.6.0',
 
-       ### from mib-2.interfaces.ifTable.ifEntry
+    ### from mib-2.interfaces.ifTable.ifEntry
 
-       'ifDescr'          => '1.3.6.1.2.1.2.2.1.2',
-       'ifType'           => '1.3.6.1.2.1.2.2.1.3',
-       'ifMtu'            => '1.3.6.1.2.1.2.2.1.4',
-       'ifSpeed'          => '1.3.6.1.2.1.2.2.1.5',
-       'ifAdminStatus'    => '1.3.6.1.2.1.2.2.1.7',
-       'ifOperStatus'     => '1.3.6.1.2.1.2.2.1.8',
+    'ifDescr'          => '1.3.6.1.2.1.2.2.1.2',
+    'ifType'           => '1.3.6.1.2.1.2.2.1.3',
+    'ifMtu'            => '1.3.6.1.2.1.2.2.1.4',
+    'ifSpeed'          => '1.3.6.1.2.1.2.2.1.5',
+    'ifAdminStatus'    => '1.3.6.1.2.1.2.2.1.7',
+    'ifOperStatus'     => '1.3.6.1.2.1.2.2.1.8',
 
-       ### from mib-2.ifMIB.ifMIBObjects.ifXTable.ifXEntry
+    ### from mib-2.ifMIB.ifMIBObjects.ifXTable.ifXEntry
 
-       'ifName'           => '1.3.6.1.2.1.31.1.1.1.1',
-       'ifHCInOctets'     => '1.3.6.1.2.1.31.1.1.1.6',
-       'ifHighSpeed'      => '1.3.6.1.2.1.31.1.1.1.15',
-       'ifAlias'          => '1.3.6.1.2.1.31.1.1.1.18',
+    'ifName'           => '1.3.6.1.2.1.31.1.1.1.1',
+    'ifHCInOctets'     => '1.3.6.1.2.1.31.1.1.1.6',
+    'ifHighSpeed'      => '1.3.6.1.2.1.31.1.1.1.15',
+    'ifAlias'          => '1.3.6.1.2.1.31.1.1.1.18',
 
-       ### from mib-2.ip.ipAddrTable.ipAddrEntry
+    ### from mib-2.ip.ipAddrTable.ipAddrEntry
 
-       'ipAdEntAddr'      => '1.3.6.1.2.1.4.20.1.1',
-       'ipAdEntIfIndex'   => '1.3.6.1.2.1.4.20.1.2',
+    'ipAdEntAddr'      => '1.3.6.1.2.1.4.20.1.1',
+    'ipAdEntIfIndex'   => '1.3.6.1.2.1.4.20.1.2',
 
-       ### from mib-2.entityMIB.entityMIBObjects.entityPhysical.
-       ###      entPhysicalTable.entPhysicalEntry
+    ### from mib-2.entityMIB.entityMIBObjects.entityPhysical.
+    ###      entPhysicalTable.entPhysicalEntry
 
-       'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
-       'entPhysicalName'            => '1.3.6.1.2.1.47.1.1.1.1.7',
-       'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
-       'entPhysicalModelName'       => '1.3.6.1.2.1.47.1.1.1.1.13',
+    'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
+    'entPhysicalName'            => '1.3.6.1.2.1.47.1.1.1.1.7',
+    'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
+    'entPhysicalModelName'       => '1.3.6.1.2.1.47.1.1.1.1.13',
 
-       ### MIB-II Switch traffic statistics
-       'ipForwDatagrams'         => '1.3.6.1.2.1.4.6.0', ## Added .0 Check to see if this breaks
+    ### MIB-II Switch traffic statistics
+    'ipForwDatagrams'         => '1.3.6.1.2.1.4.6.0', ## Added .0 Check to see if this breaks
 
 
-       ### from mib-2.transmission.dot3.dot3StatsTable.dot3StatsEntry
-       'dot3StatsIndex'   => '1.3.6.1.2.1.10.7.2.1.1',
+    ### from mib-2.transmission.dot3.dot3StatsTable.dot3StatsEntry
+    'dot3StatsIndex'   => '1.3.6.1.2.1.10.7.2.1.1',
 
-       ### from rfc1406.dsx1ConfigTable (6).dsx1ConfigEntry (1).
-       'dsx1TotalIndex' => '1.3.6.1.2.1.10.18.9.1.1',
+    ### from rfc1406.dsx1ConfigTable (6).dsx1ConfigEntry (1).
+    'dsx1TotalIndex' => '1.3.6.1.2.1.10.18.9.1.1',
 
-       # OIDs for RFC 2932 Number of multicast routes
-       'ipMRouteEntryCount' => '1.3.6.1.2.1.83.1.1.7.0',
+    # OIDs for RFC 2932 Number of multicast routes
+    'ipMRouteEntryCount' => '1.3.6.1.2.1.83.1.1.7.0',
 
-       # OID pour un nom custom PaloAlto
-       'ifNamePaloAlto'   => '1.3.6.1.2.1.31.1.1.1.18',
-       
-        );
+    # OID pour un nom custom PaloAlto
+    'ifNamePaloAlto'   => '1.3.6.1.2.1.31.1.1.1.18',
+
+);
 
 ###############################################################################
 
@@ -355,14 +355,14 @@ my %opts = (
     'chassisPhysicalDescr' => '', ### MIB-II SNMP Chassis serial output
 
     'thresholds'       => {}, ### Thresholds for automatic application
-                              ### TO-DO read them in from the config.
-    );
+    ### TO-DO read them in from the config.
+);
 
 genConfig::SNMP::register_oids(%OID);
 
 genConfig::File::set_file_header("# Generated by $script\n".
-				 "# Args: $opts{savedargs}\n".
-				 "# Date: ". scalar(localtime(time)). "\n\n");
+    "# Args: $opts{savedargs}\n".
+    "# Date: ". scalar(localtime(time)). "\n\n");
 
 ###############################################################################
 ###
@@ -381,59 +381,59 @@ $Getopt::Long::ignorecase = 0;
 #
 # Process command-line arguments
 GetOptions(
-  "bytes|b"               => sub {$opts{units} = 'bytes';},
-  "community|c=s"         => \$opts{community},
-  "addcommunity|C=s"      => sub {$opts{community} = $_[1]; $opts{addcommunity} = 1;},
-  "communityrw=s"         => \$opts{communityrw},
-  "ciscoint"              => \&deprecatedoption,
-  "ddm"                   => sub {$opts{req_ddm} = 1;},
-  "vendorint|extendedint" => sub {$opts{req_extendedint} = 1; $opts{req_vendorint} = 1;},
-  "dontcollect|d=s"       => sub {push @DONTCOLLECT, split /\s*,\s*/, $_[1]},
-  "exception|e=s"         => sub {push @EXCEPTIONS,  split /\s*,\s*/, $_[1]},
-  "framestats|f!"         => \$opts{req_framestats},
-  "getconfig|g"           => \$opts{req_getconfig},
-  "help|h!"               => sub {pod2usage(1)},
-  "lowercase|l"           => \$opts{lowercase},
-  "namedonly"             => \$opts{req_namedonly},
-  "nodupwarn"             => \$opts{nodupwarn},
-  "nounused"              => \&deprecatedoption,
-  "collectoperdown"       => \$opts{collectoperdown},
-  "cbqos"                 => \$opts{req_cbrqs},
-  "vlans"                 => \$opts{req_vlans},
-  "ospf"                  => \$opts{ospfruns},
-  "mcast"                 => \$opts{mcastroutes},
-  "modular"                 => \$opts{req_modular},
-  "triggers"              => \$opts{triggers},
-  "triggerifstatus"       => sub {$opts{triggerifstatus} = '-st'},
-  "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
-  "nodns|n"               => \$opts{nodns},
-  "noql"                  => \$opts{noql},
-  "showunused"            => sub {$opts{nounused} = 0;},
-  "nospeedcheck"          => \$opts{force_nospeedcheck},
-  "nomtucheck"            => \$opts{force_nomtucheck},
-  "outputdir|o=s"         => \&setOutputDir,
-  "parents=s"             => \&parentlist,
-  "ports|p=s"             => \&portlist,
-  "portsuplinks=s"        => \&portuplinklist,
-  "ctemplates=s"          => \&template,
-#  "itemplates=s"         => \&template,
-  "htemplates=s"          => \&template,
-#  "cinfo=s"              => \&chassisinfo,
-  "info|i=s"              => \%Common::global::service_vars,
-  "ip=s"                  => \$opts{ip},
-  "sortby=s"              => \$opts{sortby},
-  "rtragents"             => \$opts{rtragents},
-  "nucast"                => \$opts{nucast},
-  "gigonly"               => \$opts{gigonly},
-  "access"                => \$opts{access},
-  "core"                  => \$opts{coreint},
-  "version"               => \&version,
-  "loglevel=s"            => \$opts{logLevel},
-  "voip"                  => \$opts{req_voip},
-  "snmpv2c|2"             => \$opts{req_usev2c},
-  "forceplugin=s"         => \$opts{plugin},
-  "staticinstance"        => \$opts{staticinstance},
-#  "P:s"                   => \&pluginflags,
+    "bytes|b"               => sub {$opts{units} = 'bytes';},
+    "community|c=s"         => \$opts{community},
+    "addcommunity|C=s"      => sub {$opts{community} = $_[1]; $opts{addcommunity} = 1;},
+    "communityrw=s"         => \$opts{communityrw},
+    "ciscoint"              => \&deprecatedoption,
+    "ddm"                   => sub {$opts{req_ddm} = 1;},
+    "vendorint|extendedint" => sub {$opts{req_extendedint} = 1; $opts{req_vendorint} = 1;},
+    "dontcollect|d=s"       => sub {push @DONTCOLLECT, split /\s*,\s*/, $_[1]},
+    "exception|e=s"         => sub {push @EXCEPTIONS,  split /\s*,\s*/, $_[1]},
+    "framestats|f!"         => \$opts{req_framestats},
+    "getconfig|g"           => \$opts{req_getconfig},
+    "help|h!"               => sub {pod2usage(1)},
+    "lowercase|l"           => \$opts{lowercase},
+    "namedonly"             => \$opts{req_namedonly},
+    "nodupwarn"             => \$opts{nodupwarn},
+    "nounused"              => \&deprecatedoption,
+    "collectoperdown"       => \$opts{collectoperdown},
+    "cbqos"                 => \$opts{req_cbrqs},
+    "vlans"                 => \$opts{req_vlans},
+    "ospf"                  => \$opts{ospfruns},
+    "mcast"                 => \$opts{mcastroutes},
+    "modular"                 => \$opts{req_modular},
+    "triggers"              => \$opts{triggers},
+    "triggerifstatus"       => sub {$opts{triggerifstatus} = '-st'},
+    "triggertemplateclass|t=s"   => \$opts{triggertemplateclass},
+    "nodns|n"               => \$opts{nodns},
+    "noql"                  => \$opts{noql},
+    "showunused"            => sub {$opts{nounused} = 0;},
+    "nospeedcheck"          => \$opts{force_nospeedcheck},
+    "nomtucheck"            => \$opts{force_nomtucheck},
+    "outputdir|o=s"         => \&setOutputDir,
+    "parents=s"             => \&parentlist,
+    "ports|p=s"             => \&portlist,
+    "portsuplinks=s"        => \&portuplinklist,
+    "ctemplates=s"          => \&template,
+    #  "itemplates=s"         => \&template,
+    "htemplates=s"          => \&template,
+    #  "cinfo=s"              => \&chassisinfo,
+    "info|i=s"              => \%Common::global::service_vars,
+    "ip=s"                  => \$opts{ip},
+    "sortby=s"              => \$opts{sortby},
+    "rtragents"             => \$opts{rtragents},
+    "nucast"                => \$opts{nucast},
+    "gigonly"               => \$opts{gigonly},
+    "access"                => \$opts{access},
+    "core"                  => \$opts{coreint},
+    "version"               => \&version,
+    "loglevel=s"            => \$opts{logLevel},
+    "voip"                  => \$opts{req_voip},
+    "snmpv2c|2"             => \$opts{req_usev2c},
+    "forceplugin=s"         => \$opts{plugin},
+    "staticinstance"        => \$opts{staticinstance},
+    #  "P:s"                   => \&pluginflags,
 );
 
 #
@@ -448,9 +448,9 @@ pod2usage("No hostname given. Use --help for help.\n") unless defined $ARGV[0];
 Common::Log::setLevel($opts{logLevel});
 
 {
-  no warnings qw|once|; # Silence -w.
-  $Common::global::triggers = $opts{triggers};
-  $Common::global::outputdir_ct = $opts{outputdir_ct};
+    no warnings qw|once|; # Silence -w.
+    $Common::global::triggers = $opts{triggers};
+    $Common::global::outputdir_ct = $opts{outputdir_ct};
 }
 
 # Log run time, just in case we are not running in standard or extended
@@ -537,17 +537,17 @@ if (!@plugins) {
     my $forcedplugin;
     if (grep { $opts{forcedplugin} =~ m/$_->plugin_name()/gi } @plugins ) {
         foreach my $plugin (@plugins) {
-	    if ($opts{forcedplugin} =~ m/$plugin->plugin_name()/gi) {
-	        $forcedplugin = $plugin;
-		Info (" Forced plugin for $opts{sysDescr} using $plugin->plugin_name().");
+            if ($opts{forcedplugin} =~ m/$plugin->plugin_name()/gi) {
+                $forcedplugin = $plugin;
+                Info (" Forced plugin for $opts{sysDescr} using $plugin->plugin_name().");
             }
-	}
+        }
         @plugins = ($forcedplugin) if ($forcedplugin);
     } else {
         Info (" No plugins forced on multiple matched plugins. ",
-	"Defaulting to using all matched plugins.");
+            "Defaulting to using all matched plugins.");
         foreach my $plugin (@plugins) {
-		Info (" Using multiple plugins: " . $plugin->plugin_name());
+            Info (" Using multiple plugins: " . $plugin->plugin_name());
         }
     }
 } else {
@@ -665,15 +665,15 @@ if ($opts{chassisstats}) {
     }
 }
 
-    # Reset snmp collection engine version based on the user defined
-    # rules based on model type.
-    if (!$opts{usev2c}) {
-	    $opts{snmp_ver} = '1';
-	    snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
-    }
+# Reset snmp collection engine version based on the user defined
+# rules based on model type.
+if (!$opts{usev2c}) {
+    $opts{snmp_ver} = '1';
+    snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
+}
 
-    Info ("Model: $opts{model}");
-    Info ("Type: $opts{chassisttype}");
+Info ("Model: $opts{model}");
+Info ("Type: $opts{chassisttype}");
 
 
 ###########################################################################
@@ -833,7 +833,7 @@ $ldesc .= "  sysLocation: $opts{sysLocation}" if ($opts{sysLocation});
 $ldesc .= "  sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
 $ldesc .= "  sysContact: $opts{sysContact}" if ($opts{sysContact});
 $ldesc .= ($opts{chassisPhysicalDescr}) ? ( "  <BR>physDescr: $opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
-                                : ( "  <BR>: $opts{sysDescr}");
+                                        : ( "  <BR>: $opts{sysDescr}");
 
 push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if ($opts{class});
 push (@options, 'notes_url', "/grafana/dashboard/db/ta-tia-meta-generic" . lc($opts{class}) . "?var-hostname=" . $opts{devicename} . "&var-ip=" . $opts{ip} . "&var-class=" . lc($opts{class})) if (!$opts{class});
@@ -850,7 +850,7 @@ $file->writetarget("host {", '',
     'notes'             => $ldesc,
     'use'               => $dstemplates,
     @options,
-    );
+);
 
 ### Write the configuration for the chassis
 
@@ -860,11 +860,11 @@ if ($opts{chassisstats}) {
 
     my ($ldesc, $sdesc);
     my ($inst) = 0;
- 
+
     $ldesc = "Config generated: ". scalar(localtime(time)). "  ";
     $ldesc .= "Syslocation: " . $opts{sysLocation} . "  " if $opts{sysLocation};
     $ldesc .= ($opts{chassisPhysicalDescr}) ? ( "  <BR>physDescr: $opts{chassisPhysicalDescr}<BR>$opts{sysDescr}" )
-                                : ( "  <BR>$opts{sysDescr}" );
+                                            : ( "  <BR>$opts{sysDescr}" );
     $ldesc .= "  <BR>sysName: $opts{sysName}" if ($opts{sysName} && !$opts{sysDescr});
     $ldesc .= "  <BR>Notes: $opts{sysNotes}" if ($opts{sysNotes});
     $sdesc = "$opts{chassisname} - $opts{model}";
@@ -893,17 +893,17 @@ if ($opts{chassisstats}) {
 
     # Write the data to the file
     $file->writetarget("service {", '',
-	'service_description' => "chassis",
-	'display_name'  => $sdesc,
-        'host_name'     => $opts{devicename},     
+        'service_description' => "chassis",
+        'display_name'  => $sdesc,
+        'host_name'     => $opts{devicename},
         '_inst'         => $inst,
         '_display_order'=> $opts{order},
         'notes'         => $ldesc,
         '_dstemplate'   => $opts{chassisttype},
         'use'           => $templates,
         @options,
-        );
-    
+    );
+
     $opts{order} -= 1;
 }
 
@@ -926,7 +926,7 @@ if ($ipForwDatagrams && $ipForwDatagrams != 0) {
     $file->writetarget("service {", '',
         'service_description'  => $servicename,
         'display_name'     => $sdesc,
-        'host_name'        => $opts{devicename},	       
+        'host_name'        => $opts{devicename},
         '_display_order'   => $opts{order},
         'notes'            => $ldesc,
         '_dstemplate'      => 'Device-Traffic',
@@ -940,16 +940,16 @@ Debug (" Plugin list: @plugins");
 
 foreach my $plugin (@plugins) {
     my %data = (
-                'ifspeed'    => \%ifspeed,
-                'ifdescr'    => \%ifdescr,
-                'intdescr'   => \%intdescr,
-                'iftype'     => \%iftype,
-                'ifmtu'      => \%ifmtu,
-		'slotPortMapping' => \%slotPortMapping,
+        'ifspeed'    => \%ifspeed,
+        'ifdescr'    => \%ifdescr,
+        'intdescr'   => \%intdescr,
+        'iftype'     => \%iftype,
+        'ifmtu'      => \%ifmtu,
+        'slotPortMapping' => \%slotPortMapping,
     );
 
     $plugin->custom_targets(\%data,\%opts);
- 
+
     %ifspeed    = %{$data{ifspeed}};
     %ifdescr    = %{$data{ifdescr}};
     %intdescr   = %{$data{intdescr}};
@@ -970,7 +970,7 @@ if ($opts{vpntunnels}) {
     $file->writetarget("service {", '',
         'service_description'  => $servicename,
         'display_name'    => $sdesc,
-	'host_name'       => $opts{devicename},	
+        'host_name'       => $opts{devicename},
         '_inst'           => '0',
         '_display_order'  => $opts{order},
         'notes'           => $ldesc,
@@ -991,10 +991,10 @@ if ($opts{wirelessAssociations}) {
     my ($servicename) = 'wireless_associations';
 
     $file->writetarget("service {", '',
-	'service_description'  => $servicename,
-	'display_name'    => $sdesc,
-	'host_name'       =>$opts{devicename},
-	'_inst'           => '0',
+        'service_description'  => $servicename,
+        'display_name'    => $sdesc,
+        'host_name'       =>$opts{devicename},
+        '_inst'           => '0',
         '_display_order'  =>      $opts{order},
         'notes'           => $ldesc,
         '_dstemplate'     => 'Cisco-Aironet-Associations',
@@ -1015,16 +1015,16 @@ if ( %dsx1TotalIndex ) {
         $mungedname =~ s/[\/\s:,\.]/\_/g;
         my ($servicename) = $mungedname;
         my $ldesc = "<BR>Controller $ifacedescr<BR>$ifacealias";
-  
+
         $file->writetarget("service {", '',
-         'service_description'  => $ifacedescr,
-	     'display_name'     => $ifacedescr,
-	     'host_name'        => $opts{devicename},
-         '_inst'                => $key,
-         '_display_order'       => $opts{order},
-         'notes'                => $ldesc,
-         '_dstemplate'          => 'dsx-controller'
-         );
+            'service_description'  => $ifacedescr,
+            'display_name'     => $ifacedescr,
+            'host_name'        => $opts{devicename},
+            '_inst'                => $key,
+            '_display_order'       => $opts{order},
+            'notes'                => $ldesc,
+            '_dstemplate'          => 'dsx-controller'
+        );
         $opts{order} -= 1;
     }
 }
@@ -1032,24 +1032,24 @@ if ( %dsx1TotalIndex ) {
 ### MIB-II routing  traffic statistics
 
 if ($opts{mcastroutes}) {
-	my ($mcastroutes)     = get('ipMRouteEntryCount');
+    my ($mcastroutes)     = get('ipMRouteEntryCount');
     my ($ldesc, $sdesc);
     $ldesc = "Number of multicast routes";
     $sdesc = "Number of multicast routes";
-	my ($servicename) = 'routing_number_of_mcast_routes';
+    my ($servicename) = 'routing_number_of_mcast_routes';
 
-	$file->writetarget("service {", '',
-		'service_description'  => $servicename,
-		'service_dependencies'=> ",chassis",
-		'display_name'    => $sdesc,
-		'host_name'       => $opts{devicename},
-		'_inst'           => '0',
-    	'_display_order'  => $opts{order},
-    	'notes'           => $ldesc,
-    	'_dstemplate'     => 'routing-multicast',
-    	);
+    $file->writetarget("service {", '',
+        'service_description'  => $servicename,
+        'service_dependencies'=> ",chassis",
+        'display_name'    => $sdesc,
+        'host_name'       => $opts{devicename},
+        '_inst'           => '0',
+        '_display_order'  => $opts{order},
+        'notes'           => $ldesc,
+        '_dstemplate'     => 'routing-multicast',
+    );
 
-    	$opts{order} -= 1;
+    $opts{order} -= 1;
 }
 
 
@@ -1061,7 +1061,7 @@ foreach $index (keys %ipadentaddr) {
     $ipaddr{$ipadentif{$index}} = $ipadentaddr{$index};
     if ( ! $opts{nodns} ) {
         $iphost{$ipadentif{$index}} = gethostbyaddr(pack('C4',split(/\./,
-                                      $ipaddr{$ipadentif{$index}})), AF_INET) || '';
+                    $ipaddr{$ipadentif{$index}})), AF_INET) || '';
 
         # Treat condition where gethostbyaddr(Net:hostent overriden) 
         # returns a pointer to an array!
@@ -1071,9 +1071,9 @@ foreach $index (keys %ipadentaddr) {
     else {
         $iphost{$ipadentif{$index}} = '(no hostname)';
     }
-            
+
     if (!defined $iphost{$ipadentif{$index}} ||
-       ($iphost{$ipadentif{$index}} eq '')){
+        ($iphost{$ipadentif{$index}} eq '')){
         $iphost{$ipadentif{$index}} = '(no hostname)';
     }
 }
@@ -1113,19 +1113,19 @@ if (!$unique) {
 ######################################################################
 EOD
 
-#    $file->write(<<EOD) if (!$opts{nodupwarn});
-# FIXME
-#html    footnotes
-#    <TABLE>
-#    <TR>
-#        <TD VALIGN=TOP><FONT COLOR=RED>Warning: </FONT></TD>
-#        <TD>Duplicate interface descriptions have forced the use of
-#        hard coded instance numbers for interfaces marked with
-#        <FONT COLOR=RED>*</FONT>. Config file should be regenerated
-#        after any hardware or interface config changes.</TD>
-#        </TR>
-#    </TABLE>
-#EOD
+    #    $file->write(<<EOD) if (!$opts{nodupwarn});
+    # FIXME
+    #html    footnotes
+    #    <TABLE>
+    #    <TR>
+    #        <TD VALIGN=TOP><FONT COLOR=RED>Warning: </FONT></TD>
+    #        <TD>Duplicate interface descriptions have forced the use of
+    #        hard coded instance numbers for interfaces marked with
+    #        <FONT COLOR=RED>*</FONT>. Config file should be regenerated
+    #        after any hardware or interface config changes.</TD>
+    #        </TR>
+    #    </TABLE>
+    #EOD
 }
 Info ("......................... [DONE]");
 
@@ -1152,8 +1152,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     # Force stickyness on non-sticky global opts variables
     # Normally nomtucheck and nospeedcheck are always set to 0
     # after each interface loop.
-    $opts{nomtucheck} = 1 if $opts{force_nomtucheck}; 
-    $opts{nospeedcheck} = 1 if $opts{force_nospeedcheck}; 
+    $opts{nomtucheck} = 1 if $opts{force_nomtucheck};
+    $opts{nospeedcheck} = 1 if $opts{force_nospeedcheck};
 
     # See if extended statistics are supported
     if ($dot3statsindex{$index} && $opts{req_extendedint}) {
@@ -1181,7 +1181,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     # Check if Multicast or non unicast packet statistics are required
     my ($nu) = $opts{nucast} ? '-nu' : '';
-    
+
     # Push in the configuration for the interface the snmp-version required
     # to query HC 64bit snmp counters. Only if all the conditions are met.
     Debug (" Conditions met for HC counters applying -hc\n") if ($hc eq '-hc');
@@ -1204,11 +1204,31 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     $target =~ s/[\/\s:]/\_/g;
     $target =~ s/\,/_/g;
     $target_raw = $target;
-    
+    Debug ("Cleaned_target: $target");
+    my ($cc, $bb, $aa) = split(/_/,$target);
+    # Pad string if it exists, is a single character and is a number
+    $aa = pad($aa) if (defined $aa && (scalar (split("", $aa))<2) && $aa =~ /^[0-9]+$/);
+    $bb = pad($bb) if (defined $bb && (scalar (split("", $bb))<2) && $bb =~ /^[0-9]+$/);
+    if (defined $cc && (substr $cc, -1) =~ /^[0-9]$/ && (substr $cc, -2) !~ /^[0-9]+$/) {
+        my $d = chop $cc;
+        $cc .= pad($d);
+    }
+    if (defined $aa) {
+        $target = join ('_', $cc, $bb, $aa);
+    } elsif (defined $bb) {
+        $target = join ( '_', $cc, $bb);
+    } else {
+        $target = $cc;
+    }
+    Debug ("Padded_target: $target");
+    # elsif (defined $cc) {
+    #        $target = join ( '_', $bb, $cc);
+    #    }
+
     ### Set the interface speed format
-    
+
     my $b = ($opts{units} eq "bytes") ? 8 : 1;
-    
+
     ###
     ### Pre-process intdescr{} to remove characters that may cause
     ### problems in config or during HTML processing.
@@ -1236,7 +1256,7 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $match = 1;
 
     }  elsif (($iftype{$index} == 135)  &&
-              !$opts{juniperbox}) {      # Ethernet 802.1Q sub-interface
+        !$opts{juniperbox}) {      # Ethernet 802.1Q sub-interface
 
         ### If it is a sub-interface, only collect in & out stats
 
@@ -1245,60 +1265,60 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
     }  elsif (@plugins) {
         foreach my $plugin (@plugins) {
-	next if $match;
-        #Info (" Found a plugin for index $index using custom interface functions.");
-        my %data = (
-                    'ifspeed'  => \%ifspeed,
-                    'ifdescr'  => \%ifdescr,
-                    'intdescr' => \%intdescr,
-                    'iftype'   => \%iftype,
-                    'ifmtu'    => \%ifmtu,
-                    'ifoperstatus'    => \%ifoperstatus,
-                    'ifadminstatus'   => \%ifadminstatus,
-		    'slotPortMapping' => \%slotPortMapping,
-                    'config'   => \@config,
-                    'hc'       => $hc,
-                    'nu'       => $nu,
-                    'class'    => $class,
-                    'match'    => $match,
-                    'sdesc'    => $sdesc,
-                    'ldesc'    => $ldesc,
-                    'customsdesc' => $customsdesc,
-                    'customldesc' => $customldesc,
-		    'c' => $c,
-		    'target' => $target,
-		    'name' => $name,
-                    );
+            next if $match;
+            #Info (" Found a plugin for index $index using custom interface functions.");
+            my %data = (
+                'ifspeed'  => \%ifspeed,
+                'ifdescr'  => \%ifdescr,
+                'intdescr' => \%intdescr,
+                'iftype'   => \%iftype,
+                'ifmtu'    => \%ifmtu,
+                'ifoperstatus'    => \%ifoperstatus,
+                'ifadminstatus'   => \%ifadminstatus,
+                'slotPortMapping' => \%slotPortMapping,
+                'config'   => \@config,
+                'hc'       => $hc,
+                'nu'       => $nu,
+                'class'    => $class,
+                'match'    => $match,
+                'sdesc'    => $sdesc,
+                'ldesc'    => $ldesc,
+                'customsdesc' => $customsdesc,
+                'customldesc' => $customldesc,
+                'c' => $c,
+                'target' => $target,
+                'name' => $name,
+            );
 
-        $plugin->custom_interfaces($index, \%data, \%opts);
+            $plugin->custom_interfaces($index, \%data, \%opts);
 
-        # Get the data back from the data hash, which was stored in the plugin.
-        %ifspeed    = %{$data{ifspeed}};
-        %ifdescr    = %{$data{ifdescr}};
-        %intdescr   = %{$data{intdescr}};
-        %iftype     = %{$data{iftype}};
-        %ifmtu      = %{$data{ifmtu}};
-        %ifoperstatus      = %{$data{ifoperstatus}},
-        %ifadminstatus     = %{$data{ifadminstatus}},
-	%slotPortMapping   = %{$data{slotPortMapping}},
-        @config     = @{$data{config}};
-        $hc         = $data{hc};
-        $nu         = $data{nu};
-        $class      = $data{class};
-        $match      = $data{match};
-        $sdesc      = $data{sdesc};
-        $ldesc      = $data{ldesc};
-        $customsdesc = $data{customsdesc};
-        $customldesc = $data{customldesc};
-	$c           = $data{c};
-	$target      = $data{target};
-	}
+            # Get the data back from the data hash, which was stored in the plugin.
+            %ifspeed    = %{$data{ifspeed}};
+            %ifdescr    = %{$data{ifdescr}};
+            %intdescr   = %{$data{intdescr}};
+            %iftype     = %{$data{iftype}};
+            %ifmtu      = %{$data{ifmtu}};
+                        %ifoperstatus      = %{$data{ifoperstatus}},
+                        %ifadminstatus     = %{$data{ifadminstatus}},
+                    %slotPortMapping   = %{$data{slotPortMapping}},
+                @config     = @{$data{config}};
+            $hc         = $data{hc};
+            $nu         = $data{nu};
+            $class      = $data{class};
+            $match      = $data{match};
+            $sdesc      = $data{sdesc};
+            $ldesc      = $data{ldesc};
+            $customsdesc = $data{customsdesc};
+            $customldesc = $data{customldesc};
+            $c           = $data{c};
+            $target      = $data{target};
+        }
     }
 
     my $speed = !defined($ifspeed{$index}) ? undef :
-        ($ifspeed{$index} == 0xffffffff && defined($ifHighSpeed{$index}) &&
-	    $ifHighSpeed{$index} > 0) ? int(1000000*$ifHighSpeed{$index}/$b) :
-                int($ifspeed{$index} / $b); # bits to bytes
+            ($ifspeed{$index} == 0xffffffff && defined($ifHighSpeed{$index}) &&
+                $ifHighSpeed{$index} > 0) ? int(1000000*$ifHighSpeed{$index}/$b) :
+            int($ifspeed{$index} / $b); # bits to bytes
     my $speed_str = ($speed) ? fmi($speed, $opts{units}) : '';
     my $noql = ($opts{noql}) ? "-noql" : '';
 
@@ -1307,19 +1327,18 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
 
         # If there is no special interface match
         # include the default type of standard-interface for each target
-	# unless extended mib-ii are supported.
-        # FIXME Add processing for access interfaces that have sdesc variables that are not part of the uplink list	
+        # unless extended mib-ii are supported.
 
         if($opts{extendedint}) {
-	     push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
-	} else {
-             push(@config, '_dstemplate' => 'standard-interface' . $noql . $nu . $hc);
-	}
-	if ($opts{triggers}) {
-	    push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $noql . $nu . $hc);
-	}
+            push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
+        } else {
+            push(@config, '_dstemplate' => 'standard-interface' . $noql . $nu . $hc);
+        }
+        if ($opts{triggers}) {
+            push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $noql . $nu . $hc);
+        }
     } else {
-	
+
         ### Override interface triggergroups for the selected type of interface
         #
         #my %tmpconfig = @config;
@@ -1339,12 +1358,12 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     if (!$unique{$ifdescr{$index}}) {
         $target .= "_I$index";
         $ifdescr{$index} .= " I$index";
-	$opts{staticinstance} = 1;
+        $opts{staticinstance} = 1;
 
     }
 
     ### Build the interface target description strings and add them in the config.
-    
+
     $name = ((defined $iphost{$index}) ? $iphost{$index} : '');
 
     $sdesc .= "$target ";
@@ -1366,14 +1385,14 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     $ldesc .= "$speed_str $ifType_d{$iftype{$index}} ";
     $ldesc .= "DLCI = $dlci " if (defined $dlci);
     $ldesc .= "Custom: $customldesc " if ($customldesc);
-    
+
     push (@config,
-	'display_name' => $sdesc) if $unique{$ifdescr{$index}};
-    
+        'display_name' => $sdesc) if $unique{$ifdescr{$index}};
+
     push(@config,
         'notes'        => $ldesc,
         '_display_order'       => $order,
-     );
+    );
 
     ### Decreasing order of indexes
     $order -= 1;
@@ -1383,18 +1402,18 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     ### faster interfaces.
 
     my $max = !($ifspeed{$index}) ? undef :
-	    ($ifspeed{$index} == 0xffffffff && defined($ifHighSpeed{$index}) &&
-	        $ifHighSpeed{$index} > 0) ? int(1000000*$ifHighSpeed{$index}) :
-		    int($ifspeed{$index});
-    
+            ($ifspeed{$index} == 0xffffffff && defined($ifHighSpeed{$index}) &&
+                $ifHighSpeed{$index} > 0) ? int(1000000*$ifHighSpeed{$index}) :
+            int($ifspeed{$index});
+
     my $maxoctets = defined($max) ? int($max/8) : undef;
     if ($opts{show_max} == 1 && defined($max) && ($hc eq '-hc')) {
-	push(@config,
-        '_maximisedatasource'             => 'ifHCInOctets,ifHCOutOctets',
-        '_maximisedatasourcevalue'             => "$max,$max",
-        '_ds_max'             => $max,
-        '_ds_max_octets'      => $maxoctets,
-	);
+        push(@config,
+            '_maximisedatasource'             => 'ifHCInOctets,ifHCOutOctets',
+            '_maximisedatasourcevalue'             => "$max,$max",
+            '_ds_max'             => $max,
+            '_ds_max_octets'      => $maxoctets,
+        );
     } elsif ($opts{show_max} == 1 && defined($max) && ($hc ne '-hc')) {
         push(@config,
             '_maximisedatasource'      => 'ifInOctets,ifOutOctets',
@@ -1429,11 +1448,11 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $header .= "\n### - Use '--voip' to enable stats.\n";
         $c="# ";
         Debug (" Voip & No --voip");
-   } elsif ($opts{gigonly} && (int($ifspeed{$index}) < 1000000000) ) {
+    } elsif ($opts{gigonly} && (int($ifspeed{$index}) < 1000000000) ) {
         $header .= "\n### - Filtered at user request: '--gigonly'.\n";
         $c="# ";
         Debug (" Skipping " . int($ifspeed{$index}) . " < 1000Mbit interface, do not use --gigonly to see them.");
-   } elsif ((!defined($speed) || $speed == 0) && !$opts{nospeedcheck}) {
+    } elsif ((!defined($speed) || $speed == 0) && !$opts{nospeedcheck}) {
         $header .= "\n### - Has zero or insane speed.\n";
         $c="# ";
         Debug (" Has zero or insane Speed");
@@ -1454,14 +1473,14 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $c="# ";
         Debug (" Speed: $speed_str mtu: $ifmtu{$index} DONTCOLLECT");
     } elsif ($opts{namedonly} &&
-         (!defined $intdescr{$index} || $intdescr{$index} eq "")) {
+        (!defined $intdescr{$index} || $intdescr{$index} eq "")) {
         $header .= "\n#### - Has no name and --namedonly specified.\n";
         $c="# ";
         Debug (" Speed: $speed_str mtu: $ifmtu{$index} Unnamed Rejected, & --namedonly");
     } elsif ($ifdescr{$index} =~ /ATM[\d\/]+\.??0\-aal5\slayer/ && $iftype{$index} == '49'
-       || $ifdescr{$index} =~ /Virtual-(Access|Template)|ATM[\d\/]+-(interleave)|Bearer Channel/) {
-       $header .= "\n#### - Interface either has no valid SNMP counters or is dynamic.\n";
-$c="# ";
+        || $ifdescr{$index} =~ /Virtual-(Access|Template)|ATM[\d\/]+-(interleave)|Bearer Channel/) {
+        $header .= "\n#### - Interface either has no valid SNMP counters or is dynamic.\n";
+        $c="# ";
         Debug (" Invalid or dynamic interface");
     } elsif ($opts{logLevel} eq 'debug') {
         Debug (($iftype{$index} == '103' or $iftype{$index} == '104') ? " OK" : " Speed: $speed_str mtu: $ifmtu{$index} OK");
@@ -1469,7 +1488,7 @@ $c="# ";
         $header .= "\n### - Interface that is not collected based on a description command-line filter.\n";
         $c="# ";
         Debug (" Speed: $speed_str mtu: $ifmtu{$index} sdesc: $sdesc not in ports list");
-    } 
+    }
 
     ### Skip all targets that are not used. To show all interfaces
     ### use the --showunused option in calling the script.
@@ -1480,25 +1499,25 @@ $c="# ";
     ### Reset the show_max variable to true. If an interface
     ### Does not need it, disable it in the module that requires it at each iteration.
 
-    $opts{show_max} = 1; 
-    $opts{nomtucheck} = 0; 
-    $opts{nospeedcheck} = 0; 
-    
+    $opts{show_max} = 1;
+    $opts{nomtucheck} = 0;
+    $opts{nospeedcheck} = 0;
+
     ### Write the target interface to the configuration file
-    
+
     if (@plugins) {
         foreach my $plugin (@plugins) {
-	    next if $wmatch;
+            next if $wmatch;
             my %data = (
-                    'file'          => \$file,
-                    'c'             => \$c,
-                    'target'        => \$target,
-                    'config'        => \@config,
-                    'wmatch'        => \$wmatch,
-                    );
-            $plugin->custom_files(\%data, \%opts); 
+                'file'          => \$file,
+                'c'             => \$c,
+                'target'        => \$target,
+                'config'        => \@config,
+                'wmatch'        => \$wmatch,
+            );
+            $plugin->custom_files(\%data, \%opts);
             # $wmatch returned by reference in data hash reference
-	}
+        }
     }
 
     if (!$wmatch) {
@@ -1506,32 +1525,31 @@ $c="# ";
         if ($c) {
             Debug (" Commented-out: True, with prefix :" . $c);
         } else {
-            Debug (" Commented-out: False ");            
+            Debug (" Commented-out: False ");
         }
         Debug " Config: @config";
 
         my $ifprefix = "if.";
-	$ifprefix = "if_5min." if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) );
- 
-	push(@config, 'service_description'  => $ifprefix . $target);
-	
-	if ($opts{staticinstance}) {
-	    unshift (@config, '_inst' => $index);
-	} else {
-	    unshift (@config, '_instname'      => $target_raw);
-	    unshift (@config, '_mapping'       => "interface-name");
-	}
-	my $porttemplate;
+        $ifprefix = "if-5min." if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) );
+
+        push(@config, 'service_description'  => $ifprefix . $target);
+
+        if ($opts{staticinstance}) {
+            unshift (@config, '_inst' => $index);
+        } else {
+            unshift (@config, '_instname'      => $target_raw);
+            unshift (@config, '_mapping'       => "interface-name");
+        }
+        my $porttemplate;
         if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) ){
-	    $porttemplate = $opts{dtemplate} . "_5min";
+            $porttemplate = $opts{dtemplate} . "_5min";
         } else {
             $porttemplate =  $opts{dtemplate};
         }
-	        
-	unshift(@config,
-        'host_name'            => $opts{devicename},
-        'use'              => $porttemplate);
-
+        Debug ("Port template: $porttemplate");
+        unshift(@config,
+            'host_name'            => $opts{devicename},
+            'use'              => $porttemplate);
         $file->writetarget("service {", $c, @config);
     }
 }
@@ -1558,19 +1576,28 @@ sub contact {
     # causing the trouble and re-query
     if ((!defined $sysObjectID) && ($opts{snmp_ver} ne '1')) {
         Warn ("WARNING: Device does not seem to support snmpv2c, switching to v1 and re-trying.");
-	    $opts{snmp_ver} = '1';
-	    snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
+        $opts{snmp_ver} = '1';
+        snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
         ($sysObjectID) = get('sysObjectID');
     } elsif (!defined $sysObjectID) {
         Warn ("WARNING: Device does not seem to support snmpv1 correctly, try running genDevConfig with --snmpv2c option\n  You should always try running with snmpv2c support enabled, unless the device is known to be allergic to it.");
-    } 
+    }
 
     if (!defined $sysObjectID || $sysObjectID eq 0) {
         Error ("Unable to retrieve sysObjectID from $opts{ip}.\n        Bad community name and/or Device not responding. End.");
         return 0;
     }
-    $opts{sysObjectID} = $sysObjectID; 
+    $opts{sysObjectID} = $sysObjectID;
     return 1;
+}
+
+sub pad {
+    my( $str, $width, $pad )= @_;
+    $width= 2   if  ! defined $width;
+    $pad= "0"   if  ! defined $pad;
+    my ($mapping) = map {sprintf"%${width}s",$_} $str;
+    $mapping =~ s/ /$pad/g;
+    return  $mapping;
 }
 
 ###############################################################################
@@ -1594,12 +1621,12 @@ sub portlist2list {
     my($plist) = @_;
     my $chunk;
     my @plist = ();
-   
+
     if ($plist eq "none") {
         return @plist;
     }
     foreach $chunk (split(/,/, $plist)) {
-            push (@plist,$chunk);
+        push (@plist,$chunk);
     }
     return @plist;
 }
@@ -1663,16 +1690,16 @@ sub parentlist {
 sub template {
     my($opt,$value) = @_;
     if ($opts{$opt} eq '') {
-	$opts{$opt} = $value;
+        $opts{$opt} = $value;
     } else {
-	$opts{$opt} = join (",", $opts{$opt}, $value);
+        $opts{$opt} = join (",", $opts{$opt}, $value);
     }
 }
 
 sub inlist {
     my ($string,@list) = @_;
     foreach my $item (@list) {
-       return 1 if ($string =~ /$item/);
+        return 1 if ($string =~ /$item/);
     }
     return 0;
 }
@@ -1702,7 +1729,7 @@ sub setOutputDir {
     $value =~ s/\/$//; #Strip any trailing slashes
     $opts{outputdir} = $value . '/';
     # config-tree relative path
-    $opts{outputdir_ct} = '/' . $value; 
+    $opts{outputdir_ct} = '/' . $value;
 }
 
 
@@ -1886,7 +1913,7 @@ Example to get all ports with a description of XFI or uplink : --ports "uplink,X
 
 =item B<--portsuplinks <portlist>>
 
-Changes the interface collection interval to 5 minutes, except for the listed ports. The listed ports will be collected with triggers and default collection interval. All interfaces collected with 5 minutes intervals will also have a different interface name, if_5min. , instead of, if. , for regex matching with timeseries database (Graphite). Do not forget to double quote the list.  Matching is case sensitive. This would be typically used to collect access switches.
+Changes the interface collection interval to 5 minutes, except for the listed ports. The listed ports will be collected with triggers and default collection interval. All interfaces collected with 5 minutes intervals will also have a different interface name, if-5min. , instead of, if. , for regex matching with timeseries database (Graphite). Do not forget to double quote the list.  Matching is case sensitive. This would be typically used to collect access switches.
 
 Example: --portsuplinks "SuperUplink,Stacking,XFI"
 

@@ -80,6 +80,7 @@ my @types = ( "$OIDS{'AMN-1000-TE'}",
 
 my $snmp;
 my $script = "Accedian genDevConfig Module";
+my $module = "Accedian";
 
 ###############################################################################
 ###############################################################################
@@ -119,7 +120,7 @@ sub can_handle {
     
     foreach my $type (@types) {
         $type =~ s/\./\\\./g; # Use this to escape dots for pattern matching
-        Debug ("Type : " . $type);
+        Debug ("$module Type : " . $type);
         return 1 if ($opts->{sysObjectID} =~ m/$type/gi)
     }
     return 0;

@@ -62,6 +62,7 @@ my @types = ( "",
 
 my $snmp;
 my $script = "sysUptime genDevConfig Module";
+my $module = "sysUptime";
 
 ###############################################################################
 ###############################################################################
@@ -102,6 +103,8 @@ sub can_handle {
     register_oids(%OIDS);
     
     $sysUptime     = get('sysUptime');
+    Debug ("$module Type : Based on output of sysUptime");
+
     return 1 if ( $sysUptime );
     return 0;
 }

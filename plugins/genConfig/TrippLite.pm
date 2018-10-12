@@ -68,6 +68,8 @@ my @types = ( "POWERALERT 12",
 
 my $snmp;
 my $script = "TrippLite PDU genDevConfig Module";
+my $module = "TrippLite";
+
 
 ###############################################################################
 ###############################################################################
@@ -102,8 +104,10 @@ sub device_types {
 
 sub can_handle {
     my($self, $opts) = @_;
+    Debug ("$module Trying to match sysDescr : " . $opts->{sysDescr});
 
     foreach my $type (@types) {
+        Debug ("$module Type : " . $type);
         return ($opts->{sysDescr} =~ m/$type/gi)
 
         # Example using OIDs instead of a string match

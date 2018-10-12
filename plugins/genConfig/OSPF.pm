@@ -62,6 +62,7 @@ my @types = ( "",
 
 my $snmp;
 my $script = "OSPF genDevConfig Module";
+my $module = "OSPF";
 
 ###############################################################################
 ###############################################################################
@@ -101,7 +102,8 @@ sub can_handle {
     ### Add our OIDs to the the global OID list
 
     register_oids(%OIDS);
-    
+    Debug ("$module Type : check ospfRuns");
+
     %ospfSpfRuns     = gettable('ospfSpfRuns');
     return 1 if ( %ospfSpfRuns );
     return 0;

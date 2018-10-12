@@ -294,11 +294,13 @@ sub custom_interfaces {
     my %slotPortMapping   = %{$data->{slotPortMapping}};
     my @config     = @{$data->{config}};
     my $hc         = $data->{hc};
+    my $nu         = $data->{nu};
     my $class      = $data->{class};
     my $match      = $data->{match};
     my $customsdesc = $data->{customsdesc};
     my $customldesc = $data->{customldesc};
-    my $c = $data->{c};
+    my $c          = $data->{c};
+    my $target = $data->{target};
 
 
     ###
@@ -308,8 +310,10 @@ sub custom_interfaces {
     # Set a non-sticky interface setting for invalid speed in nortel MIBs
 
     ###Debug ("$module Interface name: $ifdescr{$index}, $intdescr{$index}");
-    push(@config, '_dstemplate' => 'standard-interface-noql');
+    push(@config, '_dstemplate' => 'standard-interface-noql'  . $nu . $hc);
+    push(@config, '_triggergroup' => 'interface' . $nu . $hc);
     $match = 1;
+
     ###
     ### END INTERFACE CUSTOM CONFIG SECTION
     ###
@@ -323,10 +327,12 @@ sub custom_interfaces {
     %{$data->{slotPortMapping}} = %slotPortMapping;
     @{$data->{config}} = @config;
     $data->{hc}     = $hc;
+    $data->{nu}        = $nu;
     $data->{class}  = $class;
     $data->{match}  = $match;
     $data->{customsdesc} = $customsdesc;
     $data->{customldesc} = $customldesc;
+    $data->{target} = $target;
     $data->{c} = $c;
     return;
 }

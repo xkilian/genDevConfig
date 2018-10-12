@@ -62,6 +62,7 @@ my @types = ( "",
 
 my $snmp;
 my $script = "IPFORWARD genDevConfig Module";
+my $module = "IPFORWARD";
 
 ###############################################################################
 ###############################################################################
@@ -101,7 +102,8 @@ sub can_handle {
     ### Add our OIDs to the the global OID list
 
     register_oids(%OIDS);
-    
+    Debug ("$module Type : Checking to see if inetCidrRouteNumber is set");
+
     $inetCidrRouteNumber     = get('inetCidrRouteNumber');
     return 1 if ( $inetCidrRouteNumber );
     return 0;

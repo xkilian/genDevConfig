@@ -43,9 +43,9 @@ my $VERSION = 1.16;
 # returned by the devices. The name is a regular expression.
 ###############################################################################
 my @types = ( 'IOS ',
-              '^C\d\d\d+ Software \(',
-              'Cisco Systems Catalyst'
-            );
+    '^C\d\d\d+ Software \(',
+    'Cisco Systems Catalyst'
+);
 
 
 ###############################################################################
@@ -53,157 +53,157 @@ my @types = ( 'IOS ',
 ###############################################################################
 
 my(%SensorDataType)=('1'  =>  'other',
-                  '2'   =>  'unknown',
-                  '3'   =>  'voltsAC',
-                  '4'   =>  'voltsDC',
-                  '5'   =>  'amperes',
-                  '6'   =>  'watts',
-                  '7'   =>  'hertz',
-                  '8'   =>  'celsius',
-                  '9'   =>  'percentRH',
-                  '10'  =>  'rpm',
-                  '11'  =>  'cmm',
-                  '12'  =>  'truthvalue',
-                  '13'  =>  'specialEnum',
-                  '14'  =>  'dBm',
-                );
+    '2'   =>  'unknown',
+    '3'   =>  'voltsAC',
+    '4'   =>  'voltsDC',
+    '5'   =>  'amperes',
+    '6'   =>  'watts',
+    '7'   =>  'hertz',
+    '8'   =>  'celsius',
+    '9'   =>  'percentRH',
+    '10'  =>  'rpm',
+    '11'  =>  'cmm',
+    '12'  =>  'truthvalue',
+    '13'  =>  'specialEnum',
+    '14'  =>  'dBm',
+);
 my(%SensorDataScale)=('1'  =>  'yocto',
-                  '2'   =>  'zepto',
-                  '3'   =>  'atto',
-                  '4'   =>  'femto',
-                  '5'   =>  'pico',
-                  '6'   =>  'nano',
-                  '7'   =>  'micro',
-                  '8'   =>  'milli',
-                  '9'   =>  'units',
-                  '10'  =>  'kilo',
-                  '11'  =>  'mega',
-                  '12'  =>  'giga',
-                  '13'  =>  'tera',
-                  '14'  =>  'exa',
-                  '15'  =>  'peta',
-                  '16'  =>  'zetta',
-                  '17'  =>  'yotta',
-                );
+    '2'   =>  'zepto',
+    '3'   =>  'atto',
+    '4'   =>  'femto',
+    '5'   =>  'pico',
+    '6'   =>  'nano',
+    '7'   =>  'micro',
+    '8'   =>  'milli',
+    '9'   =>  'units',
+    '10'  =>  'kilo',
+    '11'  =>  'mega',
+    '12'  =>  'giga',
+    '13'  =>  'tera',
+    '14'  =>  'exa',
+    '15'  =>  'peta',
+    '16'  =>  'zetta',
+    '17'  =>  'yotta',
+);
 
 ###############################################################################
 ### SAA RTR Agent type definitions.
 ###############################################################################
 
 my(%rttprotocol)=('1'   =>  'notApplicable',
-                  '2'   =>  'ipIcmpEcho',
-                  '3'   =>  'ipUdpEchoAppl',
-                  '4'   =>  'snaRUEcho',
-                  '5'   =>  'snaLU0EchoAppl',
-                  '6'   =>  'snaLU2EchoAppl',
-                  '7'   =>  'snaLU62Echo',
-                  '8'   =>  'snaLU62EchoAppl',
-                  '9'   =>  'appleTalkEcho',
-                  '10'  =>  'appleTalkEchoAppl',
-                  '11'  =>  'decNetEcho',
-                  '12'  =>  'decNetEchoAppl',
-                  '13'  =>  'ipxEcho',
-                  '14'  =>  'ipxEchoAppl',
-                  '15'  =>  'isoClnsEcho',
-                  '16'   =>  'isoClnsEchoAppl',
-                  '17'  =>  'vinesEcho',
-                  '18'  =>  'vinesEchoAppl',
-                  '19'  =>  'xnsEcho',
-                  '20'  =>  'xnsEchoAppl',
-                  '21'  =>  'apolloEcho',
-                  '22'  =>  'apolloEchoAppl',
-                  '23'  =>  'netbiosEchoAppl',
-                  '24'  =>  'ipTcpConn',
-                  '25'  =>  'httpAppl',
-                  '26'  =>  'dnsAppl',
-                  '27'  =>  'jitterAppl',
-                  '28'  =>  'dlswAppl',
-                  '29'  =>  'dhcpAppl',
-                  '30'  =>  'ftpAppl',
-                  '31'  =>  'mplsLspPingAppl',
-                  '32'  =>  'voipAppl',
-                  '33'  =>  'rtpAppl',
-                  '34'  =>  'icmpJitterAppl'
-                 );
+    '2'   =>  'ipIcmpEcho',
+    '3'   =>  'ipUdpEchoAppl',
+    '4'   =>  'snaRUEcho',
+    '5'   =>  'snaLU0EchoAppl',
+    '6'   =>  'snaLU2EchoAppl',
+    '7'   =>  'snaLU62Echo',
+    '8'   =>  'snaLU62EchoAppl',
+    '9'   =>  'appleTalkEcho',
+    '10'  =>  'appleTalkEchoAppl',
+    '11'  =>  'decNetEcho',
+    '12'  =>  'decNetEchoAppl',
+    '13'  =>  'ipxEcho',
+    '14'  =>  'ipxEchoAppl',
+    '15'  =>  'isoClnsEcho',
+    '16'   =>  'isoClnsEchoAppl',
+    '17'  =>  'vinesEcho',
+    '18'  =>  'vinesEchoAppl',
+    '19'  =>  'xnsEcho',
+    '20'  =>  'xnsEchoAppl',
+    '21'  =>  'apolloEcho',
+    '22'  =>  'apolloEchoAppl',
+    '23'  =>  'netbiosEchoAppl',
+    '24'  =>  'ipTcpConn',
+    '25'  =>  'httpAppl',
+    '26'  =>  'dnsAppl',
+    '27'  =>  'jitterAppl',
+    '28'  =>  'dlswAppl',
+    '29'  =>  'dhcpAppl',
+    '30'  =>  'ftpAppl',
+    '31'  =>  'mplsLspPingAppl',
+    '32'  =>  'voipAppl',
+    '33'  =>  'rtpAppl',
+    '34'  =>  'icmpJitterAppl'
+);
 
 # These are the OIDS used by this plugin
 # the OIDS should only be those necessary for index mapping or
 # recognizing if a feature is supported or not by the device.
 my %OIDS = (
 
-       ### from mib-2.entityMIB.entityMIBObjects.entityPhysical.
-       ###      entPhysicalTable.entPhysicalEntry
+    ### from mib-2.entityMIB.entityMIBObjects.entityPhysical.
+    ###      entPhysicalTable.entPhysicalEntry
 
-       'entPhysicalName'            => '1.3.6.1.2.1.47.1.1.1.1.7',
-       'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
-       'entPhysicalModelName'       => '1.3.6.1.2.1.47.1.1.1.1.13',
+    'entPhysicalName'            => '1.3.6.1.2.1.47.1.1.1.1.7',
+    'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
+    'entPhysicalModelName'       => '1.3.6.1.2.1.47.1.1.1.1.13',
 
-       ### from cisco.ciscoMgmt.ciscoRttMonMIB.ciscoRttMonObjects.
-       ### rttMonCtrl.rttMonCtrlAdminTable.rttMonCtrlAdminEntry. *
+    ### from cisco.ciscoMgmt.ciscoRttMonMIB.ciscoRttMonObjects.
+    ### rttMonCtrl.rttMonCtrlAdminTable.rttMonCtrlAdminEntry. *
 
-       'rttMonCtrlAdminTag'           => '1.3.6.1.4.1.9.9.42.1.2.1.1.3',
-       'rttMonCtrlOperState'         => '1.3.6.1.4.1.9.9.42.1.2.9.1.10',
+    'rttMonCtrlAdminTag'           => '1.3.6.1.4.1.9.9.42.1.2.1.1.3',
+    'rttMonCtrlOperState'         => '1.3.6.1.4.1.9.9.42.1.2.9.1.10',
 
-       ### from cisco.ciscoMgmt.ciscoRttMonMIB.ciscoRttMonObjects...
-       ### I can't figure out in what format the TargetAdress is encoded in?
-       ### If anyone can figure it out it would be very cool.
+    ### from cisco.ciscoMgmt.ciscoRttMonMIB.ciscoRttMonObjects...
+    ### I can't figure out in what format the TargetAdress is encoded in?
+    ### If anyone can figure it out it would be very cool.
 
-       'rttMonEchoAdminProtocol'      => '1.3.6.1.4.1.9.9.42.1.2.2.1.1',
-       'rttMonEchoAdminTargetAddress' => '1.3.6.1.4.1.9.9.42.1.2.2.1.2',
+    'rttMonEchoAdminProtocol'      => '1.3.6.1.4.1.9.9.42.1.2.2.1.1',
+    'rttMonEchoAdminTargetAddress' => '1.3.6.1.4.1.9.9.42.1.2.2.1.2',
 
-       'ccarConfigAccIdx'      =>          '1.3.6.1.4.1.9.9.113.1.1.1.1.4',
+    'ccarConfigAccIdx'      =>          '1.3.6.1.4.1.9.9.113.1.1.1.1.4',
 
-       'cbwfqObject' => '1.3.6.1.4.1.9.9.166.1.7.1.1.1',
-       'cbwfqPolicy' => '1.3.6.1.4.1.9.9.166.1.5.1.1.2',
-       'cbQosPolicyDirection' => '1.3.6.1.4.1.9.9.166.1.1.1.1.3',
-       'cbQosIfIndex' => '1.3.6.1.4.1.9.9.166.1.1.1.1.4',
+    'cbwfqObject' => '1.3.6.1.4.1.9.9.166.1.7.1.1.1',
+    'cbwfqPolicy' => '1.3.6.1.4.1.9.9.166.1.5.1.1.2',
+    'cbQosPolicyDirection' => '1.3.6.1.4.1.9.9.166.1.1.1.1.3',
+    'cbQosIfIndex' => '1.3.6.1.4.1.9.9.166.1.1.1.1.4',
 
-       ### from Cisco OLD-CHASSIS-MIB
+    ### from Cisco OLD-CHASSIS-MIB
 
-       'cardIfSlotNumber'      =>          '1.3.6.1.4.1.9.3.6.13.1.2',
-       'cardIfPortNumber'      =>          '1.3.6.1.4.1.9.3.6.13.1.3',
+    'cardIfSlotNumber'      =>          '1.3.6.1.4.1.9.3.6.13.1.2',
+    'cardIfPortNumber'      =>          '1.3.6.1.4.1.9.3.6.13.1.3',
 
-       ### from CISCO-PROCESS-MIB
-       ###
+    ### from CISCO-PROCESS-MIB
+    ###
 
-       'cpmCPUTotal1minRev'         => '1.3.6.1.4.1.9.9.109.1.1.1.1.7',
-       'cpmCPUTotalPhysicalIndex'   => '1.3.6.1.4.1.9.9.109.1.1.1.1.2',
+    'cpmCPUTotal1minRev'         => '1.3.6.1.4.1.9.9.109.1.1.1.1.7',
+    'cpmCPUTotalPhysicalIndex'   => '1.3.6.1.4.1.9.9.109.1.1.1.1.2',
 
-       ### from cisco.ciscoMgmt.ciscoFrameRelayMIB.ciscoFrMIBObjects.
-       ###      cfrCircuitObjs.cfrExtCircuitTable.cfrExtCircuitEntry
+    ### from cisco.ciscoMgmt.ciscoFrameRelayMIB.ciscoFrMIBObjects.
+    ###      cfrCircuitObjs.cfrExtCircuitTable.cfrExtCircuitEntry
 
-       'cfrExtCircuitSubifIndex' => '1.3.6.1.4.1.9.9.49.1.2.2.1.3',
+    'cfrExtCircuitSubifIndex' => '1.3.6.1.4.1.9.9.49.1.2.2.1.3',
 
-       ### from mib-2.transmission.frame-relay.frCircuitTable.
-       ###      frCircuitEntry.
+    ### from mib-2.transmission.frame-relay.frCircuitTable.
+    ###      frCircuitEntry.
 
-       'frCircuitState'   => '1.3.6.1.2.1.10.32.2.1.3',
+    'frCircuitState'   => '1.3.6.1.2.1.10.32.2.1.3',
 
-       ### from cisco.local.linterfaces.lifTable.lifEntry
+    ### from cisco.local.linterfaces.lifTable.lifEntry
 
-       'CiscolocIfDescr'  => '1.3.6.1.4.1.9.2.2.1.1.28',
+    'CiscolocIfDescr'  => '1.3.6.1.4.1.9.2.2.1.1.28',
 
-       ### from Cisco ESSWITCH-MIB
-       'swPortName' => '1.3.6.1.4.1.437.1.1.3.3.1.1.3',
+    ### from Cisco ESSWITCH-MIB
+    'swPortName' => '1.3.6.1.4.1.437.1.1.3.3.1.1.3',
 
-       ### from mib-2.transmission.dialControlMib.dialControlMibObjects.
-       ###      dialCtlPeer.dialCtlPeerCfgTable.dialCtlPeerCfgEntry.
-       'dialCtlPeerCfgOriginateAddress' => '1.3.6.1.2.1.10.21.1.2.1.1.4',
-       'dialCtlPeerCfgIfType' => '1.3.6.1.2.1.10.21.1.2.1.1.2',
-       
-       ### from Cisco-EnvMon-MIB
-       'ciscoEnvMonFanState' => '1.3.6.1.4.1.9.9.13.1.4.1.3',
-       'ciscoEnvMonFanStatusDescr' => '1.3.6.1.4.1.9.9.13.1.4.1.2',
-       
-        'ciscoEnvMonSupplyState' => '1.3.6.1.4.1.9.9.13.1.5.1.3',
-       'ciscoEnvMonSupplyStatusDescr' => '1.3.6.1.4.1.9.9.13.1.5.1.2',
+    ### from mib-2.transmission.dialControlMib.dialControlMibObjects.
+    ###      dialCtlPeer.dialCtlPeerCfgTable.dialCtlPeerCfgEntry.
+    'dialCtlPeerCfgOriginateAddress' => '1.3.6.1.2.1.10.21.1.2.1.1.4',
+    'dialCtlPeerCfgIfType' => '1.3.6.1.2.1.10.21.1.2.1.1.2',
 
-       'entSensorDataType'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.1',
-       'entSensorDataScale'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.2',
-       'entSensorPrecision'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.3',
-       'entSensorValue'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.4',
-       
-      );
+    ### from Cisco-EnvMon-MIB
+    'ciscoEnvMonFanState' => '1.3.6.1.4.1.9.9.13.1.4.1.3',
+    'ciscoEnvMonFanStatusDescr' => '1.3.6.1.4.1.9.9.13.1.4.1.2',
+
+    'ciscoEnvMonSupplyState' => '1.3.6.1.4.1.9.9.13.1.5.1.3',
+    'ciscoEnvMonSupplyStatusDescr' => '1.3.6.1.4.1.9.9.13.1.5.1.2',
+
+    'entSensorDataType'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.1',
+    'entSensorDataScale'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.2',
+    'entSensorPrecision'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.3',
+    'entSensorValue'  => '1.3.6.1.4.1.9.9.91.1.1.1.1.4',
+
+);
 
 ###############################################################################
 ### Private variables
@@ -243,7 +243,7 @@ sub plugin_name {
 sub can_handle {
     my($self, $opts) = @_;
 
-    Debug ("$module Trying to match sysObjectID : " . $opts->{sysDescr});
+    Debug ("$module Trying to match sysDescr : " . $opts->{sysDescr});
 
     #return (grep { $opts->{sysDescr} =~ m/$_/gi } @types)
     foreach my $type (@types) {
@@ -278,7 +278,7 @@ sub discover {
     ($opts->{vendor_soft_ver}) = ($opts->{sysDescr} =~ m/Version\s+([\d\.]+)\(\d/o);
     if (defined $opts->{vendor_soft_ver}) {
         $opts->{vendor_descr_oid} = ($opts->{vendor_soft_ver} ge "11.1") # IOS 11.1 supports ifAlias
-                       ? "ifAlias" : "CiscolocIfDescr";
+            ? "ifAlias" : "CiscolocIfDescr";
         $opts->{req_framestats} = 0 if ($opts->{vendor_soft_ver} le "11.2"); # Demote framestats for unsupported IOS
 
         ## 12.2+ supports ifInOctets/ifOutOctets on
@@ -302,18 +302,18 @@ sub discover {
     # 7x00 Series platforms are starting to show some issues with the OLD-CHASSIS-MIB.
     $opts->{req_ciscoslotport} = 0  if (($opts->{sysDescr} =~ / GS / || $opts->{sysDescr} =~ / RSP /));
 
-     if ($opts->{sysDescr} =~ /IOS\s+(\(tm\)|Software,)/) {
+    if ($opts->{sysDescr} =~ /IOS\s+(\(tm\)|Software,)/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /IOS\s+(?:\(tm\)|Software,)\s+(\S+)/;
         Info("Found an IOS device: model: $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template";
+        $opts->{dtemplate} = "default-snmp-template";
     } elsif ($opts->{sysDescr} =~ /Cisco Systems Catalyst/) {
         ($opts->{model}) = $opts->{sysDescr} =~ /Cisco Systems Catalyst (\d+)/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template";
+        $opts->{dtemplate} = "default-snmp-template";
     } elsif ($opts->{sysDescr} =~ /C\d\d\d+ Software \(/ ) {
- 	 ($opts->{model}) = $opts->{sysDescr} =~ /(\S+) Software \(/;
+        ($opts->{model}) = $opts->{sysDescr} =~ /(\S+) Software \(/;
         Info("Found an IOS device (alternate sysDescr) : $opts->{model}");
-	$opts->{dtemplate} = "default-snmp-template";
+        $opts->{dtemplate} = "default-snmp-template";
     }
 
     if ($opts->{model} =~ /MSFC/) {
@@ -365,12 +365,12 @@ sub discover {
         $opts->{chassisttype} = 'Cisco-4500-Router';
     } elsif ($opts->{model} =~ /3[789]00/) {
         $opts->{chassisttype} = 'Cisco-3800-Router';
-	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
+        $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} =~ /3600/) {
         $opts->{chassisttype} = 'Cisco-3600-Router';
-   } elsif ($opts->{model} =~ /2[789]00/) {
+    } elsif ($opts->{model} =~ /2[789]00/) {
         $opts->{chassisttype} = 'Cisco-2900-Router';
-	$opts->{usev2c} = 1 if ($opts->{req_usev2c});
+        $opts->{usev2c} = 1 if ($opts->{req_usev2c});
     } elsif ($opts->{model} eq "C1200") {
         $opts->{chassisttype} = 'Cisco-1200-AP';
     } elsif ($opts->{model} =~ /2600/) {
@@ -414,6 +414,10 @@ sub discover {
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
         $opts->{maxoidrequest} = "32";
+    } elsif ($opts->{model} =~ /s2t54/) { #Catalyst 6K Sup2
+        $opts->{chassisttype} = 'Cisco-Generic-Router';
+        $opts->{usev2c} = 1 if ($opts->{req_usev2c});
+        $opts->{maxoidrequest} = "32";
     } elsif ($opts->{ciscobox}) {   # Default Cisco config
         $opts->{chassisttype} = 'Cisco-Generic-Router';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
@@ -430,7 +434,7 @@ sub discover {
 
 sub custom_targets {
     my ($self,$data,$opts) = @_;
-        
+
     # Saving local copies of runtime data
     my %ifspeed    = %{$data->{ifspeed}};
     my %ifdescr    = %{$data->{ifdescr}};
@@ -444,7 +448,7 @@ sub custom_targets {
     ### START DEVICE CUSTOM CONFIG SECTION
     ###
 
-#    ### Cisco Specific Slot/Port mapping tables
+    #    ### Cisco Specific Slot/Port mapping tables
     #
     #my %cardIfSlotNumber;
     #my %cardIfPortNumber;
@@ -458,30 +462,30 @@ sub custom_targets {
     #        next if $cardIfSlotNumber{$index} eq "-1"; # Bug fix for invalid slots numbers
     #            $slotPortMapping{$index} = "$cardIfSlotNumber{$index}/$cardIfPortNumber{$index}";
     #        } else {
-#		$slotPortMapping{$index} = "$cardIfSlotNumber{$index}/0";
-#            }
-#        }
-#    }
-#    # Build generic two level Slot/Port mapping for Cisco devices.
-#    foreach my $index (keys %ifdescr) {
-#        if ($ifdescr{$index} =~ /([a-zA-Z]+)(\d+)$/) {
-#            next if (%cardIfSlotNumber && %cardIfPortNumber);
-#            ### Fudge the slot/port mapping to the ifdescr for Cisco devices
-#            $slotPortMapping{$index} = "$1$2";
-#        }
-#        next unless $ifdescr{$index} =~ m(([a-zA-Z]+)(\d+)/(\d+)(/?)(\d*));
-#        ### Build a mapping between the ifDescr and its associated Slot.
-#        $slotPortList{$ifdescr{$index}} = $2;
-#        ### Build a mapping between the Slot number and its name.
-#        $slotNameList{$2} = "$1_$2";
-#        ### Build a list of existing slots. This will serve to store the 
-#        $slotList{$2}++;
-#        next if (%cardIfSlotNumber && %cardIfPortNumber);
-#        if (!$4){
-#                $slotPortMapping{$index} = "$1$2/$3";
-#        }else{
-#                $slotPortMapping{$index} = "$1$2/$3$4$5";
-#        }
+    #		$slotPortMapping{$index} = "$cardIfSlotNumber{$index}/0";
+    #            }
+    #        }
+    #    }
+    #    # Build generic two level Slot/Port mapping for Cisco devices.
+    #    foreach my $index (keys %ifdescr) {
+    #        if ($ifdescr{$index} =~ /([a-zA-Z]+)(\d+)$/) {
+    #            next if (%cardIfSlotNumber && %cardIfPortNumber);
+    #            ### Fudge the slot/port mapping to the ifdescr for Cisco devices
+    #            $slotPortMapping{$index} = "$1$2";
+    #        }
+    #        next unless $ifdescr{$index} =~ m(([a-zA-Z]+)(\d+)/(\d+)(/?)(\d*));
+    #        ### Build a mapping between the ifDescr and its associated Slot.
+    #        $slotPortList{$ifdescr{$index}} = $2;
+    #        ### Build a mapping between the Slot number and its name.
+    #        $slotNameList{$2} = "$1_$2";
+    #        ### Build a list of existing slots. This will serve to store the
+    #        $slotList{$2}++;
+    #        next if (%cardIfSlotNumber && %cardIfPortNumber);
+    #        if (!$4){
+    #                $slotPortMapping{$index} = "$1$2/$3";
+    #        }else{
+    #                $slotPortMapping{$index} = "$1$2/$3$4$5";
+    #        }
     #
     #}
 
@@ -588,18 +592,18 @@ sub custom_targets {
                 my $triggertemplate = "chassis_cisco_ddm";
 
                 $file->writetarget("service {", '',
-                        'host_name'           => $opts->{devicename},
-                        'service_description' => $target,
-                        'notes'               => $ldesc,
-                        'display_name'        => $target,
-                        '_inst'               => $sensor,
-                        '_display_order'      => $opts->{order},
-                        '_dstemplate'         => "cisco-sensor-ddm",
-                        '_triggergroup'       => $triggertemplate,
-                        'use'                 => "generic-sensor-service",
+                    'host_name'           => $opts->{devicename},
+                    'service_description' => $target,
+                    'notes'               => $ldesc,
+                    'display_name'        => $target,
+                    '_inst'               => $sensor,
+                    '_display_order'      => $opts->{order},
+                    '_dstemplate'         => "cisco-sensor-ddm",
+                    '_triggergroup'       => $triggertemplate,
+                    'use'                 => "generic-sensor-service",
                 );
 
-            $opts->{order} -= 1; 
+                $opts->{order} -= 1;
             }
         }
     }
@@ -627,14 +631,14 @@ sub custom_targets {
             my $sdesc = "CPU " . $cpuname . ": " . $cpudescr;
 
             $file->writetarget("service {", '',
-	            'host_name'           => $opts->{devicename},
-                    'service_description' => $target,
-                    'notes'               => $ldesc,
-                    'display_name'        => $sdesc,
-                    '_inst'               => $cpu,
-                    '_display_order'              => $opts->{order},
-                    '_dstemplate'                 => "cisco-vip-cpu",
-                            	    'use'                 => $opts->{dtemplate},
+                'host_name'           => $opts->{devicename},
+                'service_description' => $target,
+                'notes'               => $ldesc,
+                'display_name'        => $sdesc,
+                '_inst'               => $cpu,
+                '_display_order'              => $opts->{order},
+                '_dstemplate'                 => "cisco-vip-cpu",
+                'use'                 => $opts->{dtemplate},
             );
 
             $opts->{order} -= 1;
@@ -675,21 +679,21 @@ sub custom_targets {
             my $ifacedescr;
             my $policy; # id: iface.directon
             my %dup_hash;
-	    
+
             $name_cell = $cisco_cbwfq_obj{$key};
             $config_id1_cell = $key;
-             
+
             foreach $key (keys %cisco_cbwfq_pol) {
                 ($pol_id_cell, $obj_id_cell)= split(/\./,$key);
                 $config_id2_cell = $cisco_cbwfq_pol{$key};
-        
+
                 if ($config_id1_cell == $config_id2_cell) {
                     if ( exists $dup_hash{$pol_id_cell} ) {
                         next if $dup_hash{$pol_id_cell} = $config_id2_cell;
                     } else {
                         $dup_hash{$pol_id_cell}	= $config_id2_cell;
                     }
-                    ($policydirection) = get('cbQosPolicyDirection' . "." . $pol_id_cell); 
+                    ($policydirection) = get('cbQosPolicyDirection' . "." . $pol_id_cell);
                     $policydirection = $policydirection == 1 ? "input" : "output";
                     ($ifindex) = get('cbQosIfIndex' . "." . $pol_id_cell);
                     Debug ("ifindex=$ifindex, policydirection=$policydirection, pol_id_cell=$pol_id_cell");
@@ -701,9 +705,9 @@ sub custom_targets {
                     $sdesc = "QoS $ifdescr\[$policydirection\]: $name_cell";
                     $targetdesc = "QoS_$ifdescr\_$policydirection\_$name_cell";
                     $targetname = "qos_$ifacedescr\_$policydirection\_$name_cell";
-        
+
                     $file->writetarget("service {", '',
-			'host_name'           => $opts->{devicename},
+                        'host_name'           => $opts->{devicename},
                         'service_description'   => $targetname,
                         '_interface_name' => $targetdesc,
                         'notes'          => $ldesc,
@@ -715,7 +719,7 @@ sub custom_targets {
                         'use'                 => $opts->{dtemplate},
                     );
                     $opts->{order} -= 1;
-    
+
                     $policy = "$ifdescr,$policydirection";
                     if (exists($servicepolicy{$policy})) {
                         $servicepolicy{$policy} = "$servicepolicy{$policy};$targetname";
@@ -749,16 +753,16 @@ sub custom_targets {
                 $direction="output"
             }
             if($cisco_car{$key}==0){
-                    $acl="ANY";
+                $acl="ANY";
             }else{
-                    $acl="ACL".$cisco_car{$key};
+                $acl="ACL".$cisco_car{$key};
             }
-     $ifname.="_".$acl."_".$direction."_ratelimit";
+            $ifname.="_".$acl."_".$direction."_ratelimit";
             $sdesc="rate-limit $direction $ifdescr{$ifindex}  - $intdescr{$ifindex}";
             $ldesc="$ifdescr{$ifindex} $acl $direction ratelimit  - $intdescr{$ifindex}";
 
             push(@config,
-            'host_name'           => $opts->{devicename},
+                'host_name'           => $opts->{devicename},
                 'service_description' =>  "ifcar." . $ifname,
                 '_display_order'              =>  $opts->{order},
                 'notes'               =>  $ldesc . " " . $rest,
@@ -793,21 +797,21 @@ sub custom_targets {
             #ICMP Operational values: <BR>Operational values: 1(Ok) 2(Disconnct) 4(Timeout) 5(Busy) 6(NoConnection) 7(LackIntRes) 8(BadSeqID) 9(BadData) 16(Error)' ;
 
             $sdesc = 'Cisco SLA (RTR) using ' . $protocol .
-                     ' for destination ip: ' . $address . ' tag: ' . $rttMonCtrlAdminTag{$key};
+                ' for destination ip: ' . $address . ' tag: ' . $rttMonCtrlAdminTag{$key};
 
             #Debug ("Destination for $key tag: $rttMonCtrlAdminTag{$key} addr: $address\n");
             my ($targetname) = 'SaaRtt_Agent_' . $key;
 
-               $file->writetarget("service {", '',
-            'host_name'           => $opts->{devicename},
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
                 'service_description'        => $targetname,
                 '_inst'        => $key,
                 '_display_order'       => $opts->{order},
                 'display_name' => $targetname,
                 'notes'        => $ldesc,
-            #'short-desc'   => $sdesc,
+                #'short-desc'   => $sdesc,
                 '_dstemplate'          => $protocol,
-            'use'                 => $opts->{dtemplate},
+                'use'                 => $opts->{dtemplate},
             );
             $opts->{order} -= 1;
         }
@@ -822,11 +826,11 @@ sub custom_targets {
         $customfile = $opts->{dpfile} = new genConfig::File("$customdir/targets");
 
         genConfig::File::set_file_header("# Generated by $script\n".
-                     "# Args: $opts->{savedargs}\n".
-                     "# Date: ". scalar(localtime(time)). "\n\n");
+            "# Args: $opts->{savedargs}\n".
+            "# Date: ". scalar(localtime(time)). "\n\n");
 
         foreach my $key (keys %PeerCfgOrigAddr) {
-          Debug ("PeerCfgOrigAddr for peer $key: $PeerCfgOrigAddr{$key}\n");
+            Debug ("PeerCfgOrigAddr for peer $key: $PeerCfgOrigAddr{$key}\n");
         }
 
     } else {
@@ -834,14 +838,14 @@ sub custom_targets {
     }
 
     ### Build the fan stats
-
+    # IOS iso.3.6.1.4.1.9.9.13.1.4.1.2.1007 = STRING: "Switch#1, Fan#1"
     Debug("$module Trying to build fan status for IOS");
-    if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} !~ /IOS-XE/)) {
+    if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} !~ /IOS-XE/) && ($opts->{model} !~ /s2t54/)) {
         foreach my $key (keys %ciscoEnvMonFanState) {
 
             my ($ldesc, $sdesc);
-        $ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
-        $sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
+            $ldesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+            $sdesc = 'Cisco Fan State for ' . $ciscoEnvMonFanStatusDescr{$key};
             $ldesc =~ tr/,/ /;
             $sdesc =~ tr/,/ /;
 
@@ -850,57 +854,85 @@ sub custom_targets {
 
             my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
 
-               $file->writetarget("service {", '',
-            'host_name'           => $opts->{devicename},
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
                 'service_description'        => $targetname,
                 '_inst'        => $key,
                 '_display_order'       => $opts->{order},
                 'display_name' => $targetname,
                 'notes'        => $ldesc,
-                   '_triggergroup'   => 'chassis_cisco_fan_state',
+                '_triggergroup'   => 'chassis_cisco_fan_state',
                 '_dstemplate'          => 'cisco-fan-state',
-            'use'                 => $opts->{dtemplate},
+                'use'                 => $opts->{dtemplate},
             );
             $opts->{order} -= 1;
         }
     }
 
     ### Build the fan stats for IOS-XE
-    Debug("$module Trying to build fan status for IOS-XE");
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.1 = STRING: "Chassis Fan Tray 1"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.2 = STRING: "Chassis Fan Tray 2"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.3 = STRING: "Chassis Fan Tray 3"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.4 = STRING: "Chassis Fan Tray 4"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.5 = STRING: "Chassis Fan Tray 5"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.6 = STRING: "Power Supply 1 Fan"
 
-    if ($opts->{fanstatus} && %ciscoEnvMonFanState && ($opts->{model} =~ /IOS-XE/)) {
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.101 = STRING: "chassis-1 Chassis Fan Tray 1"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.102 = STRING: "chassis-1 Power Supply 1 Fan"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.103 = STRING: "chassis-1 Power Supply 2 Fan"
+    # iso.3.6.1.4.1.9.9.13.1.4.1.2.201 = STRING: "chassis-2 Chassis Fan Tray 1"
+    Debug("$module Trying to build fan status for IOS-XE, s2t54");
+
+    if ($opts->{fanstatus} && %ciscoEnvMonFanState && (($opts->{model} =~ /IOS-XE/) || ($opts->{model} =~ /s2t54/)) ) {
         foreach my $key (keys %ciscoEnvMonFanState) {
 
-            my ($ldesc, $sdesc, $swid);
+            my ($ldesc, $sdesc, $swid, $targetname);
             my ($name, $fanid, $rest);
-            my ($description) = $ciscoEnvMonFanStatusDescr{$key};
-            $description =~ tr/ /_/;
-            $description =~ tr/,//;
 
-            if ($key < 8 ){
-                $swid = 1;
+            my ($chassis, $rest) = split(/ /,$ciscoEnvMonFanStatusDescr{$key});
+
+            if ($opts->{model} =~ /IOS-XE/) {
+                if ($key < 8 ){
+                    $swid = 1;
+                } else {
+                    $swid = 2;
+                }
             } else {
-                $swid = 2;
+                $swid = chop $chassis;
             }
-            $ldesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
-            $sdesc = 'Cisco Switch ' . $ciscoEnvMonFanStatusDescr{$key};
-            my ($targetname) = 'CiscoFan_state_for_switch_' . $swid . "_" . $description;
+            $ldesc = 'Cisco Fan state for ' . $ciscoEnvMonFanStatusDescr{$key} . '. Status normal(1). On degraded status, replace fan.';
+            $sdesc = 'Cisco Fan state for ' . $ciscoEnvMonFanStatusDescr{$key};
+            $targetname = 'CiscoFan_state_for_switch_' . $swid . "_" . $rest if ($opts->{model} =~ /IOS-XE/);
 
-               $file->writetarget("service {", '',
-            'host_name'           => $opts->{devicename},
+            my ($description) = $ciscoEnvMonFanStatusDescr{$key};
+            $description =~ tr/,/ /;
+            $description =~ tr/ /_/;
+            $targetname = 'CiscoFan_state_for_' . $description if ($opts->{model} =~ /s2t54/);
+
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
                 'service_description'        => $targetname,
                 '_inst'        => $key,
                 '_display_order'       => $opts->{order},
                 'display_name' => $targetname,
                 'notes'        => $ldesc,
-                   '_triggergroup'   => 'chassis_cisco_fan_state',
+                '_triggergroup'   => 'chassis_cisco_fan_state',
                 '_dstemplate'          => 'cisco-fan-state',
-            'use'                 => $opts->{dtemplate},
+                'use'                 => $opts->{dtemplate},
             );
             $opts->{order} -= 1;
         }
     }
-
+    # IOS-XE
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.1 = STRING: "Power Supply 1"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.2 = STRING: "Power Supply 2"
+    # IOS
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.1006 = STRING: "Sw1, PS1 Normal, RPS NotExist"
+    # S2t54
+    #     iso.3.6.1.4.1.9.9.13.1.5.1.2.101 = STRING: "chassis-1 Power Supply 1, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.102 = STRING: "chassis-1 Power Supply 2, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.201 = STRING: "chassis-2 Power Supply 1, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.202 = STRING: "chassis-2 Power Supply 2, WS-CAC"
     ### Build the power supply stats
     Debug("$module Trying to build power supply status");
 
@@ -909,24 +941,34 @@ sub custom_targets {
 
             my ($ldesc, $sdesc);
             $ldesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key} . '. Status normal(1). On degraded status, replace powersupply or switch.';
-            $sdesc = 'Cisco Fan State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
-            my ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
-            Debug("$module Power supply description: $rest");
+            $sdesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
+            my ($name, $rest);
+            my ($ps, $junk);
+            if (!($opts->{model} =~ /s2t54/)){
+                Info (" Supplydescr: $ciscoEnvMonSupplyStatusDescr{$key}");
+                ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
+                ($ps, $junk) = split(/\s+/,$rest);
+            }
+            Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
 
-            my ($ps, $junk) = split(/\s+/,$rest);
-            my ($targetname) = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps);
+            my ($targetname) = '';
+            $targetname = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps) unless ($opts->{model} =~ /s2t54/);
 
+            my ($description) = $ciscoEnvMonSupplyStatusDescr{$key};
+            $description =~ tr/,/ /;
+            $description =~ tr/ /_/;
+            $targetname = 'CiscoSupply_state_for_' . $description if ($opts->{model} =~ /s2t54/);
 
-               $file->writetarget("service {", '',
-            'host_name'           => $opts->{devicename},
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
                 'service_description'        => $targetname,
                 '_inst'        => $key,
                 '_display_order'       => $opts->{order},
                 'display_name' => $targetname,
                 'notes'        => $ldesc,
-                   '_triggergroup'   => 'chassis_cisco_power_state',
+                '_triggergroup'   => 'chassis_cisco_power_state',
                 '_dstemplate'          => 'cisco-supply-state',
-            'use'                 => $opts->{dtemplate},
+                'use'                 => $opts->{dtemplate},
             );
             $opts->{order} -= 1;
         }
@@ -980,18 +1022,16 @@ sub custom_interfaces {
         if ($opts->{voip}) {
             ($peerid) = $ifdescr{$index} =~ /Peer:\s+(\d+)/;
             push(@config,
-			'_peerid' => $peerid,
-                        'notes' => 'Dial Peer Stats',
-                        '_dstemplate'    => 'dial-peer',
-                        	    'use'                 => $opts->{dtemplate});
+                '_peerid' => $peerid,
+                '_dstemplate'    => 'dial-peer',);
 
             $customfile = $opts->{dpfile}; # Select the file to store configs
-            $customsdesc .= $PeerCfgOrigAddr{$peerid.'.'.$index}; 
-            $customldesc = "Call Address: $PeerCfgOrigAddr{$peerid.'.'.$index}";
+            $customsdesc .= "Dial Peer stats: " . $PeerCfgOrigAddr{$peerid.'.'.$index};
+            $customldesc = "Dial Peer stats: Call Address: $PeerCfgOrigAddr{$peerid.'.'.$index}";
         }
-	# Set any non-sticky variables
-	$opts->{show_max} = 0; # Do not display max and max_octets for dp interfaces
-	$opts->{nomtucheck} = 1; # Do not skip the interface due to insane mtu
+        # Set any non-sticky variables
+        $opts->{show_max} = 0; # Do not display max and max_octets for dp interfaces
+        $opts->{nomtucheck} = 1; # Do not skip the interface due to insane mtu
         $opts->{nospeedcheck} = 1; #Do not skip the interface due to insane speed
 
         $match = 1;
@@ -1005,36 +1045,34 @@ sub custom_interfaces {
         ### Otherwise set the interface as a simple sub-interface.
 
         if ($opts->{framestats} && ($ifdescr{$index} =~ /\.\d+$/) &&
-	exists $cfrExtCircuitSubifIndex{$index}) {
+            exists $cfrExtCircuitSubifIndex{$index}) {
 
             if (defined $opts->{vendor_soft_ver} &&
-	       ($opts->{vendor_soft_ver} lt "11.1") &&
-	       !defined $intdescr{$index}) {
+                ($opts->{vendor_soft_ver} lt "11.1") &&
+                !defined $intdescr{$index}) {
 
-               ###  This is a frame-relay sub-interface *and* the router
-               ###  is running an IOS older than 11.1. Therefore, we can
-               ###  get neither ifAlias nor ciscoLocIfDesc. Do something
-               ###  useful.
-               $intdescr{$index} = "Cisco PVCs descriptions require IOS 11.1+.";
+                ###  This is a frame-relay sub-interface *and* the router
+                ###  is running an IOS older than 11.1. Therefore, we can
+                ###  get neither ifAlias nor ciscoLocIfDesc. Do something
+                ###  useful.
+                $intdescr{$index} = "Cisco PVCs descriptions require IOS 11.1+.";
             }
-        
+
             my $dspname = $ifdescr{$index};
             my ($mainif, $dlci);
             ($mainif, $dlci) = split(/\./, $cfrExtCircuitSubifIndex{$index});
             $ifdescr{$index} = $ifdescr{$mainif};
-
+            $customsdesc = "dspname: $dspname dlci: $dlci";
+            $customldesc = "dspname: $dspname dlci: $dlci";
             push(@config,      '_dlci'           => $dlci,
-                               'notes       '    => "$opts->{devicename} $dspname",
-                               '_dstemplate'             => 'frame-interface',
-                                'use'                 => $opts->{dtemplate});
+                '_dstemplate'             => 'frame-interface',);
 
             $match = 1;
 
         } else {
 
-            push(@config, 
-		        '_dstemplate' => 'sub-interface' . $hc,
-                'use'                 => $opts->{dtemplate});
+            push(@config,
+                '_dstemplate' => 'sub-interface' . $hc,);
 
             $match = 1;
         }
@@ -1047,17 +1085,16 @@ sub custom_interfaces {
         # Override global classification to only apply minimal thresholds
         #$class = '-access' if (($iftype{$index} == 81 ) || ($iftype{$index} == 77) || ($iftype{$index} == 23)); # ISDN
 
-	# Check if NU Cast packet statistics are required
+        # Check if NU Cast packet statistics are required
         my ($nu) = $opts->{nustats} ? '-nu' : '';
 
-        push(@config, 
-		    '_dstemplate' => 'cisco-interface' . $nu . $hc,
-                    'use'                 => $opts->{dtemplate});
+        push(@config,
+            '_dstemplate' => 'cisco-interface' . $nu . $hc,);
 
-	Info ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
-	if ($opts->{triggers}) {
-	    	push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus} . $nu . $hc);
-	}
+        Info ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
+        if ($opts->{triggers}) {
+            push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus} . $nu . $hc);
+        }
 
         $match = 1;
     }
