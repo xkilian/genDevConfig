@@ -881,7 +881,7 @@ sub custom_targets {
     # iso.3.6.1.4.1.9.9.13.1.4.1.2.102 = STRING: "chassis-1 Power Supply 1 Fan"
     # iso.3.6.1.4.1.9.9.13.1.4.1.2.103 = STRING: "chassis-1 Power Supply 2 Fan"
     # iso.3.6.1.4.1.9.9.13.1.4.1.2.201 = STRING: "chassis-2 Chassis Fan Tray 1"
-    Debug("$module Trying to build fan status for IOS-XE, s2t54");
+    Debug("$module Trying to build fan status for IOS-XE, Cat 6K Sup s2t54");
 
     if ($opts->{fanstatus} && %ciscoEnvMonFanState && (($opts->{model} =~ /IOS-XE/) || ($opts->{model} =~ /s2t54/)) ) {
         foreach my $key (keys %ciscoEnvMonFanState) {
@@ -923,20 +923,15 @@ sub custom_targets {
             $opts->{order} -= 1;
         }
     }
+
     # IOS-XE
     # iso.3.6.1.4.1.9.9.13.1.5.1.2.1 = STRING: "Power Supply 1"
     # iso.3.6.1.4.1.9.9.13.1.5.1.2.2 = STRING: "Power Supply 2"
     # IOS
     # iso.3.6.1.4.1.9.9.13.1.5.1.2.1006 = STRING: "Sw1, PS1 Normal, RPS NotExist"
-    # S2t54
-    #     iso.3.6.1.4.1.9.9.13.1.5.1.2.101 = STRING: "chassis-1 Power Supply 1, WS-CAC"
-    # iso.3.6.1.4.1.9.9.13.1.5.1.2.102 = STRING: "chassis-1 Power Supply 2, WS-CAC"
-    # iso.3.6.1.4.1.9.9.13.1.5.1.2.201 = STRING: "chassis-2 Power Supply 1, WS-CAC"
-    # iso.3.6.1.4.1.9.9.13.1.5.1.2.202 = STRING: "chassis-2 Power Supply 2, WS-CAC"
     ### Build the power supply stats
-    Debug("$module Trying to build power supply status");
-
-    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState) {
+    Debug("$module Trying to build power supply status for IOS and IOS-XE");
+    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState && ($opts->{model} !~ /s2t54/)) {
         foreach my $key (keys %ciscoEnvMonSupplyState) {
 
             my ($ldesc, $sdesc);
@@ -944,20 +939,17 @@ sub custom_targets {
             $sdesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
             my ($name, $rest);
             my ($ps, $junk);
-            if (!($opts->{model} =~ /s2t54/)){
-                Info (" Supplydescr: $ciscoEnvMonSupplyStatusDescr{$key}");
-                ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
-                ($ps, $junk) = split(/\s+/,$rest);
+            Info (" Supplydescr: $ciscoEnvMonSupplyStatusDescr{$key}");
+            if (opts->{model} !~ /IOS-XE/) {
+	    ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
+            ($ps, $junk) = split(/\s+/,$rest);
             }
-            Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
+	    Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
 
             my ($targetname) = '';
-            $targetname = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps) unless ($opts->{model} =~ /s2t54/);
+            $targetname = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps) unless opts->{model} == /IOS-XE/;
 
-            my ($description) = $ciscoEnvMonSupplyStatusDescr{$key};
-            $description =~ tr/,/ /;
-            $description =~ tr/ /_/;
-            $targetname = 'CiscoSupply_state_for_' . $description if ($opts->{model} =~ /s2t54/);
+            $targetname = 'CiscoSupply_state_ps' . chop($rest) if opts->{model} =~ /IOS-XE/;
 
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
@@ -973,6 +965,43 @@ sub custom_targets {
             $opts->{order} -= 1;
         }
     }
+
+    # S2t54
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.101 = STRING: "chassis-1 Power Supply 1, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.102 = STRING: "chassis-1 Power Supply 2, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.201 = STRING: "chassis-2 Power Supply 1, WS-CAC"
+    # iso.3.6.1.4.1.9.9.13.1.5.1.2.202 = STRING: "chassis-2 Power Supply 2, WS-CAC"
+
+    Debug("$module Trying to build power supply status for IOS-XE");
+    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState && ($opts->{model} =~ /s2t54/)) ) {
+        foreach my $key (keys %ciscoEnvMonSupplyState) {
+
+            my ($ldesc, $sdesc);
+            $ldesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key} . '. Status normal(1). On degraded status, replace powersupply or switch.';
+            $sdesc = 'Cisco Supply State for ' . $ciscoEnvMonSupplyStatusDescr{$key};
+            Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
+
+            my ($targetname) = '';
+            my ($description) = $ciscoEnvMonSupplyStatusDescr{$key};
+            $description =~ tr/,/ /;
+            $description =~ tr/ /_/;
+            $targetname = 'CiscoSupply_state_for_' . $description;
+
+            $file->writetarget("service {", '',
+                'host_name'           => $opts->{devicename},
+                'service_description'        => $targetname,
+                '_inst'        => $key,
+                '_display_order'       => $opts->{order},
+                'display_name' => $targetname,
+                'notes'        => $ldesc,
+                '_triggergroup'   => 'chassis_cisco_power_state',
+                '_dstemplate'          => 'cisco-supply-state',
+                'use'                 => $opts->{dtemplate},
+            );
+            $opts->{order} -= 1;
+        }
+    }
+
 
     # Saving local copies of runtime data
     %{$data->{ifspeed}} = %ifspeed;
