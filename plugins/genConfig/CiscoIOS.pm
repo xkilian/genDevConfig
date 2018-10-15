@@ -136,6 +136,8 @@ my %OIDS = (
 
     'entPhysicalName'            => '1.3.6.1.2.1.47.1.1.1.1.7',
     'entPhysicalDescr'           => '1.3.6.1.2.1.47.1.1.1.1.2',
+    'entPhysicalParent'       => '1.3.6.1.2.1.47.1.1.1.1.4',
+
     'entPhysicalModelName'       => '1.3.6.1.2.1.47.1.1.1.1.13',
 
     ### from cisco.ciscoMgmt.ciscoRttMonMIB.ciscoRttMonObjects.
@@ -259,6 +261,16 @@ sub can_handle {
 # IN : options reference
 # OUT: N/A
 #-------------------------------------------------------------------------------
+
+
+sub pad {
+    my( $str, $width, $pad )= @_;
+    $width= 2   if  ! defined $width;
+    $pad= "0"   if  ! defined $pad;
+    my ($mapping) = map {sprintf"%${width}s",$_} $str;
+    $mapping =~ s/ /$pad/g;
+    return  $mapping;
+}
 
 sub discover {
     my($self, $opts) = @_;
@@ -415,7 +427,7 @@ sub discover {
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
         $opts->{maxoidrequest} = "32";
     } elsif ($opts->{model} =~ /s2t54/) { #Catalyst 6K Sup2
-        $opts->{chassisttype} = 'Cisco-Generic-Router';
+        $opts->{chassisttype} = 'Cisco-Generic-Sup2';
         $opts->{usev2c} = 1 if ($opts->{req_usev2c});
         $opts->{maxoidrequest} = "32";
     } elsif ($opts->{ciscobox}) {   # Default Cisco config
@@ -566,6 +578,8 @@ sub custom_targets {
     my %cisco_entSensorValue; # The value
     my %entPhysicalName; # The value
     my %entPhysicalModel; # The value
+    my %entPhysicalParent; # Relative position of the container name based on the sensor
+
     if ($opts->{ciscobox}) {
         %cisco_entSensorDataType  = gettable('entSensorDataType');
         %cisco_entSensorDataScale = gettable('entSensorDataScale');
@@ -573,6 +587,75 @@ sub custom_targets {
         %cisco_entSensorValue     = gettable('entSensorValue');
         %entPhysicalName         = gettable('entPhysicalName');
         %entPhysicalModel         = gettable('entPhysicalModelName');
+        %entPhysicalParent  = gettable('entPhysicalParent');
+    }
+
+    ### Build Temperature and other blade sensors for Catalyst CatX690X
+
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2000 = STRING: "Chassis 1 WS-X6904-40G DCEF2T 4 port 40GE / 16 port 10GE Rev. 1.0"
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2001 = STRING: "Chassis 1 CPU of Module 1"
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2002 = STRING: "Chassis 1 module 1 power-output-fail Sensor"
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2003 = STRING: "Chassis 1 module 1 outlet temperature Sensor"
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2004 = STRING: "Chassis 1 module 1 inlet temperature Sensor"
+    # iso.3.6.1.2.1.47.1.1.1.1.2.2005 = STRING: "Chassis 1 module 1 insufficient cooling Sensor"
+
+    # iso.3.6.1.4.1.9.9.91.1.1.1.1.4.2002 = INTEGER: 1
+    # iso.3.6.1.4.1.9.9.91.1.1.1.1.4.2003 = INTEGER: 42
+    # iso.3.6.1.4.1.9.9.91.1.1.1.1.4.2004 = INTEGER: 25
+    # iso.3.6.1.4.1.9.9.91.1.1.1.1.4.2005 = INTEGER: 1
+
+
+    # Do stuff insufficient cooling Sensor, outlet temperature Sensor, inlet temperature Sensor
+    Debug("$module Trying to build Chassis module for power-output-fail and insufficient cooling");
+
+    if ($opts->{ciscobox} && %entPhysicalName) {
+        foreach my $sensor (keys %entPhysicalName) {
+            if ($entPhysicalName{$sensor} =~ /Chassis \d+ module \d+/ && $entPhysicalName{$sensor} =~ /power-output-fail Sensor|insufficient cooling Sensor|outlet temperature Sensor|inlet temperature Sensor|fan-upgrade required Sensor/ && defined($cisco_entSensorValue{$sensor})) {
+                Debug("Sensor $sensor description: " . $entPhysicalName{$sensor});
+                next if ($entPhysicalName{$sensor} =~ /outlet temperature Sensor|inlet temperature Sensor/ && $entPhysicalModel{$entPhysicalParent{$sensor}} !~ /VS-SUP/);
+                Debug("Sensor $sensor passed");
+                my $target = $entPhysicalName{$sensor};
+                $target =~ s/[\/\s:]/\_/g;
+                $target =~ s/\,/_/g;
+                $target = "chassis-5min." . $target;
+
+                my $ldesc = $entPhysicalName{$sensor};
+                $ldesc .= "<BR> Chassis : " . $entPhysicalModel{$entPhysicalParent{$sensor}};
+                $ldesc .= "<BR> Precision : Sensor 1 OK or 1+N FAIL" if $entPhysicalName{$sensor} =~ /power-output-fail Sensor/;
+                $ldesc .= "<BR> Precision : Sensor 1 OK or 1+N FAIL" if $entPhysicalName{$sensor} =~ /insufficient cooling Sensor/;
+                $ldesc .= "<BR> Precision : Sensor in Celsius" if $entPhysicalName{$sensor} =~ /outlet temperature Sensor/;
+                $ldesc .= "<BR> Precision : Sensor in Celsius" if $entPhysicalName{$sensor} =~ /inlet temperature Sensor/;
+                $ldesc .= "<BR> Precision : Sensor 1 OK or 1+N FAIL" if $entPhysicalName{$sensor} =~ /fan-upgrade required Sensor/;
+
+                my $dstemplate = 'cisco-chassis-sensor';
+                $dstemplate .= "-power-output-fail" if $entPhysicalName{$sensor} =~ /power-output-fail Sensor/;
+                $dstemplate .= "-insufficient-cooling" if $entPhysicalName{$sensor} =~ /insufficient cooling Sensor/;
+                $dstemplate .= "-outlet-temp" if $entPhysicalName{$sensor} =~ /outlet temperature Sensor/;
+                $dstemplate .= "-inlet-temp" if $entPhysicalName{$sensor} =~ /inlet temperature Sensor/;
+                $dstemplate .= "-fan-upgrade-required" if $entPhysicalName{$sensor} =~ /fan-upgrade required Sensor/;
+
+                my $triggertemplate = "cisco_chassis_sensor";
+                $triggertemplate .= "_power_output_fail" if $entPhysicalName{$sensor} =~ /power-output-fail Sensor/;
+                $triggertemplate .= "_insufficient_cooling" if $entPhysicalName{$sensor} =~ /insufficient cooling Sensor/;
+                $triggertemplate .= "_outlet_temp" if $entPhysicalName{$sensor} =~ /outlet temperature Sensor/;
+                $triggertemplate .= "_inlet_temp" if $entPhysicalName{$sensor} =~ /inlet temperature Sensor/;
+                $triggertemplate .= "_fan_upgrade_required" if $entPhysicalName{$sensor} =~ /fan_upgrade required Sensor/;
+
+                $file->writetarget("service {", '',
+                    'host_name'           => $opts->{devicename},
+                    'service_description' => $target,
+                    'notes'               => $ldesc,
+                    'display_name'        => $target,
+                    '_inst'               => $sensor,
+                    '_display_order'      => $opts->{order},
+                    '_dstemplate'         => "cisco-sensor-state",
+                    '_triggergroup'       => $triggertemplate,
+                    'use'                 => $opts->{dtemplate} . "_5min",
+
+                );
+                $opts->{order} -= 1;
+            }
+        }
     }
 
     ### Build Sensor supervision data for Optical Interfaces
@@ -580,16 +663,53 @@ sub custom_targets {
 
     if ($opts->{ciscobox} && %entPhysicalName) {
         foreach my $sensor (keys %entPhysicalName) {
+            Debug("Sensor $sensor description: " . $entPhysicalName{$sensor});
+
             if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor|Receive Power Sensor/ && defined($cisco_entSensorValue{$sensor})) {
-                Debug("Sensor $sensor description: " . $entPhysicalName{$sensor});
+                Debug("In IF Sensor $sensor description: " . $entPhysicalName{$sensor});
                 my $target = $entPhysicalName{$sensor};
+                $target =~ s/[\/\s:]/\_/g;
+                $target =~ s/\,/_/g;
                 my $ldesc = $entPhysicalName{$sensor};
+                $ldesc .= "<BR> Model : " . $entPhysicalModel{$entPhysicalParent{$sensor}} if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor/);
+                $ldesc .= "<BR> Model : " . $entPhysicalModel{$entPhysicalParent{$sensor}} if ($entPhysicalName{$sensor} =~ /Receive Power Sensor/);
                 $ldesc .= "<BR> Type  : " . $SensorDataType{$cisco_entSensorDataType{$sensor}};
                 $ldesc .= "<BR> Scale : " . $SensorDataScale{$cisco_entSensorDataScale{$sensor}};
                 $ldesc .= "<BR> Precision : " . $cisco_entSensorPrecision{$sensor};
-                #$ldesc .= "<BR> Model : " . $entPhysicalModel{$sensor};
+
 
                 my $triggertemplate = "chassis_cisco_ddm";
+
+                # Process the target name to get it to something sortable and without slashes
+                # TODO Convert this to a function, no reason to clutter main code.
+
+                Debug ("Cleaned_target: $target");
+                my $description;
+                if ($entPhysicalName{$sensor} =~ /Transmit Power Sensor/){
+                    ($target,$description) = split(/Transmit/,$target);
+                    $description = "_Transmit" . $description;
+                } else {
+                    ($target,$description) = split(/Receive/,$target);
+                    $description = "_Receive" . $description;
+                }
+                my ($cc, $bb, $aa) = split(/_/,$target);
+                # Pad string if it exists, is a single character and is a number
+                $aa = pad($aa) if (defined $aa && (scalar (split("", $aa))<2) && $aa =~ /^[0-9]+$/);
+                $bb = pad($bb) if (defined $bb && (scalar (split("", $bb))<2) && $bb =~ /^[0-9]+$/);
+                if (defined $cc && (substr $cc, -1) =~ /^[0-9]$/ && (substr $cc, -2) !~ /^[0-9]+$/) {
+                    my $d = chop $cc;
+                    $cc .= pad($d);
+                }
+                if (defined $aa) {
+                    $target = join ('_', $cc, $bb, $aa);
+                } elsif (defined $bb) {
+                    $target = join ( '_', $cc, $bb);
+                } else {
+                    $target = $cc;
+                }
+                $target .= $description;
+                Debug ("Padded_target: $target");
+                # End process
 
                 $file->writetarget("service {", '',
                     'host_name'           => $opts->{devicename},
@@ -886,10 +1006,10 @@ sub custom_targets {
     if ($opts->{fanstatus} && %ciscoEnvMonFanState && (($opts->{model} =~ /IOS-XE/) || ($opts->{model} =~ /s2t54/)) ) {
         foreach my $key (keys %ciscoEnvMonFanState) {
 
-            my ($ldesc, $sdesc, $swid, $targetname);
+            my ($ldesc, $sdesc, $swid, $targetname, $chassis);
             my ($name, $fanid, $rest);
 
-            my ($chassis, $rest) = split(/ /,$ciscoEnvMonFanStatusDescr{$key});
+            ($chassis, $rest) = split(/ /,$ciscoEnvMonFanStatusDescr{$key});
 
             if ($opts->{model} =~ /IOS-XE/) {
                 if ($key < 8 ){
@@ -940,16 +1060,18 @@ sub custom_targets {
             my ($name, $rest);
             my ($ps, $junk);
             Info (" Supplydescr: $ciscoEnvMonSupplyStatusDescr{$key}");
-            if (opts->{model} !~ /IOS-XE/) {
-	    ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
-            ($ps, $junk) = split(/\s+/,$rest);
+            if ($opts->{model} !~ /IOS-XE/) {
+                ($name, $rest) = split(/, /,$ciscoEnvMonSupplyStatusDescr{$key});
+                ($ps, $junk) = split(/\s+/,$rest);
+            } else {
+                $rest = $ciscoEnvMonSupplyStatusDescr{$key};
             }
-	    Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
+            Debug("$module Power supply description: $ciscoEnvMonSupplyStatusDescr{$key}");
 
             my ($targetname) = '';
-            $targetname = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps) unless opts->{model} == /IOS-XE/;
+            $targetname = 'CiscoSupply_state_for_switch' . chop($name) . "_ps" . chop($ps) unless $opts->{model} =~ /IOS-XE/;
 
-            $targetname = 'CiscoSupply_state_ps' . chop($rest) if opts->{model} =~ /IOS-XE/;
+            $targetname = 'CiscoSupply_state_ps' . chop($rest) if $opts->{model} =~ /IOS-XE/;
 
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
@@ -973,7 +1095,7 @@ sub custom_targets {
     # iso.3.6.1.4.1.9.9.13.1.5.1.2.202 = STRING: "chassis-2 Power Supply 2, WS-CAC"
 
     Debug("$module Trying to build power supply status for IOS-XE");
-    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState && ($opts->{model} =~ /s2t54/)) ) {
+    if ($opts->{supplystatus} && %ciscoEnvMonSupplyState && ($opts->{model} =~ /s2t54/)) {
         foreach my $key (keys %ciscoEnvMonSupplyState) {
 
             my ($ldesc, $sdesc);
@@ -1033,10 +1155,14 @@ sub custom_interfaces {
     my %slotPortMapping   = %{$data->{slotPortMapping}};
     my @config     = @{$data->{config}};
     my $hc         = $data->{hc};
+    my $nu         = $data->{nu};
     my $class      = $data->{class};
     my $match      = $data->{match};
     my $customsdesc = $data->{customsdesc};
     my $customldesc = $data->{customldesc};
+    my $target      = $data->{target};
+
+    my @collectableuplinks = @{$opts->{collectableuplinks}};
 
     ###
     ### START DEVICE CUSTOM INTERFACE CONFIG SECTION
@@ -1115,15 +1241,20 @@ sub custom_interfaces {
         #$class = '-access' if (($iftype{$index} == 81 ) || ($iftype{$index} == 77) || ($iftype{$index} == 23)); # ISDN
 
         # Check if NU Cast packet statistics are required
-        my ($nu) = $opts->{nustats} ? '-nu' : '';
 
+        Debug ("Pushing dstemplate: cisco-interface to: $target");
         push(@config,
             '_dstemplate' => 'cisco-interface' . $nu . $hc,);
 
-        Info ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
-        if ($opts->{triggers}) {
-            push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus} . $nu . $hc);
+        my $porttemplate;
+
+        if (($opts->{req_portuplinklist}) && inlist("$target $intdescr{$index}",@collectableuplinks) ){
+            if ($opts->{triggers}) {
+                Debug ("Triggers enabled : $opts->{triggers} : interface $opts->{triggerifstatus} $nu $hc");
+                push(@config, '_triggergroup' => 'interface' . $opts->{triggerifstatus}  . $nu . $hc);
+            }
         }
+
 
         $match = 1;
     }
@@ -1141,6 +1272,7 @@ sub custom_interfaces {
     %{$data->{slotPortMapping}} = %slotPortMapping;
     @{$data->{config}} = @config;
     $data->{hc}     = $hc;
+    $data->{nu}     = $nu;
     $data->{class}  = $class;
     $data->{match}  = $match;
     $data->{customsdesc} = $customsdesc;
@@ -1182,6 +1314,14 @@ sub custom_files {
 
     # Save return value in the reference hash
     ${$data->{wmatch}}  = $wmatch;
+}
+
+sub inlist {
+    my ($string,@list) = @_;
+    foreach my $item (@list) {
+        return 1 if ($string =~ /$item/);
+    }
+    return 0;
 }
 
 1;

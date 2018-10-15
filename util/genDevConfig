@@ -314,6 +314,7 @@ my %opts = (
     'noql'              => 0,
     'req_portlist'      => 0,
     'req_portuplinklist' => 0,
+    'collectableuplinks' => '',
     ###
     ### Informational variables
     ###
@@ -357,6 +358,8 @@ my %opts = (
     'thresholds'       => {}, ### Thresholds for automatic application
     ### TO-DO read them in from the config.
 );
+
+$opts{collectableuplinks} = \@collectableuplinks;
 
 genConfig::SNMP::register_oids(%OID);
 
@@ -1323,30 +1326,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     my $noql = ($opts{noql}) ? "-noql" : '';
 
 
-    if (!$match) {
-
-        # If there is no special interface match
-        # include the default type of standard-interface for each target
-        # unless extended mib-ii are supported.
-
-        if($opts{extendedint}) {
-            push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
-        } else {
-            push(@config, '_dstemplate' => 'standard-interface' . $noql . $nu . $hc);
-        }
-        if ($opts{triggers}) {
-            push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $noql . $nu . $hc);
-        }
-    } else {
-
-        ### Override interface triggergroups for the selected type of interface
-        #
-        #my %tmpconfig = @config;
-        #my $trigger = getTriggerTemplate($tmpconfig{use}, $opts{triggerifclass});
-        #Info ("Trigger to apply : $trigger");
-        #push(@config, '_triggergroup' => $trigger,) if ($trigger ne "");
-    }
-
     # Strip out disallowed caracters from descriptions
     $ifdescr{$index} =~ tr/\\\"//;
 
@@ -1360,6 +1339,18 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         $ifdescr{$index} .= " I$index";
         $opts{staticinstance} = 1;
 
+    }
+    if (!$match) {
+        # If there is no special interface match
+        # include the default type of standard-interface for each target
+        # unless extended mib-ii are supported.
+
+        if ($opts{extendedint}) {
+            push(@config, '_dstemplate' => 'extended-interface' . $nu . $hc);
+        }
+        else {
+            push(@config, '_dstemplate' => 'standard-interface' . $noql . $nu . $hc);
+        }
     }
 
     ### Build the interface target description strings and add them in the config.
@@ -1520,6 +1511,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         }
     }
 
+
+
     if (!$wmatch) {
         Debug " ### Interface $index $target ###";
         if ($c) {
@@ -1527,7 +1520,6 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
         } else {
             Debug (" Commented-out: False ");
         }
-        Debug " Config: @config";
 
         my $ifprefix = "if.";
         $ifprefix = "if-5min." if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) );
@@ -1541,15 +1533,25 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
             unshift (@config, '_mapping'       => "interface-name");
         }
         my $porttemplate;
+
         if (($opts{req_portuplinklist}) && !inlist($sdesc,@collectableuplinks) ){
+            Debug ("Not an uplink, will NOT apply any triggers and setting 5minute collection template");
             $porttemplate = $opts{dtemplate} . "_5min";
         } else {
+            Debug ("An uplink, regular collection interval applies. triggers: $opts{triggers}");
             $porttemplate =  $opts{dtemplate};
+            if ($opts{triggers}) {
+                if (!$match) {
+                    Debug ("Applying triggers.");
+                    push(@config, '_triggergroup' => 'interface' . $opts{triggerifstatus} . $noql . $nu . $hc)
+                }
+            }
         }
-        Debug ("Port template: $porttemplate");
+
         unshift(@config,
             'host_name'            => $opts{devicename},
             'use'              => $porttemplate);
+        Debug " Config: @config";
         $file->writetarget("service {", $c, @config);
     }
 }
@@ -1667,6 +1669,7 @@ sub portlist {
 sub portuplinklist {
     my($opt,$value) = @_;
     @collectableuplinks = portlist2list($value);
+    $opts{collectableuplinks} = \@collectableuplinks;
     $opts{req_portuplinklist} = 1 if (scalar @collectableuplinks > 0);
     #$opts{collectall} = 0;
 }
