@@ -20,17 +20,30 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # Permit regex-mappings and direct mappings. All others are unsupported.
 # Parameters read from INI formatted file at runtime instead of command-line parameters
 
+2016/2017/2018
+
 # Version 3_0_9 - Current master branch - unreleased
 
 # - New plugin PaloAlto Firewalls
 # - New plugin Peavey NioN hardware
 # - New plugin Spectracom Securesync NTP Server
+# - New plugin Datadomain NAS/Backup server
+# - Major change to interface naming output to make them sortable as text. Ex. interface-name 1/1/9 will be converted to interface-name_01_01_09. The assumption is that a switch will never have mode than 99 interfaces, modules or chassis.
 # - Added operstatus and admin status to cisco device specific interfaces
 # - Added new option --triggerifstatus to add up/check critical trigger to interfaces
 # - Fix: Logic bug in --gigonly
 # - Added alias to Shinken config output
+# - CiscoIOS plugin fix power supply and fan detection. Add support for Catalyst 6K Sup 2t54
+# - Geist rsmini - support new hardware
+# - Reworked option --ports "keyword, list" to select what interfaces to collect based on keywords. Now works with any switch type interface description or interface name!
+# - Added new option --portsuplinks "keyword,list" to collect interfaces with standard cycle and full triggers based on key word and set all other interfaces as
+#   collected interfaces with a 5 minute cycle and no triggers.
+# - AlcatelAOS Detect and add to info SFP type
+# - AlcatelAOS fix for putting shinken config "use" statement in custom_interface detection, this should have been handled in the main script not in a module.
+# - Removed all code related to chassis/interface detection to create hierarchical output. This is not supported anyway with Shinken.
+# - Minor debug output formatting in various plugins
 
-
+2016
 # Version 3_0_8
 
 # - New plugin for Alcatel OXE Call server nodes
@@ -44,6 +57,9 @@ Date format: Gregorian Little Endian, starting with Day [DD/MM/YYYY]
 # - Minor update to OSPF plugin
 # - Bug fix for SNMP_Session get use in plugins where returned value was not cast into an array
 # - Triggergroup handling is now functional
+
+
+2013
 
 # Version 3_0_7
 
