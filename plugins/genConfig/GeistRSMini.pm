@@ -211,7 +211,7 @@ sub custom_targets {
                'display_name'        => "Temperature sensor " . $id,
                '_inst'               => $id,
                '_dstemplate'         => "geist-sensor-temperature",
-               '_triggergroup'       => "RSMini_Temp_Complex",
+               '_triggergroup'       => "RSMini_Temp_30",
                '_timeout'            => "15",
                'use'                 => $opts->{dtemplate},
             );
@@ -243,7 +243,7 @@ sub custom_targets {
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-airflow",
                '_timeout'            => "15",
-              #'_triggergroup'       => "RSMini_Temp",
+              '_triggergroup'       => "RSMini_Airflow_Flow_10",
                'use'                 => $opts->{dtemplate},
             );
     }
@@ -273,7 +273,7 @@ sub custom_targets {
                '_inst'               => $id,
                '_dstemplate'         => "geist-airflow-temperature",
                '_timeout'            => "15",
-              #'_triggergroup'       => "RSMini_Temp",
+              '_triggergroup'       => "RSMini_Airflow_Temp_26",
                'use'                 => $opts->{dtemplate},
             );
     }

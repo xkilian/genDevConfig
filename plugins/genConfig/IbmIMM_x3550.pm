@@ -157,6 +157,7 @@ sub discover {
     
     $opts->{usev2c} = 0;
     $opts->{dtemplate} = "generic-imm-service";
+    $opts->{htemplates} = "SnmpBooster-host-MDG";
     return;
 }
 

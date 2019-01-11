@@ -969,7 +969,9 @@ sub custom_targets {
             $ldesc =~ tr/,/ /;
             $sdesc =~ tr/,/ /;
 
-            my ($name, $fan, $rest) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
+            my ($name, $fan, @list) = split(/, /,$ciscoEnvMonFanStatusDescr{$key});
+            my ($rest) = join ( '_', @list);
+
             Debug("$name $fan $ldesc");
 
             my ($targetname) = 'CiscoFan_state_for_switch' . chop($name) . "_fan" . chop($fan);
@@ -1007,9 +1009,10 @@ sub custom_targets {
         foreach my $key (keys %ciscoEnvMonFanState) {
 
             my ($ldesc, $sdesc, $swid, $targetname, $chassis);
-            my ($name, $fanid, $rest);
+            my ($name, $fanid, @list, $rest);
 
-            ($chassis, $rest) = split(/ /,$ciscoEnvMonFanStatusDescr{$key});
+            ($chassis, @list) = split(/ /,$ciscoEnvMonFanStatusDescr{$key});
+            ($rest) = join ( '_', @list);
 
             if ($opts->{model} =~ /IOS-XE/) {
                 if ($key < 8 ){
