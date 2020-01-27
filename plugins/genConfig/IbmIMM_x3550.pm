@@ -60,8 +60,8 @@ my %OIDS = (
 ## returned by the devices. The name is a regular expression.
 ################################################################################
 my @types = ( "$OIDS{'rcIbmImm'}",
-               $OIDS{'rcIbmImm2'}",
-              "$OIDS{'IbmAMM'}",
+               "$OIDS{'rcIbmImm2'}",
+              "$OIDS{'IbmAMM'}"
             );
 
 

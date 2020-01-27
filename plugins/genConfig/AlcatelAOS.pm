@@ -46,7 +46,8 @@ my %OIDS = (
       ### Undefined MIB
     'OidSoftwareRev'                 => '1.3.6.1.2.1.47.1.1.1.1.10.1',
     'OidSerialNum'                   => '1.3.6.1.2.1.47.1.1.1.1.11.1',
-    'OidchasEntPhysOperStatus'       => '1.3.6.1.4.1.6486.801.1.1.1.1.1.1.1.2',
+    'OidAlcatelchasEntPhysOperStatus'       => '1.3.6.1.4.1.6486.800.1.1.1.1.1.1.1.2',
+    'OidAoschasEntPhysOperStatus'       => '1.3.6.1.4.1.6486.801.1.1.1.1.1.1.1.2',
     'OidAosalaOspfRouteNumber'       => '1.3.6.1.4.1.6486.801.1.2.1.10.4.1.1.1.7.0',
     'OS6900X20'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.1',
     'OS6900X40'                      => '1.3.6.1.4.1.6486.801.1.1.2.1.10.1.2',
@@ -67,6 +68,7 @@ my %OIDS = (
     'OS645024L'                      => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.10',
     'OS6450P24L'                     => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.11',
     'OS625024'                       => '1.3.6.1.4.1.6486.800.1.1.2.1.11.2.1',
+    'OS6250P24'                      => '1.3.6.1.4.1.6486.800.1.1.2.1.11.2.2',
     'OS645048'                       => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.8',
     'OS6450P48'                      => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.9',
     'OS6450P48L'                     => '1.3.6.1.4.1.6486.800.1.1.2.1.12.1.13',
@@ -116,6 +118,7 @@ my @types = ( "$OIDS{'OS6900X20'}",
               "$OIDS{'OS6450P48'}",
               "$OIDS{'OS645048'}",
               "$OIDS{'OS625024'}",
+              "$OIDS{'OS6250P24'}",
 #              "$OIDS{'OS685514'}",
             );
 
@@ -227,7 +230,7 @@ sub discover {
     my %vcroles     = gettable('virtualChassisRole');
 
     
-    $opts->{vendor_descr_oid} = "ifName";
+    $opts->{vendor_descr_oid} = "ifAlias";
     $opts->{sysDescr} .= "<BR>" . $opts->{vendor_soft_ver} . "<BR>" . $opts->{sysLocation} . "<BR>" . get('OidSoftwareRev');
  
     if ($opts->{model} =~ /6900/ || $opts->{model} =~ /6860/){
@@ -284,6 +287,21 @@ sub discover {
         $chassisospf = 1;
         $chassisconfig = 1;
         $opts->{sysNotes} = 'Alcatel OS6900 Chassis. General supervised statistics, alarms should be treated in priority, such as failed VC members.<BR>Control status notSynchronized(3),synchronized(4).';
+    } elsif ($opts->{model} =~ /6865/) {
+        $opts->{chassisttype} = 'Alcatel-OS6865';
+        $opts->{chassisname} = 'chassis.Alcatel-OS6865';
+        #$opts->{chassistriggergroup} = 'chassis_OS6865';        
+        $opts->{class} = 'aos';
+        $opts->{chassisinst} = "0";
+        $opts->{dtemplate} = "default-snmp-template";
+        #$opts->{htemplates} = join(",", $opts->{htemplates}, "generic-host-powersupply");
+        #$chassispowersupply = 1;
+        $chassisfilter = 1;
+        #$chassisfan = 0;
+        $chassisospf = 1;
+        $chassisconfig = 1;
+        $opts->{sysNotes} = 'Alcatel OS6865 Chassis. General supervised statistics, alarms should be treated in priority, such as failed VC members.<BR>Control status notSynchronized(3),synchronized(4).<BR> Note :Temperature is internal temp, not external, threshold is ';
+
     } elsif ($opts->{model} =~ /6860/) {
         $opts->{chassisttype} = 'Alcatel-OS6860' . $vcsize;
         $opts->{chassisname} = 'chassis.Alcatel-OS6860';
@@ -331,6 +349,7 @@ sub discover {
         $chassisospf = 0;
         $ chassishelper = 1;
     } else {
+        Debug ("Defaulting to most basic type Alcatel-Generic...");
         # Default to AOS 6.x
         $opts->{chassisttype} = 'Alcatel-Generic';
         $opts->{chassisname} = 'chassis.Alcatel-Generic';
@@ -352,7 +371,7 @@ sub discover {
         %alcatelddmtemperaturetable     = gettable('AlcatelddmTemperature');
         %alcatelddmtxmtable             = gettable('AlcatelddmTxOutputPower');
     }
-
+    
     # Default feature promotions for Alcatel routing switches
     $opts->{usev2c} = 1      if ($opts->{req_usev2c});
     $opts->{alcatelbox} = 1;
@@ -390,6 +409,7 @@ sub custom_targets {
 
     # OSPF number of routes
     my $OspfRouteNumber;
+    my %AlcatelchasEntPhysOperStatus;
     
     # QoS Filters on the switch
     my %AlcatelQoSAppliedRuleConditiontable     = gettable('AlcatelQoSAppliedRuleCondition');
@@ -435,32 +455,106 @@ sub custom_targets {
     }
     ### Build powersupply status for AOS 6.x
     if ($chassispowersupply_alcatel) {
-            $ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
-            $sdesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
-            Debug ("Building chassis power supply target AOS 6.x...");
+        %AlcatelchasEntPhysOperStatus =              gettable('OidAlcatelchasEntPhysOperStatus');
+        my $numPS = 1;
+        $numPS = 2 if (defined($AlcatelchasEntPhysOperStatus{'98'}));        
+        $ldesc = "Powersupply status : up=1,down=2,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
+        $sdesc = "Powersupply status : up=1,down=2,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
+        Debug ("Building chassis power supply target AOS 6.x...");
+        $file->writetarget("service {", '',
+            'host_name'           => $opts->{devicename},
+            'service_description' => "chassis.powersupply",
+            'notes'               => $ldesc,
+            'display_name'        => $sdesc,
+            '_inst'               => 0,
+            '_display_order'              => $opts->{order},
+            '_dstemplate'                 => "Alcatel-OS6450-Powersupply-" . $numPS,
+            '_triggergroup'               => "chassis_OS6450_Powersupply-" . $numPS,
+            'use'                 => $opts->{dtemplate},
+        );
+
+        $opts->{order} -= 1;
+
+    }
+ if ($chassispowersupply && $opts->{model} =~ /6900/) {
+        my $type = '6900';
+        Debug ("Building chassis power supply target AOS 7.x 8.x for OS6900...");
+        my @myarray = ();
+        #---------------------begin modification------------------
+        # 20-SEP-2019: Modified SFL (Felix Sidokhine)
+        # This is to get the power supply model and serial number in the chassis
+        my $header = "up=1,down=2,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
+
+        my %mydata = (
+            275,"S1PS1",
+            276,"S1PS2",
+            277,"S2PS1",
+            278,"S2PS2",
+            279,"S3PS1",
+            280,"S3PS2",
+            281,"S4PS1",
+            282,"S4PS2",
+            283,"S5PS1",
+            284,"S5PS2",
+            285,"S6PS1",
+            286,"S6PS2",
+            287,"S7PS1",
+            288,"S7PS2",
+            289,"S8PS1",
+            290,"S8PS2"
+        );
+        my @validIds = keys %mydata;
+        foreach  my $id (sort keys %entPhysicalSerialNum){
+            if($id ~~ @validIds) {
+                my $dinfo = $entPhysicalModelName{$id} ." (". $mydata{$id} .")" . " (S/N: " . $entPhysicalSerialNum{$id} .")";
+                push(@myarray,$dinfo);
+            }
+        }
+        my $i = 0;
+        $ldesc = "";
+        while(my $element = shift(@myarray)){
+            if($i == 0){
+                $ldesc = $ldesc . $header .$element;
+                $i=$i+1;
+            }
+            else {
+                $ldesc = $ldesc . "," . $element;
+            }
+        }
+        #--------------------end  modification-------------------
+            ##$ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
+            $sdesc = "Powersupply status";
+            my $dstemplate = "Alcatel-OS" . $type . "-Powersupply";
+            $dstemplate = "Alcatel-OS" . $type . "-Powersupply" . $vcsize if $vcsize ne '';
+            my $triggertemplate = "chassis_OS"  . $type .  "_Powersupply";
+            $triggertemplate = "chassis_OS" . $type . "_Powersupply" . $vcsize if $vcsize ne '';
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
                 'service_description' => "chassis.powersupply",
-                'notes'               => $ldesc,
+                'notes'               => $ldesc,  #Ajouter numero de serie
                 'display_name'        => $sdesc,
                 '_inst'               => 0,
                 '_display_order'              => $opts->{order},
-                '_dstemplate'                 => "Alcatel-OS6450-Powersupply-1",
-                '_triggergroup'               => "Chassis_OS6450_Powersupply-1",
+                '_dstemplate'                 => $dstemplate, #modifier.
+                '_triggergroup'               => $triggertemplate,
                 'use'                 => $opts->{dtemplate},
             );
 
         $opts->{order} -= 1;
 
     }
-    
-    ### Build powersupply status for AOS 7.x 8.x
-    if ($chassispowersupply) {
+
+
+ 
+    ### Build powersupply status for AOS 7.x 8.x chassis 6860
+    if ($chassispowersupply && $opts->{model} =~ /6860/) {
+        my $type = '6860';
+        Debug ("Building chassis power supply target AOS 7.x 8.x for OS6860...");
         my @myarray = ();
         #---------------------begin modification------------------
         # 20-SEP-2019: Modified SFL (Felix Sidokhine)
         # This is to get the power supply model and serial number in the chassis
-        my $header = "up=3,down=3,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
+        my $header = "up=1,down=2,testing=3,unknown=4,secondary=5,notPresent=6,unpowered=7,master=8,idle=9,pwrsave=10<BR>";
 
         my %mydata = (
             275,"S1PS1",
@@ -501,12 +595,11 @@ sub custom_targets {
         #--------------------end  modification-------------------
             ##$ldesc = "Powersupply LED status : notApplicable (0), off (1), greenOn (2), greenBlink (3), amberOn (4), amberBlink (5)";
             $sdesc = "Powersupply status";
-            Debug ("Building chassis power supply target AOS 7.x...");
             
-            my $dstemplate = "Alcatel-OS6860-Powersupply";
-            $dstemplate = "Alcatel-OS6860-Powersupply" . $vcsize if $vcsize ne '';
-            my $triggertemplate = "Chassis_OS6860_Powersupply";
-            $triggertemplate = "Chassis_OS6860_Powersupply" . $vcsize if $vcsize ne '';
+            my $dstemplate = "Alcatel-OS" . $type . "-Powersupply";
+            $dstemplate = "Alcatel-OS" . $type . "-Powersupply" . $vcsize if $vcsize ne '';
+            my $triggertemplate = "chassis_OS"  . $type .  "_Powersupply";
+            $triggertemplate = "chassis_OS" . $type . "_Powersupply" . $vcsize if $vcsize ne '';
             $file->writetarget("service {", '',
                 'host_name'           => $opts->{devicename},
                 'service_description' => "chassis.powersupply",
@@ -556,32 +649,32 @@ sub custom_targets {
     }
 
 
-    ### Build chassis helper status for AOS 6.x
-    if ($chassishelper){
-            my ($helperstatus) = get('AlcatelSspHelperStatus');
-            # Skip it in case the helper status is not enabled
-            next if (!defined($helperstatus));
-
-            Debug ("Building chassis helper status target...");
-            $ldesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2).<BR>If disabled, check Virtual chassis VCSP status and helper switch configruation and status.";
-            $sdesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2)";
-
-
-            $file->writetarget("service {", '',
-                'host_name'           => $opts->{devicename},
-                'service_description' => "chassis.helper.status",
-                'notes'               => $ldesc,
-                'display_name'        => $sdesc,
-                '_inst'               => "0",
-                '_display_order'              => $opts->{order},
-                '_dstemplate'                 => "Alcatel-AOS6-HelperStatus",
-                '_triggergroup'               => "AOS6_helper",
-                'use'                 => $opts->{dtemplate},
-            );
-
-        $opts->{order} -= 1;
-
-    }
+#    ### Build chassis helper status for AOS 6.x
+#    if ($chassishelper){
+#            my ($helperstatus) = get('AlcatelSspHelperStatus');
+#            # Skip it in case the helper status is not enabled
+#            next if (!defined($helperstatus));
+#
+#            Debug ("Building chassis helper status target...");
+#            $ldesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2).<BR>If disabled, check Virtual chassis VCSP status and helper switch configruation and status.";
+#            $sdesc = "Alcatel Stack Switch Helper Status VCSP - enabled (1) disabled (2)";
+#
+#
+#            $file->writetarget("service {", '',
+#                'host_name'           => $opts->{devicename},
+#                'service_description' => "chassis.helper.status",
+#                'notes'               => $ldesc,
+#                'display_name'        => $sdesc,
+#                '_inst'               => "0",
+#                '_display_order'              => $opts->{order},
+#                '_dstemplate'                 => "Alcatel-AOS6-HelperStatus",
+#                '_triggergroup'               => "AOS6_helper",
+#                'use'                 => $opts->{dtemplate},
+#            );
+#
+#        $opts->{order} -= 1;
+#
+#    }
        
 
   ### Build filter status for AOS 8.x                                                                                                                                                     
@@ -747,21 +840,21 @@ sub custom_interfaces {
         if ($target =~ /Alcatel-Lucent_/) {
             #DDM Optical DAC
             next if $opts->{ddm} == 0;
-            next if ($opts->{class} eq 'aos' && !defined ($aosddmtemperaturetable{$index . ".1"}));
-            next if ($opts->{class} eq 'alcatel' && !defined ($alcatelddmtemperaturetable{$index . ".1"}));
+            next if ($opts->{class} eq 'aos' && !defined ($aosddmtxmtable{$index . ".1"}));
+            next if ($opts->{class} eq 'alcatel' && !defined ($alcatelddmtxmtable{$index}));
+            Debug ("AlcatelDDM Creating custom ddm interfaces... intdescr: " . $intdescr{$index} . "ifdescr: " . $ifdescr{$index});
     
-            if ($opts->{class} eq 'alcatel' && defined ($alcatelddmtxmtable{$index . ".1"}) && $alcatelddmtxmtable{$index . ".1"} eq -200) {
+            if ($opts->{class} eq 'alcatel' && defined ($alcatelddmtxmtable{$index}) && $alcatelddmtxmtable{$index} eq -200) {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddmDAC');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
-                Debug ("Found an alcatelddmDAC interface: " . $alcatelddmtxmtable{$index . ".1"});
-                Debug ("Found an alcatelddmDAC interface.temp:" . $alcatelddmtemperaturetable{$index . ".1"});
+                if( defined($intdescr{$index}) && defined($ifdescr{$index})){
+                    $intdescr{$index} = $intdescr{$index} . " (OpticalDAC)";
+                }
                 $match = 1;
             } elsif ($opts->{class} eq 'aos' && defined ($aosddmtxmtable{$index . ".1"}) && $aosddmtxmtable{$index . ".1"} eq -200 ) {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddmDAC');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
-                Debug ("Found an aosddmDAC interface.tx:" . $aosddmtxmtable{$index . ".1"});
-                Debug ("Found an aosddmDAC interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
-                #Over-ride the notes to include the SFP type information
+                # Add to the notes to include the SFP type information
                 if( defined($intdescr{$index}) && defined($ifdescr{$index})){
                     $intdescr{$index} = $intdescr{$index} . " (" . IdentifySFP($ifdescr{$index}) . ")";
                 }
@@ -769,19 +862,18 @@ sub custom_interfaces {
             } elsif ($opts->{class} eq 'aos') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-aosddm');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
-                Debug ("Found an aosddm interface.:" . $aosddmtxmtable{$index . ".1"});
-                Debug ("Found an aosddm interface.temp:" . $aosddmtemperaturetable{$index . ".1"});
-                #Over-ride the notes to include the SFP type information
+                # Add to the notes to include the SFP type information
                 if( defined($intdescr{$index}) && defined($ifdescr{$index})){
-                    $intdescr{$index} = $intdescr{$index} . "(" . IdentifySFP($ifdescr{$index}) . ")";
+                    $intdescr{$index} = $intdescr{$index} . " (" . IdentifySFP($ifdescr{$index}) . ")";
                 }
                 $match = 1;
             } elsif ($opts->{class} eq 'alcatel') {
                 push(@config, '_dstemplate' => 'standard-interface' . $nu . $hc . '-alcatelddm');
                 push(@config, '_triggergroup' => 'interface' . $nu . $hc);
-                Debug ("Found an alcatelddm interface.:" . $alcatelddmtxmtable{$index . ".1"});
-                Debug ("Found an alcatelddm interface.temp:" . $alcatelddmtemperaturetable{$index . ".1"});
                 $match = 1;
+                if( defined($intdescr{$index}) && defined($ifdescr{$index})){
+                    $intdescr{$index} = $intdescr{$index} . " (Optical)";
+                }
             }
         }
     }

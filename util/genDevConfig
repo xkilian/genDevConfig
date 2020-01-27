@@ -143,6 +143,7 @@ my %OID = (
 
     'ifName'           => '1.3.6.1.2.1.31.1.1.1.1',
     'ifHCInOctets'     => '1.3.6.1.2.1.31.1.1.1.6',
+    'ifHCOutOctets'     => '1.3.6.1.2.1.31.1.1.1.7',
     'ifHighSpeed'      => '1.3.6.1.2.1.31.1.1.1.15',
     'ifAlias'          => '1.3.6.1.2.1.31.1.1.1.18',
 
@@ -733,16 +734,17 @@ if ($opts{req_extendedint}) {
 my %ipadentaddr     = gettable('ipAdEntAddr');
 my %ipadentif       = gettable('ipAdEntIfIndex');
 
-### Walk ifHCInOctets if we're going to use SNMP version 2c.  We'll use
+### Walk ifHCOutOctets if we're going to use SNMP version 2c.  We'll use
 ### this later to verify that high capacity counters are available for
 ### each interface.  We also need ifHighSpeed for devices with speeds
 ### greater than will fit in 32 bits.
 
-my %ifHCInOctets;
+my %ifHCOutOctets;
 my %ifHighSpeed;
 if ($opts{usev2c}) {
     snmp_def($opts{ip}, $opts{community}, '2c');
-    %ifHCInOctets    = gettable('ifHCInOctets');
+    %ifHCOutOctets    = gettable('ifHCOutOctets');
+#    %ifHCInOctets    = gettable('ifHCInOctets');
     %ifHighSpeed     = gettable('ifHighSpeed');
     # Reset to SNMP acquisition to snmp v1 before continuing
     snmp_def($opts{ip}, $opts{community}, $opts{snmp_ver});
@@ -1179,8 +1181,8 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     ### to '2c' for that interface.
     ### Add -nu for non unicast or multicast statistics.
 
-
-    $hc = '-hc' if ($opts{usev2c} && defined $ifHCInOctets{$index} && $ifHCInOctets{$index} != 0 && (int($ifspeed{$index}) > 100000000));
+    #$hc = '-hc' if ($opts{usev2c} && defined $ifHCOutOctets{$index} && ($ifHCOutOctets{$index} != 0 || $ifadminstatus{$index} == 0) && (int($ifspeed{$index}) > 100000000));
+    $hc = '-hc' if ($opts{usev2c} && defined $ifHCOutOctets{$index} && (int($ifspeed{$index}) > 100000000));
 
     # Check if Multicast or non unicast packet statistics are required
     my ($nu) = $opts{nucast} ? '-nu' : '';
@@ -1208,25 +1210,58 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
     $target =~ s/\,/_/g;
     $target_raw = $target;
     Debug ("Cleaned_target: $target");
-    my ($cc, $bb, $aa) = split(/_/,$target);
+    
+    my ($rest, $numbers);
+    # Only do number replacement on interfaces with names that are expected
+    if ($target =~ /thernet\d/) {
+        ($rest, $numbers) = split(/thernet/, $target);
+        $rest .= "thernet";
+    }
+    elsif ($target =~ /channel\d/) {
+        ($rest, $numbers) = split(/channel/, $target);
+        $rest .= "channel";
+    } elsif ($target =~ /Alcatel/) {
+
+        if ($target =~ /GNI_\d/) {
+           ($rest, $numbers) = split(/GNI_/, $target);
+           $rest .= "GNI_";
+        } elsif ($target =~ /VFL_\d/) {
+           ($rest, $numbers) = split(/VFL_/, $target);
+           $rest .= "VFL_";
+        } elsif ($target =~ /XNI_\d/) {
+           ($rest, $numbers) = split(/XNI_/, $target);
+           $rest .= "XNI_";
+        } elsif ($target =~ /Stacking_\d/) {
+           ($rest, $numbers) = split(/Stacking_/, $target);
+           $rest .= "Stacking_";
+        } elsif ($target =~ /Lucent_\d/) {
+           ($rest, $numbers) = split(/Lucent_/, $target);
+           $rest .= "Lucent_";
+        }
+    }
+    if (defined $numbers) {
+
+    my ($cc, $bb, $aa) = split(/_/,$numbers);
+
     # Pad string if it exists, is a single character and is a number
     $aa = pad($aa) if (defined $aa && (scalar (split("", $aa))<2) && $aa =~ /^[0-9]+$/);
     $bb = pad($bb) if (defined $bb && (scalar (split("", $bb))<2) && $bb =~ /^[0-9]+$/);
-    if (defined $cc && (substr $cc, -1) =~ /^[0-9]$/ && (substr $cc, -2) !~ /^[0-9]+$/) {
-        my $d = chop $cc;
-        $cc .= pad($d);
-    }
+    $cc = pad($cc) if (defined $cc && (scalar (split("", $cc)) < 2) && $cc =~ /^[0-9]+$/);
+
+    #if (defined $cc && (substr $cc, -1) =~ /^[0-9]$/ && (substr $cc, -2) !~ /^[0-9]+$/) {
+    #    my $d = chop $cc;
+    #    $cc .= pad($d);
+    #}
     if (defined $aa) {
-        $target = join ('_', $cc, $bb, $aa);
+        $numbers = join ('_', $cc, $bb, $aa);
     } elsif (defined $bb) {
-        $target = join ( '_', $cc, $bb);
+        $numbers = join ( '_', $cc, $bb);
     } else {
-        $target = $cc;
+        $numbers = $cc;
     }
+    $target = $rest . $numbers;
     Debug ("Padded_target: $target");
-    # elsif (defined $cc) {
-    #        $target = join ( '_', $bb, $cc);
-    #    }
+    }
 
     ### Set the interface speed format
 
@@ -1301,10 +1336,10 @@ foreach $index ( sort { $a <=> $b } keys %ifdescr) {
             %intdescr   = %{$data{intdescr}};
             %iftype     = %{$data{iftype}};
             %ifmtu      = %{$data{ifmtu}};
-            %ifoperstatus      = %{$data{ifoperstatus}};
-            %ifadminstatus     = %{$data{ifadminstatus}};
-            %slotPortMapping   = %{$data{slotPortMapping}};
-            @config     = @{$data{config}};
+                        %ifoperstatus      = %{$data{ifoperstatus}},
+                        %ifadminstatus     = %{$data{ifadminstatus}},
+                    %slotPortMapping   = %{$data{slotPortMapping}},
+                @config     = @{$data{config}};
             $hc         = $data{hc};
             $nu         = $data{nu};
             $class      = $data{class};
