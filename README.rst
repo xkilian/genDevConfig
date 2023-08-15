@@ -1,7 +1,16 @@
+
+
+==================
+Deprecation notice
+==================
+
+Use a modern stack like Prometheus + Prometheus snmp_exporter + Grafana.
+
+Prometheus snmp_exporter is similarly functional as genDevConfig in that it can generate the necessary collection configuration and will store all data in a time series-database and has even greater scaling that genDevConfig.
+
 ============================
 Presentation of genDevConfig
 ============================
-
 genDevConfig is a perl Script that will generate the configuration to supervise a networked device using SNMP. 
 The configuration that is generated is meant to be used with the Shinken monitoring system.
 
